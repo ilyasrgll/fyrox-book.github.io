@@ -1,27 +1,26 @@
-# Editor, Plugins and Scripts
+# Editör, Eklentiler ve Komut Dosyaları
 
-Every Fyrox game is just a plugin for both the engine and the editor, this approach allows the game to run from the 
-editor and enables editing of the game entities from within it. A game can define any number of scripts, which can be assigned 
-to scene objects to run custom game logic on them. This chapter will cover how to install the engine with its platform-specific dependencies, how to use the plugins and scripting system, and how to run the editor.
+Her Fyrox oyunu, hem motor hem de editör için bir eklentidir. Bu yaklaşım, oyunun editöründen çalıştırılmasını ve oyun öğelerinin içinden düzenlenmesini sağlar. Bir oyun, sahne nesnelerine atanarak üzerlerinde özel oyun mantığı çalıştırmak için herhangi bir sayıda komut dosyası tanımlayabilir. Bu bölümde, motorun platformuna özgü bağımlılıklarıyla birlikte nasıl kurulacağı, eklentilerin ve komut dosyası sisteminin nasıl kullanılacağı ve editörün nasıl çalıştırılacağı anlatılacaktır.
 
-## Platform-specific Dependencies
+## Platforma özgü bağımlılıklar
 
-Before starting to use the engine, make sure all required platform-specific development dependencies are installed. If 
-using Windows or macOS, no additional dependencies are required other than the [latest Rust installed](https://rustup.rs)
-with appropriate toolchain for your platform.
+Motoru kullanmaya başlamadan önce, gerekli tüm platforma özgü geliştirme bağımlılıklarının yüklü olduğundan emin olun. 
+
+Windows veya macOS kullanıyorsanız, platformunuz için uygun araç zinciri ile [en son Rust sürümü](https://rustup.rs)
+
+dışında ek bir bağımlılık gerekmez.
 
 ### Linux
 
-On Linux, Fyrox needs the following libraries for development: `libxcb-shape0`, `libxcb-xfixes0`, `libxcb1`, 
-`libxkbcommon`, `libasound2`, `libegl-mesa0` and the `build-essential` package group.
+Linux'ta, Fyrox'un geliştirilmesi için aşağıdaki kütüphaneler gereklidir: `libxcb-shape0`, `libxcb-xfixes0`, `libxcb1`, `libxkbcommon`, `libasound2`, `libegl-mesa0` ve `build-essential` paket grubu.
 
-For Debian based distros like Ubuntu, they can be installed like below:
+Ubuntu gibi Debian tabanlı dağıtımlarda, aşağıdaki gibi kurulabilir:
 
 ```shell
 sudo apt install libxcb-shape0-dev libxcb-xfixes0-dev libxcb1-dev libxkbcommon-dev libasound2-dev libegl-mesa0 build-essential
 ```
 
-For NixOS, add a file named `flake.nix` to the root of your repository with the following contents, add it to the git index (e.g., with `git add flake.nix`), and then run `nix develop` to open a shell with all of the required dependencies.
+NixOS için, deponuzun kök dizinine `flake.nix` adlı bir dosya ekleyin ve içine aşağıdaki içeriği yazın, dosyayı git dizinine ekleyin (örneğin, `git add flake.nix` komutuyla) ve ardından `nix develop` komutunu çalıştırarak gerekli tüm bağımlılıkların bulunduğu bir kabuk açın.
 
 ```nix
 {
@@ -72,21 +71,18 @@ For NixOS, add a file named `flake.nix` to the root of your repository with the 
 }
 ```
 
-## Project Manager
+## Proje Yöneticisi
 
-![project manager](https://fyrox.rs/assets/0.36/project_manager.png)
+![proje yöneticisi](https://fyrox.rs/assets/0.36/project_manager.png)
 
-Project manager is a part of the engine that allows you to manage multiple projects made with the engine all at once.
-It allows you to create a new project or import an existing one, run the project or edit it in the editor, 
-upgrade the project to a selected version of the engine, and many more options. 
+Proje yöneticisi, motorla oluşturulan birden fazla projeyi aynı anda yönetmenizi sağlayan motorun bir parçasıdır.
+Yeni bir proje oluşturmanıza veya mevcut bir projeyi içe aktarmanıza, projeyi çalıştırmanıza veya düzenleyicide düzenlemenize, projeyi seçilen motor sürümüne yükseltmenize ve daha birçok seçeneğe sahip olursunuz.
 
-[Download the project manager](https://fyrox.rs/download.html) for your OS and run it. Then click the `+Create`
-button, select the path where you want the project to be located and click `Create`. Select the new project
-in the list and click `Edit` button to run the editor.
+[Proje yöneticisini indirin](https://fyrox.rs/download.html) işletim sisteminiz için indirin ve çalıştırın. Ardından `+create` düğmesine tıklayın, projenin yer almasını istediğiniz yolu seçin ve `create` düğmesine tıklayın. Listeden yeni projeyi seçin ve düzenleyiciyi çalıştırmak için `edit` düğmesine tıklayın.
 
-## Quick Start Using Console Commands
+## Konsol Komutlarını Kullanarak Hızlı Başlangıç
 
-Run the following commands to start using the editor as quickly as possible.
+Editörü mümkün olan en kısa sürede kullanmaya başlamak için aşağıdaki komutları çalıştırın.
 
 ```sh
 cargo install fyrox-template
@@ -95,86 +91,101 @@ cd fyrox_test
 cargo run --package editor --release
 ```
 
-## Project Generator
+## Proje Oluşturucu
 
-> ⚠️ This section is mostly for console users and those who like building their software from source code.
-> If you prefer to use Project Manager you can, it does the same as `fyrox-template` but with the benefits of a GUI.
+> ⚠️ Bu bölüm çoğunlukla konsol kullanıcıları ve yazılımlarını kaynak kodundan derlemeyi sevenler içindir.
+> Project Manager'ı kullanmayı tercih ederseniz, `fyrox-template` ile aynı işlevi görür, ancak GUI'nin avantajlarından da yararlanabilirsiniz.
 
-Fyrox plugins are written in Rust, this means that if the source code of the game changes you will need to recompile. 
-The architecture requires some boilerplate code. Fyrox offers a special tiny command line tool - `fyrox-template`. This 
-helps generate all the boilerplate code with a single command. Install it by running the following command:
+Fyrox eklentileri Rust ile yazılmıştır, bu da oyunun kaynak kodu değişirse yeniden derlemeniz gerekeceği anlamına gelir.
+Mimarisi bazı standart kodlar gerektirir. Fyrox, özel bir küçük komut satırı aracı sunar: `fyrox-template`. Bu, tek bir komutla tüm standart kodları oluşturmanıza yardımcı olur. Aşağıdaki komutu çalıştırarak yükleyin:
 
 ```shell
 cargo install fyrox-template
 ```
 
-_Note for Linux:_ This installs it in `$user/.cargo/bin`. If receiving errors about the `fyrox-template` command not  
-being found, add this hidden cargo bin folder to the operating systems `$PATH` environment variable.
+_Linux için not:_ Bu, programı `$user/.cargo/bin` dizinine yükler. `fyrox-template` komutunun bulunamadığına dair hata mesajları alırsanız  ,
+bu gizli cargo bin klasörünü işletim sisteminin `$PATH` ortam değişkenine ekleyin.
 
-Now, navigate to the desired project folder and run the following command:
+
+
+Şimdi, istediğiniz proje klasörüne gidin ve aşağıdaki komutu çalıştırın:
 
 ```shell
 fyrox-template init --name my_game --style 3d
 ```
 
-Note that unlike `cargo init`, this will create a new folder with the given name.
+`cargo init` komutundan farklı olarak, bu komut verilen adla yeni bir klasör oluşturur.
 
-The tool accepts two arguments - a project name (`--name`) and a style (`--style`), which defines the contents of the default
-scene. After initializing the project, go to `game/src/lib.rs` - this is where the game logic is located, as you will 
-see, the `fyrox-template` generates quite a bit of code for you. The code is decorated with comments explaining what each place is for. For 
-more info about each method, please refer [to the docs](https://docs.rs/fyrox/latest/fyrox/plugin/trait.Plugin.html).
 
-Once the project is generated, two commands can be used to run your game in different modes:
 
-- `cargo run --package editor --release` - launches the editor with your game attached. The editor allows you to run your game
-  from it and edit its game entities. This is intended to be used only for development purposes.
-- `cargo run --package executor --release` - creates and runs the production binary of your game. This command generates executables which can be shipped (for example - to a store).
+Araç iki argüman kabul eder: bir proje adı (`--name`) ve bir stil (`--style`), bu stil varsayılan sahnenin içeriğini tanımlar. Projeyi başlattıktan sonra, `game/src/lib.rs` dosyasına gidin. Burası oyun mantığının bulunduğu yerdir. 
 
-Navigate to your project's directory and run `cargo run --package editor --release`, after a short while, you should see the 
-editor:
+Gördüğünüz gibi, `fyrox-template` sizin için oldukça fazla kod üretir. Kod, her yerin ne işe yaradığını açıklayan yorumlarla süslenmiştir. 
+
+Her yöntem hakkında daha fazla bilgi için lütfen [belgelere](https://docs.rs/fyrox/latest/fyrox/plugin/trait.Plugin.html) bakın..
+
+Proje oluşturulduktan sonra, oyununuzu farklı modlarda çalıştırmak için iki komut kullanılabilir:
+
+
+
+- `cargo run --package editor --release` - oyununuzun eklendiği düzenleyiciyi başlatır. Düzenleyici, oyununuzu
+
+  buradan çalıştırmanıza ve oyun öğelerini düzenlemenize olanak tanır. Bu komut yalnızca geliştirme amaçlı kullanılmak üzere tasarlanmıştır.
+
+- `cargo run --package executor --release` - oyununuzun üretim ikili dosyasını oluşturur ve çalıştırır. Bu komut, gönderilebilecek (örneğin bir mağazaya) yürütülebilir dosyalar oluşturur.
+
+
+
+Projenizin dizinine gidin ve `cargo run --package editor --release` komutunu çalıştırın. Kısa bir süre sonra 
 
 ![editor](editor.png)
 
-In the editor you can start building your game scene. **Important note:** your scene must have at least one camera,
-otherwise you won't see a thing. Read the next chapter to learn how to use the editor.
+Editörde oyun sahnenizi oluşturmaya başlayabilirsiniz. 
 
-## Using the Latest Engine Version
+**Önemli not:** sahnenizde en az bir kamera olmalıdır,
 
-Due to the nature of software development, bugs will inevitably sneak into the major releases, due to this, 
-it is recommended to always use the latest engine version from the repository on GitHub. This is most likely to have bugs fixed
-(you can also contribute by fixing any bugs you find or at least, by [filing an issue](https://github.com/FyroxEngine/Fyrox/issues)).
+aksi takdirde hiçbir şey göremezsiniz. Editörün nasıl kullanıldığını öğrenmek için bir sonraki bölümü okuyun.
 
-### Automatic
+## En Son Motor Sürümünü Kullanma
 
-> ⚠️ `fyrox-template` has a special sub-command - `upgrade` to quickly upgrade to a desired engine version. To upgrade to 
-> the latest version (`nightly`) you should execute `fyrox-template upgrade --version nightly` command in your game's 
-> directory.
+Yazılım geliştirmenin doğası gereği, büyük sürümlerde kaçınılmaz olarak hatalar ortaya çıkacaktır. Bu nedenle, 
 
-There are three main variants for `--version` switch:
+GitHub'daki depodan her zaman en son motor sürümünü kullanmanız önerilir. Bu sürümlerde hatalar büyük olasılıkla düzeltilmiş olacaktır
 
-- `nightly` - uses latest nightly version of the engine from GitHub directly. This is the preferable version if you want
-to use the latest changes and bug fixes as they are released.
-- `latest` - uses latest stable version of the engine. This option also supports `--local` key, that sets the path to
-the engine to `../Fyrox/fyrox` and the editor to `../Fyrox/editor`. Obviously, this path requires the engine to be located
-in the parent directory of your project. This option could be useful if you want to use a custom version of the engine 
-(for example, if you're developing a patch for the engine).
-- `major.minor.patch` - uses a specific stable version from crates.io (`0.30.0` for example).
+(bulduğunuz hataları düzelterek veya en azından [bir sorun bildirerek](https://github.com/FyroxEngine/Fyrox/issues) katkıda bulunabilirsiniz).
+
+### Otomatik
+
+> ⚠️ `fyrox-template`, istenen motor sürümüne hızlı bir şekilde yükseltmek için özel bir alt komut olan `upgrade` komutuna sahiptir. 
+> En son sürüme (`nightly`) yükseltmek için, oyununuzun 
+> dizininde `fyrox-template upgrade --version nightly` komutunu çalıştırmalısınız.
+
+`--version` anahtarının üç ana varyantı vardır:
+
+- `nightly` - GitHub'dan doğrudan motorun en son gece sürümünü kullanır. En son değişiklikleri ve hata düzeltmelerini yayınlandıkları anda kullanmak istiyorsanız bu sürümü tercih etmelisiniz
+.
+
+- `latest` - motorun en son kararlı sürümünü kullanır. Bu seçenek, motorun yolunu `../Fyrox/fyrox` ve editörün yolunu `../Fyrox/editor` olarak ayarlayan `--local` anahtarını da destekler. Açıkçası, bu yol motorun projenizin üst dizininde bulunmasını gerektirir. Bu seçenek, motorun projenizin üst dizininde bulunmasını gere
+
+`../Fyrox/fyrox` ve editörün yolunu `../Fyrox/editor` olarak ayarlar. Açıkçası, bu yolun motorun projenizin ana dizininde bulunmasını gerektirir.
+
+ Bu seçenek, motorun özel bir sürümünü kullanmak istiyorsanız (örneğin, motor için bir yama geliştiriyorsanız) yararlı olabilir.
+
+- `major.minor.patch` - crates.io'dan belirli bir kararlı sürümü kullanır (örneğin `0.30.0`).
 
 ### Manual
 
-The Engine version can also be updated manually. The first step is to install the latest `fyrox-template`, this can be done
-with a single `cargo` command:
+Motor sürümü manuel olarak da güncellenebilir. İlk adım, en son `fyrox-template` sürümünü yüklemektir. Bu,
+tek bir `cargo` komutuyla yapılabilir:
 
 ```shell
 cargo install fyrox-template --force --git https://github.com/FyroxEngine/Fyrox
 ```
 
-This will ensure you're using the latest project/script template generator, which is very important; old versions
-of the template generator will most likely generate outdated code, which is no longer compatible with the engine.
-
-To switch existing projects to the latest version of the engine, you will need to specify paths pointing to the remote repository 
-for the `fyrox` and `fyroxed_base` dependencies. All you need to do is to change paths to these dependencies in the 
-root `Cargo.toml`:
+Bu, en son proje/komut dosyası şablon oluşturucuyu kullandığınızdan emin olmanızı sağlar, bu çok önemlidir; eski sürümler
+şablon oluşturucunun büyük olasılıkla artık motorla uyumlu olmayan eski kodlar oluşturacaktır.
+Mevcut projeleri motorun en son sürümüne geçirmek için, `fyrox` ve`fyroxed_base` bağımlılıkları için uzak depoya işaret eden yollar belirtmeniz gerekecektir. 
+Tek yapmanız gereken, kök `Cargo.toml` dosyasındaki bu bağımlılıkların yollarını değiştirmektir:
 
 ```toml
 [workspace.dependencies.fyrox]
@@ -184,8 +195,7 @@ default-features = false
 version = { git = "https://github.com/FyroxEngine/Fyrox" }
 ```
 
-Now your game will use the latest engine and editor, but beware - new commits may surface some API mis-matches. You can avoid 
-these by specifying a particular commit, just add `rev = "desired_commit_hash"` to every dependency like so:
+Artık oyununuz en son motoru ve editörü kullanacak, ancak dikkatli olun - yeni taahhütler bazı API uyumsuzlukları ortaya çıkarabilir. Bunları, belirli bir taahhüt belirleyerek önleyebilirsiniz. Bunun için, her bağımlılığa şu şekilde `rev = "desired_commit_hash` ekleyin:
 
 ```toml
 [dependencies]
@@ -196,13 +206,18 @@ default-features = false
 version = { git = "https://github.com/FyroxEngine/Fyrox", rev = "0195666b30562c1961a9808be38b5e5715da43af" }
 ```
 
-To bring a local git repository of the engine to the latest version, just call `cargo update` at the root of the project's
-workspace. This will pull the latest changes from the remote, unless there is no `rev` specified.
+Motorun yerel git deposunu en son sürüme getirmek için, projenin
 
-Learn more about dependency paths on the official `cargo` documentation, [here](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories).
+çalışma alanının kök dizininde `cargo update` komutunu çalıştırın. Bu, `rev` belirtilmediği sürece, uzak sunucudan en son değişiklikleri çekecektir.
 
-## Adding Game Logic
 
-Any object-specific game logic should be added using scripts. A script is a "container" for data and code, that will be
-executed by the engine. Read the [Scripts](../scripting/script.md) chapter to learn how to create, edit, and use scripts in
-your game.
+
+Bağımlılık yolları hakkında daha fazla bilgiyi resmi `cargo` belgelerinde [burada](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories) bulabilirsiniz.
+
+## Oyun Mantığı Ekleme
+
+Nesneye özgü oyun mantığı, komut dosyaları kullanılarak eklenmelidir. Komut dosyası, veriler ve kodlar için bir “kap”tır ve
+
+motor tarafından yürütülür. Oyununuzda komut dosyalarını nasıl oluşturacağınızı, düzenleyeceğinizi ve kullanacağınızı öğrenmek için [Komut Dosyaları](../scripting/script.md) bölümünü okuyun
+
+.

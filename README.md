@@ -1,15 +1,29 @@
-# Fyrox Game Engine Guide Book
+# Fyrox Oyun Motoru Kılavuz Kitabı
 
-A book for Fyrox Game Engine. Read the book [here](https://fyrox-book.github.io)
 
-## Contributing
 
-There are very simple contribution rules:
+Fyrox Oyun Motoru için bir kitap. Kitabı [buradan](https://fyrox-book.github.io) okuyun.
 
-- Test your code snippets
-- Do not repeat existing chapters
-- Write everything in English
 
-### Tests
 
-Every code snippet is tested for compilation, please run `cd src/code/snippets && cargo check`.
+## Katkı
+
+
+
+Katkı kuralları çok basittir:
+
+
+
+- Kod parçacıklarınızı test edin
+
+- Mevcut bölümleri tekrarlamayın
+
+- Her şeyi İngilizce yazın
+
+
+
+### Test
+
+
+
+Her kod parçacığı derleme için test edilir, lütfen `cd src/code/snippets && cargo check` komutunu çalıştırın.

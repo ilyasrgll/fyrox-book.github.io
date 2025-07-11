@@ -1,222 +1,258 @@
-# Scripts
+# Scripts (Komut Dosyası)
 
-Script - is a container for game data and logic that can be assigned to a scene node. Fyrox uses Rust for scripting, 
-so scripts are as fast as native code. Every scene node can have any number of scripts assigned.
+Script - bir sahne düğümüne atanabilen oyun verileri ve mantığı için bir konteynerdir. Fyrox, scripting için Rust kullanır, 
 
-## When to Use Scripts and When Not
+bu nedenle scriptler yerel kod kadar hızlıdır. Her sahne düğümüne istediğiniz sayıda script atayabilirsiniz.
 
-Scripts are meant to be used to add data and some logic to scene nodes. That being said, you should not use scripts
-to hold some global state of your game (use your game plugin for that). For example, use scripts for your game items, 
-bots, player, level, etc. On the other hand **do not** use scripts for leader boards, game menus, progress information,
-etc.
 
-Also, scripts cannot be assigned to UI widgets due to intentional Game <-> UI decoupling reasons. All user interface 
-components should be created and handled in the game plugin of your game.
 
-## Script Structure
+## Scriptleri (Komut Dosyasıları) Ne Zaman Kullanmalı, Ne Zaman Kullanmamalı
 
-Typical script structure is something like this:
+
+
+Scriptler, sahne düğümlerine veri ve bazı mantık eklemek için kullanılır. Bununla birlikte, scriptleri
+
+oyununuzun genel durumunu tutmak için kullanmamalısınız (bunun için oyun eklentinizi kullanın). Örneğin, oyun öğeleriniz, 
+
+botlar, oyuncu, seviye vb. için scriptleri kullanın. Öte yandan, liderlik tabloları, oyun menüleri, ilerleme bilgileri vb. için scriptleri **kullanmayın**.
+
+
+
+Ayrıca, kasıtlı olarak Game <-> UI ayrıştırma nedenleriyle komut dosyaları UI widget'larına atanamaz. Tüm kullanıcı arayüzü 
+
+bileşenleri, oyununuzun oyun eklentisinde oluşturulmalı ve yönetilmelidir.
+
+
+
+## Script (Komut dosyası) Yapısı
+
+
+
+Tipik bir komut dosyası yapısı şuna benzer:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/example.rs:example_script}}
 ```
 
-Each script must implement following traits:
+Her komut dosyası aşağıdaki özellikleri uygulamalıdır:
 
-- `Visit` implements serialization/deserialization functionality, it is used by the editor to save your object to a 
-scene file.
-- `Reflect` implements compile-time reflection that provides a way to iterate over script fields, set their values, 
-find fields by their paths, etc.
-- `Debug` - provides debugging functionality, it is mostly for the editor to let it turn the structure and its fields 
-into string.
-- `Clone` - makes your structure clone-able, since we can clone objects, we also want the script instance to be 
-cloned.
-- `Default` implementation is very important - the scripting system uses it to create your scripts in the default state.
-This is necessary to set some data to it and so on. If it's a special case, you can always implement your own `Default`'s
-implementation if it's necessary for your script.
-- `TypeUuidProvider` is used to attach some unique id for your type, every script **must** have a unique ID, otherwise, 
-the engine will not be able to save and load your scripts. To generate a new UUID, use 
-[Online UUID Generator](https://www.uuidgenerator.net/) or any other tool that can generate UUIDs.
-- `ComponentProvider` - gives access to inner fields of the script marked with `#[component(include)]` attribute.
 
-`#[visit(optional)]` attribute is used to suppress serialization errors when some fields are missing or changed. 
 
-## Script Template Generator
+- `Visit`, serileştirme/serileştirmeyi kaldırma işlevini uygular ve editör tarafından nesnenizi bir sahne dosyasına kaydetmek için kullanılır.
 
-You can use `fyrox-template` tool to generate all required boilerplate code for a new script, it makes adding new scripts
-much less tedious. To generate a new script use `script` command:
+- `Reflect`, komut dosyası alanlarını yinelemek, değerlerini ayarlamak, yollarından alanları bulmak vb. için bir yol sağlayan derleme zamanı yansıtma işlevini uygular.
+
+- `Debug` - hata ayıklama işlevselliği sağlar, çoğunlukla editörün yapıyı ve alanlarını dizeye dönüştürmesi için kullanılır.
+
+- `Clone` - yapınızı klonlanabilir hale getirir, nesneleri klonlayabildiğimiz için komut dosyası örneğinin de 
+klonlanmasını isteriz.
+
+- `Default` uygulaması çok önemlidir - komut dosyası sistemi, komut dosyalarınızı varsayılan durumda oluşturmak için bunu kullanır.
+
+Bazı verileri ayarlamak vb. için gereklidir. Özel bir durum varsa, komut dosyanız için gerekliyse her zaman kendi `Default` uygulamanızı uygulayabilirsiniz.
+
+- `TypeUuidProvider`, türünüz için benzersiz bir kimlik eklemek için kullanılır. Her komut dosyası **mutlaka** benzersiz bir kimliğe sahip olmalıdır, aksi takdirde 
+
+motor komut dosyalarınızı kaydedip yükleyemez. Yeni bir UUID oluşturmak için [Çevrimiçi UUID Oluşturucu](https://www.uuidgenerator.net/) veya UUID oluşturabilen başka bir araç kullanın.
+
+- `ComponentProvider` - `#[component(include)]` özniteliği ile işaretlenmiş komut dosyasının iç alanlarına erişim sağlar.
+
+
+
+`#[visit(optional)]` özniteliği, bazı alanlar eksik veya değiştirildiğinde serileştirme hatalarını bastırmak için kullanılır.
+
+## Script (Komut Dosyası) Şablonu Oluşturucu
+
+Yeni bir komut dosyası için gerekli tüm hazır kodları oluşturmak için `fyrox-template` aracını kullanabilirsiniz, bu yeni komut dosyaları eklemeyi
+
+çok daha kolay hale getirir. Yeni bir komut dosyası oluşturmak için `script` komutunu kullanın:
 
 ```shell
 fyrox-template script --name MyScript
 ```
 
-It will create a new file in `game/src` directory with `my_script.rs` name and fill with required code. Do not forget
-to add the module with the new script to `lib.rs` like this: 
+`game/src` dizininde `my_script.rs` adında yeni bir dosya oluşturulacak ve gerekli kodlarla doldurulacaktır.
+
+Yeni komut dosyasını `lib.rs` dosyasına şu şekilde eklemeyi unutmayın:
 
 ```rust,no_run,compile_fail
 // Use your script name instead of `my_script` here.
 pub mod my_script;
 ```
 
-Comments in each generated method should help you to figure out which code should be placed where and what is the purpose
-of every method.
+Oluşturulan her yöntemde yer alan yorumlar, hangi kodun nereye yerleştirilmesi gerektiğini ve her yöntemin amacını anlamanıza yardımcı olacaktır.
 
-> ⚠️ Keep in mind that every new script must be registered in `PluginConstructor::register`, otherwise you won't be able
-> to assign the script in the editor to a node. See the next section for more info. 
+> ⚠️ Her yeni komut dosyasının `PluginConstructor::register` içinde kaydedilmesi gerektiğini unutmayın, aksi takdirde
+> komut dosyasını düzenleyicide bir düğüme atayamazsınız. Daha fazla bilgi için bir sonraki bölüme bakın.
 
-## Script Registration
+## Script (Komut Dosyası) Kaydı
 
-Every script must be registered before use, otherwise the engine won't "see" your script and won't let you assign it
-to an object. `PluginConstructor` trait has `register` method exactly for script registration. To register a script
-you need to register it in the list of script constructors like so:
+Her komut dosyası kullanılmadan önce kaydedilmelidir, aksi takdirde motor komut dosyanızı “görmez” ve onu bir nesneye atamanıza izin vermez.
+`PluginConstructor` özelliği, komut dosyalarını kaydetmek için `register` yöntemine sahiptir. Bir komut dosyasını kaydetmek için,onu komut dosyası oluşturucular listesine şu şekilde kaydetmeniz gerekir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/example.rs:register}}
 ```
 
-Every script type (`MyScript` in the code snippet above, you need to change it to your script type) must be registered using 
+Her komut dosyası türü (yukarıdaki kod parçasında `MyScript`, bunu kendi komut dosyası türünüzle değiştirmeniz gerekir) 
+
 [ScriptConstructorsContainer::add](https://docs.rs/fyrox/latest/fyrox/script/constructor/struct.ScriptConstructorContainer.html#method.add) 
-method, which accepts a script type as a generic argument and its name, that will be shown in the editor. The name can be 
-arbitrary, it is used only in the editor. You can also change it at any time, it won't break existing scenes.
+yöntemiyle kaydedilmelidir. Bu yöntem, genel bir argüman olarak komut dosyası türünü ve düzenleyicide gösterilecek adını kabul eder.
 
-## Script Attachment
+ Ad isteğe bağlıdır ve yalnızca düzenleyicide kullanılır. Adı istediğiniz zaman değiştirebilirsiniz, mevcut sahneler bozulmaz.
 
-To assign a script and see it in action, run the editor, select an object and find `Scripts` property in the Inspector.
-Click on a small `+` button and select your script from the drop-down list on the newly added entry. To see the script 
-in action, click "Play/Stop" button. The editor will run your game in separate process with the scene active in the editor.
+## Script (Komut Dosyası) Eki
 
-The script can be attached to a scene node from code:
+Bir komut dosyası atamak ve çalışırken görmek için düzenleyiciyi çalıştırın, bir nesne seçin ve Denetçi'de `Scripts` özelliğini bulun.
+
+Küçük `+` düğmesine tıklayın ve yeni eklenen girişin açılır listesinden komut dosyanızı seçin. Komut dosyasını 
+çalışırken görmek için “Çal/Durdur” düğmesine tıklayın. Editör, oyunu editörde sahne aktif haldeyken ayrı bir işlemde çalıştıracaktır.
+
+
+
+Komut dosyası koddan bir sahne düğümüne eklenebilir:
 
 ```rust, no_run
 {{#include ../code/snippets/src/scripting/example.rs:add_my_script}}
 ```
 
-Initialization as well as update of newly assigned script will happen on next update tick of the engine.
+Yeni atanan komut dosyasının başlatılması ve güncellenmesi, motorun bir sonraki güncelleme tikinde gerçekleşecektir.
 
-## Script Context
+## Script (Komut Dosyası) Bağlamı
 
-Script context provides access to the environment that can be used to modify engine and game state from scripts. Typical
-content of the context is something like this:
+Script context, scriptlerden motor ve oyun durumunu değiştirmek için kullanılabilecek ortama erişim sağlar. Tipik
+
+context içeriği şuna benzer:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/context.rs:context}}
 ```
 
-- `dt` - amount of time passed since last frame. The value of the variable is implementation-defined, usually it is
-something like 1/60 (0.016) of a second.
-- `elapsed_time` - amount of time that passed since start of your game (in seconds).
-- `plugins` - a mutable reference to all registered plugins, it allows you to access some "global" game data that does 
-not belong to any object. For example, a plugin could store key mapping used for player controls, you can access it 
-using `plugins` field and find desired plugin. In case of a single plugin, you just need to cast the reference to a 
-particular type using `context.plugins[0].cast::<MyPlugin>().unwrap()` call.
-- `handle` - a handle of the node to which the script is assigned to (parent node). You can borrow the node using
-`context.scene.graph[handle]` call. Typecasting can be used to obtain a reference to a particular node type.
-- `scene` - a reference to parent scene of the script, it provides you full access to scene content, allowing you to
-add/modify/remove scene nodes.
-- `scene_handle` - a handle of a scene the script instance belongs to.
-- `resource_manager` - a reference to resource manager, you can use it to load and instantiate assets. 
-- `message_sender` - a message sender. Every message sent via this sender will be then passed to every 
-`ScriptTrait::on_message` method of every script.
-- `message_dispatcher` - a message dispatcher. If you need to receive messages of a particular type, you must subscribe
-to a type explicitly.
-- `task_pool` - task pool for asynchronous task management.
-- `graphics_context` - Current graphics context of the engine.
-- `user_interfaces` - a reference to user interface container of the engine. The engine guarantees that there's
-at least one user interface exists. Use `context.user_interfaces.first()/first_mut()` to get a reference to it.
-- `script_index` - index of the script. Never save this index, it is only valid while this context exists!
+- `dt` - son kareden bu yana geçen süre. Değişkenin değeri uygulamaya göre tanımlanır, genellikle saniyenin 1/60'ı (0,016) gibi bir değerdir.
 
-## Execution order
+- `elapsed_time` - oyunun başlangıcından bu yana geçen süre (saniye cinsinden).
 
-Scripts have strictly defined execution order for their methods (the order if execution is linear and **do not** depend 
-on actual tree structure of the graph where the script is located):
+- `plugins` - kayıtlı tüm eklentilere değiştirilebilir bir referans, herhangi bir nesneye ait olmayan bazı “global” oyun verilerine erişmenizi sağlar.
 
-- `on_init` - called first for every script instance
-- `on_start` - called after every `on_init` is called
-- `on_update` - called zero or more times per one render frame. The engine stabilizes update rate of the logic, so if
-your game runs at 15 FPS, the logic will still run at 60 FPS thus the `on_update` will be called 4 times per frame. The
-method can also be not called at all, if the FPS is very high. For example, if your game runs at 240 FPS, then `on_update`
-will be called once per 4 frames.
-- `on_message` - called once per incoming message.
-- `on_os_event` - called once per incoming OS event.
-- `on_deinit` - called at the end of the update cycle once when the script (or parent node) is about to be deleted.
+ Örneğin, bir eklenti oyuncu kontrolleri için kullanılan tuş atamalarını saklayabilir, 
 
-If a scene node has multiple scripts assigned, then they will be processed as described above in the same order as they
-assigned to the scene node.
 
-## Message passing
+`plugins` alanını kullanarak ve istediğiniz eklentiyi bulabilirsiniz. Tek bir eklenti olması durumunda, referansı
+ 
+`context.plugins[0].cast::<MyPlugin>().unwrap()` çağrısı kullanarak belirli bir türe dönüştürmeniz yeterlidir.
 
-Script system of Fyrox supports message passing for scripts. Message passing is a mechanism that allows you to send some 
-data (message) to a node, hierarchy of nodes or the entire graph. Each script can subscribe for a specific message type. 
-It is an efficient way for decoupling scripts from each other. For instance, you may want to detect and respond to some 
-event in your game. In this case when the event has happened, you send a message of a type and every "subscriber" will 
-react to it. This way subscribers will not know anything about sender(s); they'll only use message data to do some actions.
+- `handle` - komut dosyasının atandığı düğümün (üst düğüm) tanıtıcısı. Düğümü
 
-A simple example where the message passing can be useful is when you need to react to some event in your game. Imagine,
-that you have weapons in your game, and they can have a laser sight that flashes with a different color when some target
-was hit. In very naive approach you can handle all laser sights where you handle all intersection for projectiles, but
-this adds a very tight coupling between laser sight and projectiles. This is totally unnecessary coupling can be made
-loose by using message passing. Instead of handling laser sights directly, all you need to do is to broadcast an
-`ActorDamaged { actor: Handle<Node>, attacker: Handle<Node> }` message. Laser sight in its turn can subscribe for such
-message and handle all incoming messages and compare `attacker` with owner of the laser sight and if the hit was made
-by `attacker` flash with some different color. In code this would like so:
+`context.scene.graph[handle]` çağrısı kullanarak ödünç alabilirsiniz. Belirli bir düğüm türüne referans elde etmek için tür dönüştürme kullanılabilir.
+
+- `scene` - komut dosyasının üst sahnesine bir referans, sahne içeriğine tam erişim sağlar ve 
+sahne düğümleri eklemenizi/değiştirmenizi/kaldırmanızı
+
+- `scene_handle` - komut dosyası örneğinin ait olduğu sahnenin bir tanıtıcısı.
+
+
+- `resource_manager` - kaynak yöneticisine bir referans, varlıkları yüklemek ve örneklendirmek için kullanabilirsiniz.
+ 
+- `message_sender` - bir mesaj gönderici. Bu gönderici aracılığıyla gönderilen her mesaj, her 
+
+- `ScriptTrait::on_message` yöntemine aktarılır.
+
+- `message_dispatcher` - bir mesaj dağıtıcı. Belirli bir türdeki mesajları almanız gerekiyorsa,
+bir türe açıkça abone olmanız gerekir.
+
+- `task_pool` - eşzamansız görev yönetimi için görev havuzu.
+
+- `graphics_context` - Motorun mevcut grafik bağlamı.
+
+- `user_interfaces` - motorun kullanıcı arayüzü konteynerine bir referans. Motor, en az bir kullanıcı arayüzünün varlığını garanti eder. Buna referans almak için `context.user_interfaces.first()/first_mut()` kullanın.
+
+- `script_index` - komut dosyasının dizini. Bu dizini asla kaydetmeyin, bu bağlam var olduğu sürece geçerlidir!
+
+## Yürütme emri
+
+Komut dosyalarının yöntemleri için kesin olarak tanımlanmış bir yürütme sırası vardır (yürütme sırası doğrusaldır ve **komut dosyasının bulunduğu grafiğin gerçek ağaç yapısına bağlı değildir**):
+
+- `on_init` - her komut dosyası örneği için ilk olarak çağrılır
+
+- `on_start` - her `on_init` çağrıldıktan sonra çağrılır
+
+
+- `on_update` - bir render karesi başına sıfır veya daha fazla kez çağrılır. Motor, mantığın güncelleme hızını sabitler, bu nedenle oyununuz 15 FPS'de çalışıyorsa, mantık yine 60 FPS'de çalışır ve `on_update` her kare için 4 kez çağrılır. FPS çok yüksekse, yöntem hiç çağrılmayabilir. Örneğin, oyununuz 240 FPS'de çalışıyorsa, `on_update` 4 kare başına bir kez çağrılır.
+
+- `on_message` - gelen her mesaj için bir kez çağrılır.
+
+- `on_os_event` - gelen her işletim sistemi olayı için bir kez çağrılır.
+
+- `on_deinit` - güncelleme döngüsünün sonunda, komut dosyası (veya üst düğüm) silinmek üzereyken bir kez çağrılır.
+
+
+
+Bir sahne düğümüne birden fazla komut dosyası atanmışsa, bunlar sahne düğümüne atandıkları sırayla yukarıda açıklanan şekilde işlenir.
+
+## Mesaj iletimi
+
+Fyrox'un komut dosyası sistemi, komut dosyaları için mesaj iletimi destekler. Mesaj iletimi, bir düğüme, düğüm hiyerarşisine veya tüm grafiğe bazı veriler (mesaj) göndermenizi sağlayan bir mekanizmadır. Her komut dosyası belirli bir mesaj türüne abone olabilir. Bu, komut dosyalarını birbirinden ayırmanın etkili bir yoludur. Örneğin, oyununuzda bazı olayları algılayıp yanıtlamak isteyebilirsiniz. Bu durumda, olay gerçekleştiğinde, bir tür mesaj gönderirsiniz ve her “abone”  buna tepki verir. Bu şekilde aboneler gönderen(ler) hakkında hiçbir şey bilmezler; yalnızca mesaj verilerini bazı eylemleri gerçekleştirmek için kullanırlar. Mesaj aktarımının yararlı olabileceği basit bir örnek, oyununuzdaki bazı olaylara tepki vermeniz gerektiğinde ortaya çıkar.
+
+ Oyununuzda silahlarınız olduğunu ve bazı hedefler vurulduğunda farklı renkte yanıp sönen lazer nişangahları olduğunu düşünün. oyununda silahların olduğunu ve bu silahların, bir hedef vurulduğunda farklı bir renkte yanıp sönen lazer nişangahları olduğunu düşün. Çok basit bir yaklaşımda, tüm lazer nişangahlarını, mermilerin kesiştiği tüm noktaları işleyerek yönetebilirsin, ancak bu, lazer nişangahları ile mermiler arasında çok sıkı bir bağlantı oluşturur. Bu tamamen gereksiz bir bağlantıdır ve mesaj aktarımı kullanılarak gevşetilebilir. Lazer nişangahlarını doğrudan yönetmek yerine, tek yapman gereken `ActorDamaged { actor: Handle<Node>, attacker: Handle<Node> }` mesajını yayınlamak yeterlidir. Lazer nişangahı da bu mesaja abone olabilir ve gelen tüm mesajları işleyerek `attacker` ile lazer nişangahının sahibini karşılaştırabilir ve vuruşun `attacker` tarafından yapılıp yapılmadığını kontrol edebilir ve farklı bir renkle yanıp sönebilir. Kodda bu şöyle görünür:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/mod.rs:message_passing}}
 ```
 
-There are few key parts:
+Birkaç önemli nokta vardır:
 
-- You should explicitly subscribe script instance to a message type, otherwise messages of the type won't be delivered
-to your script. This is done using the message dispatcher: `ctx.message_dispatcher.subscribe_to::<Message>(ctx.handle);`.
-This should be done in `on_start` method, however it is possible to subscribe/unsubscribe at runime.
-- You can react to messages only in special method `on_message` - here you just need to check for message type using
-pattern matching and do something useful.
 
-Try to use message passing in all cases, loose coupling significantly improves code quality and readability, however
-in simple projects it can be ignored completely.
 
-## Accessing Other Script's Data
+- Komut dosyası örneğini bir mesaj türüne açıkça abone olmalısınız, aksi takdirde bu türdeki mesajlar komut dosyanıza iletilmez. Bu, mesaj dağıtıcı kullanılarak yapılır: `ctx.message_dispatcher.subscribe_to::<Message>(ctx.handle);`.  Bu, `on_start` yönteminde yapılmalıdır, ancak çalışma zamanında abone olma/abonelikten çıkma da mümkündür.
 
-Every script "lives" on some scene node, so to access a script data from some other script you need to know
-a handle of a scene node with that script first. You can do this like so:
+- Mesajlara yalnızca özel `on_message` yönteminde tepki verebilirsiniz - burada sadece
+desen eşleştirme kullanarak mesaj türünü kontrol etmeniz ve yararlı bir işlem yapmanız gerekir.
+
+
+
+Tüm durumlarda mesaj aktarımını kullanmaya çalışın, gevşek bağlama kod kalitesini ve okunabilirliği önemli ölçüde artırır, ancak
+
+basit projelerde tamamen göz ardı edilebilir.
+
+## Diğer scriptlerin (Komut Dosyalarının) Verilerine Erişmek
+
+Her komut dosyası bir sahne düğümünde “yaşar”, bu nedenle başka bir komut dosyasından bir komut dosyası verisine erişmek için önce o komut dosyasının bulunduğu sahne düğümünün tanıtıcısını bilmeniz gerekir. Bunu şu şekilde yapabilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/mod.rs:access_other_1}}
 {{#include ../code/snippets/src/scripting/mod.rs:access_other_2}}
 ```
 
-In this example we have the two script types: `MyScript` and `MyOtherScript`. Now imagine that we have two scene
-nodes, where the first one contains `MyScript` and the second one `MyOtherScript`. `MyScript` knows about
-the second node by storing a handle of in `second_node` field. `MyScript` waits until `MyOtherScript` will count
-its internal counter to `60.0` and then prints a message into the log. This code does immutable borrowing and 
-does not allow you to modify other script's data. If you a mutable access, then use `try_get_script_of_mut`
-method (or `try_get_script_mut` for the alternative code).
+Bu örnekte iki komut dosyası türü vardır: `MyScript` ve `MyOtherScript`. Şimdi iki sahne düğümü olduğunu düşünün, ilki `MyScript`, ikincisi `MyOtherScript` içerir. `MyScript`,
+`second_node` alanında bir tanıtıcı saklayarak ikinci düğümü bilir. `MyScript`, `MyOtherScript`
+iç sayacını `60.0`'a sayana kadar bekler ve ardından günlüğe bir mesaj yazdırır. Bu kod, değiştirilemez ödünç alma işlemi yapar ve 
+diğer komut dosyalarının verilerini değiştirmenize izin vermez. Değiştirilebilir erişim istiyorsanız, `try_get_script_of_mut`
+yöntemini (veya alternatif kod için `try_get_script_mut` yöntemini) kullanın.
 
-`second_node` field of the `MyScript` is usually assigned in the editor, but you can also find the node in
-your scene by using the following code:
+
+`MyScript`'in `second_node` alanı genellikle düzenleyicide atanır, ancak aşağıdaki kodu kullanarak sahnenizde de bu düğümü bulabilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/mod.rs:find_node}}
 ```
 
-This code searches for a node with `SomeName` and assigns its handle to the `second_node` variable in the script
-for later use.
+Bu kod, `SomeName` adlı bir düğümü arar ve onun tanıtıcısını komut dosyasında `second_node` değişkenine atar.
 
-## Accessing Plugins From Scripts
+## Scripttler'den (Komut Dosyaları'ndan) Eklentilere Erişmek
 
-Sometimes there's a need to access plugin data from scripts, there may be various reasons for that, for example 
-you may need to register a bot in the list of bots. This list could then be used for AI to search targets without 
-searching in the entire scene graph at every frame.
+Bazen komut dosyalarından eklenti verilerine erişmek gerekebilir, bunun çeşitli nedenleri olabilir, örneğin botları listesine bir bot kaydetmeniz gerekebilir. Bu liste daha sonra AI'nın her karede tüm sahne grafiğinde arama yapmadan hedefleri aramak için kullanılabilir.
 
-Accessing plugins from scripts is very easy, all you need to do is to call `get/get_mut` method from `ctx.plugins`:
+
+Eklentilere komut dosyalarından erişmek çok kolaydır, tek yapmanız gereken `ctx.plugins`'den `get/get_mut` yöntemini çağırmaktır:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scripting/mod.rs:access_plugin}}
 ```
 
-In this example the Bot script registers itself in a global list of bots on start, and unregisters on destruction.
-`update` is then used to search for targets in that list. 
+Bu örnekte Bot komut dosyası, başlangıçta global bot listesine kendini kaydeder ve yok edildiğinde kaydı silinir.
 
-In multiplayer games, plugin could store server/client instances and scripts could easily access them to send messages
-across the network for other players. In general, you could use plugins as an arbitrary, global data storage for your
-scripts.
+ `update` komutu, bu listede hedefleri aramak için kullanılır. 
+
+
+
+Çok oyunculu oyunlarda, eklenti sunucu/istemci örneklerini depolayabilir ve komut dosyaları bunlara kolayca erişerek diğer oyunculara ağ üzerinden mesaj gönderebilir. Genel olarak, eklentileri komut dosyalarınız için isteğe bağlı, global bir veri depolama alanı olarak kullanabilirsiniz.

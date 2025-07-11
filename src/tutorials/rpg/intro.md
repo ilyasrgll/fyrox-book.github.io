@@ -1,13 +1,25 @@
-# Role-Playing Game Tutorial
+# Rol Yapma Oyunu Öğreticisi
 
-This tutorial starts the series of tutorials about writing a role-playing game in Rust using Fyrox game engine. Strangely,
-but Fyrox has a reputation of an engine for 3D shooters. In this series I'll try to prove that it is a general purpose
-game engine.
 
-## Source Code
 
-Source code for the entire tutorial is [available here](https://github.com/fyrox-book/fyrox-book.github.io/tree/main/src/code/tutorials/rpg).
+Bu öğretici, Fyrox oyun motorunu kullanarak Rust'ta bir rol yapma oyunu yazma konusunda bir dizi öğreticinin ilkidir. Garip bir şekilde,
 
-## Engine Version
+Fyrox bir 3D nişancı oyunu motoru olarak bilinir. Bu seride, onun genel amaçlı bir
 
-This tutorial is made using Fyrox 0.34.
+oyun motoru olduğunu kanıtlamaya çalışacağım.
+
+
+
+## Kaynak Kodu
+
+
+
+Tüm öğreticinin kaynak kodu [burada](https://github.com/fyrox-book/fyrox-book.github.io/tree/main/src/code/tutorials/rpg) mevcuttur.
+
+
+
+## Motor Sürümü
+
+
+
+Bu öğretici Fyrox 0.34 kullanılarak hazırlanmıştır.

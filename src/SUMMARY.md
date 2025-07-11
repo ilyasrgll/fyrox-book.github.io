@@ -1,154 +1,313 @@
 # Summary
 
-- [About the Book](./introduction.md)
-- [Introduction](./introduction/index.md)
-  - [Introduction to Fyrox](./introduction/introduction.md)
-  - [System Requirements and Supported Platforms](./introduction/requirements.md)
-  - [Basic concepts](./introduction/basic_concepts.md)
-  - [Design Philosophy and Goals](./introduction/philosophy_and_goals.md)
-  - [Frequently Asked Questions](./introduction/faq.md)
-- [Getting started](./beginning/getting_started.md)
-  - [Editor, Plugins and Scripts](./beginning/scripting.md)
-  - [Project Manager](./beginning/project_manager.md)
-  - [Hot Reloading](./beginning/hot_reloading.md)
-  - [Editor Overview](./beginning/editor_overview.md)
-  - [Scene and Scene Graph](./beginning/scene_and_scene_graph.md)
-  - [Assets](./beginning/assets.md)
-  - [Data Management](./beginning/data_management.md)
-  - [Borrow Checker](./beginning/borrow_checker.md)
-- [Scripting](./scripting/scripting.md)
-  - [Plugins](./scripting/plugin.md)
-  - [Executor](./scripting/executor.md)
-  - [Scripts](./scripting/script.md)
-  - [Tasks](./scripting/tasks.md)
-- [Scene](./scene/scene.md)
-  - [Graph](./scene/graph.md) 
-  - [Transformation](./scene/transform.md)
-  - [Prefabs](./scene/prefab.md) 
-  - [Property Inheritance](./scene/inheritance.md)
-  - [Base Node](./scene/base_node.md)
-  - [Mesh Node](./scene/mesh_node.md)
-  - [Light Node](./scene/light_node.md)
-  - [Sprite Node](./scene/sprite_node.md)
-  - [Particle System Node](./scene/particle_system_node.md)
-  - [Terrain Node](./scene/terrain_node.md)
-  - [Camera Node](./scene/camera_node.md)
-  - [Decal Node](./scene/decal_node.md)
-  - [Rectangle Node](./scene/rectangle.md)
-  - [Tile Map](./scene/tilemap.md)
-    - [Autotiling Macros](./scene/autotiling.md)
-  - [Custom Node](./scene/custom_node.md)
-  - [Physics](./physics/physics.md)
-    - [Rigid Body](./physics/rigid_body.md)
-    - [Collider](./physics/collider.md)
-    - [Joint](./physics/joint.md)
-    - [Ray Casting](./physics/ray.md)
-    - [Ragdoll](./physics/ragdoll.md)
-  - [Sound](./sound/index.md)
-    - [Audio Bus](./sound/bus.md) 
-    - [Sound Node](./sound/sound.md)
-    - [HRTF](./sound/hrtf.md)
-  - [Animation](./animation/animation.md)
-    - [Animation Editor](./animation/anim_editor.md) 
-    - [Animation Blending](./animation/blending.md)
-    - [ABSM Editor](./animation/absm_editor.md)
-    - [Signals](./animation/signal.md)
-    - [Root Motion](./animation/root_motion/root_motion.md)
-    - [Sprite Animation](./animation/spritesheet/spritesheet.md)
-  - [Debugging](./scene/debug.md)
-- [Input Handling](./input/input.md)
-  - [Keyboard](./input/keyboard.md)
-  - [Mouse](./input/mouse.md)
-  - [Raw Text Input (WIP)](./input/text.md)
-- [Artificial Intelligence (WIP)](./ai/ai.md)
-  - [Behaviour Trees (WIP)](./ai/beh_tree.md)
-  - [Path Finding](./ai/pathfinding.md)
-  - [Navigational Meshes](./ai/navmesh.md)
-- [Rendering](./rendering/rendering.md)
-  - [Shaders](./rendering/shaders.md)
-  - [Materials](./rendering/materials.md)        
-  - [Light Maps](./rendering/lightmaps.md)
-  - [Settings](./rendering/settings.md)
-  - [Render Pass](./rendering/render_pass.md)
-  - [Normal Maps](./rendering/normal_maps.md)
-- [Resource Management](./resources/resources.md)
-  - [Models](./resources/model.md)
-  - [Textures](./resources/texture.md)
-  - [Sound Buffers](./resources/sound.md)
-  - [Custom Resource](./resources/custom.md)
-  - [Hot Reloading](./resources/hot_reloading.md)
-  - [Events](./resources/events.md)
-- [Engine](./engine/engine.md)
-  - [Graphics Context](./engine/graphics_context.md)
-  - [Window Management](./engine/windows.md)
-  - [Manual Initialization](./engine/manual_initialization.md)
-- [Network](./net/net.md)
-  - [Basics](./net/basics.md)
-  - [Synchronization](./net/sync.md)
-  - [Hosting](./net/hosting.md)
-- [User Interface](./ui/ui.md)
-  - [Basic concepts](./ui/basic_concepts/basic_concepts.md)
-  - [Editor](./ui/editor/editor.md)
-  - [Rendering](./ui/rendering.md)
-  - [Fonts](./ui/font.md)
-  - [Style](./ui/style.md)
-  - [Widgets](./ui/widgets.md)
-    - [Custom widget](./ui/custom.md) 
-    - [Button](./ui/button.md)
-    - [Border](./ui/border.md)
-    - [Canvas](./ui/canvas.md)
-    - [Check box](./ui/checkbox/check_box.md)
-    - [Curve editor (WIP)](./ui/curve_editor.md)
-    - [Decorator](./ui/decorator.md)
-    - [Docking manager (WIP)](./ui/dock.md)
-    - [Dropdown list (WIP)](./ui/dropdown_list.md)
-    - [Expander](./ui/expander.md)
-    - [File browser (WIP)](./ui/file_browser.md)
-    - [Grid](./ui/grid.md)        
-    - [Image](./ui/image.md)        
-    - [Inspector (WIP)](./ui/inspector.md)        
-    - [List view (WIP)](./ui/list_view.md)        
-    - [Menu (WIP)](./ui/menu.md)        
-    - [Message box (WIP)](./ui/message_box.md)        
-    - [Numeric field](./ui/numeric.md)        
-    - [Popup (WIP)](./ui/popup.md)        
-    - [Progress bar (WIP)](./ui/progress_bar.md)        
-    - [Range (WIP)](./ui/range.md)        
-    - [Rect (WIP)](./ui/rect.md)        
-    - [Scroll bar](./ui/scroll_bar.md)        
-    - [Scroll panel](./ui/scroll_panel.md)        
-    - [Scroll viewer](./ui/scroll_viewer.md)     
-    - [Screen](./ui/screen.md)
-    - [Stack panel](./ui/stack_panel.md)        
-    - [Tab control](./ui/tab_control.md)        
-    - [Text](./ui/text.md)        
-    - [Text box](./ui/text_box.md)        
-    - [Tree](./ui/tree.md)        
-    - [Vector image](./ui/vector_image.md)        
-    - [Window](./ui/window.md)        
-    - [Wrap panel](./ui/wrap_panel.md)        
-- [Serialization](./serialization/index.md)
-  - [Saved Games](./serialization/save.md)
-- [Editor](./editor/index.md)
-  - [Property Editors](./editor/property_editors.md)
-  - [Settings](./editor/settings.md)
-  - [Plugins](./editor/plugins.md)
-- [Miscellaneous](./misc/misc.md)
-  - [Log](./misc/log.md)
-- [Shipping](./shipping/shipping.md)
-  - [PC](./shipping/pc.md)
+- [Kitap Hakkında](./introduction.md)
+- [Giriş](./introduction/index.md)
+
+
+  - [Fyrox'a Giriş](./introduction/introduction.md)
+
+- [Sistem Gereksinimleri ve Desteklenen Platformlar](./introduction/requirements.md)
+
+- [Temel kavramlar](./introduction/basic_concepts.md)
+  - [Tasarım Felsefesi ve Hedefler](./introduction/philosophy_and_goals.md)
+
+
+  - [Sıkça Sorulan Sorular](./introduction/faq.md)
+
+- [Başlangıç](./beginning/getting_started.md)
+
+- [Editör, Eklentiler ve Komut Dosyaları](./beginning/scripting.md)
+  - [Proje Yöneticisi](./beginning/project_manager.md)
+
+
+  - [Sıcak Yeniden Yükleme](./beginning/hot_reloading.md)
+
+- [Editör Genel Bakış](./beginning/editor_overview.md)
+
+- [Sahne ve Sahne Grafiği](./beginning/scene_and_scene_graph.md)
+  - [Assets (Varlıklar)](./beginning/assets.md)
+
+
+  - [Veri Yönetimi](./beginning/data_management.md)
+
+- [Ödünç Alma Denetleyicisi](./beginning/borrow_checker.md)
+
+- [Komut Dosyası Oluşturma](./scripting/scripting.md)
+  - [Plugin (Eklentiler)](./scripting/plugin.md)
+
+
+  - [Executor (Yürütücü)](./scripting/executor.md)
+
+- [Scripts (Komut Dosyaları)](./scripting/script.md)
+
+- [Görevler](./scripting/tasks.md)
+
+- [Scene (Sahne)](./scene/scene.md)
+
+- [Grafik](./scene/graph.md)
+
+- [Dönüştürme](./scene/transform.md)
+
+
+  - [Prefabrikler](./scene/prefab.md)
+   - [Özellik Kalıtımı](./scene/inheritance.md)
+
+
+  - [Base Node (Temel Düğüm)](./scene/base_node.md)
+
+- [Mesh Node (Ağ Düğümü)](./scene/mesh_node.md)
+
+- [Light Node (Işık Düğümü)](./scene/light_node.md)
+  - [Sprite Düğümü](./scene/sprite_node.md)
+
+
+  - [Parçacık (Particle) Sistemi Düğümü](./scene/particle_system_node.md)
+
+- [Terrain Node (Arazi Düğümü)](./scene/terrain_node.md)
+
+- [Camera Node (Kamera Düğümü)](./scene/camera_node.md)
+  - [Decal Düğümü](./scene/decal_node.md)
+
+
+  - [Dikdörtgen Düğümü](./scene/rectangle.md)
+
+- [Tilemap (Döşeme Haritası)](./scene/tilemap.md)
+
+
+    - [Autotiling (Otomatik Döşeme Makroları)](./scene/autotiling.md)
+
+  - [Custom Node (Özel Düğüm)](./scene/custom_node.md)
+
+- [Fizik](./physics/physics.md)
+
+- [Rigidbody (Sert Cisim)](./physics/rigid_body.md)
+    - [Collider (Çarpışan)](./physics/collider.md)
+
+
+    - [Joint (Eklem)](./physics/joint.md)
+
+- [Işın Atma](./physics/ray.md)
+
+- [Ragdoll](./physics/ragdoll.md)
+  - [Ses](./sound/index.md)
+
+
+    - [Ses Veriyolu](./sound/bus.md)
+ 
+- [Ses Düğümü](./sound/sound.md)
+
+- [HRTF](./sound/hrtf.md)
+
+- [Animasyon](./animation/animation.md)
+    - [Animasyon Editörü](./animation/anim_editor.md) 
+
+
+    - [Animasyon Karıştırma](./animation/blending.md)
+
+- [ABSM Editörü](./animation/absm_editor.md)
+    - [Sinyaller](./animation/signal.md)
+
+
+    - [Root Motion (Kök Hareket)](./animation/root_motion/root_motion.md)
+    - [Sprite Animasyon](./animation/spritesheet/spritesheet.md)
+
+
+  - [Hata Ayıklama](./scene/debug.md)
+
+- [Giriş İşleme](./input/input.md)
+
+- [Klavye](./input/keyboard.md)
+
+- [Fare](./input/mouse.md)
+  - [Ham Metin Girişi (WIP)](./input/text.md)
+
+
+- [Yapay Zeka (WIP)](./ai/ai.md)
+
+- [Davranış Ağaçları (WIP)](./ai/beh_tree.md)
+
+- [Yol Bulma](./ai/pathfinding.md)
+  - [Navigasyon Meshelere](./ai/navmesh.md)
+
+
+- [Renderleme](./rendering/rendering.md)
+
+- [Shaderler](./rendering/shaders.md)
+
+
+ - [Materials (Malzemeler)](./rendering/materials.md)
+          - [Işık Haritaları](./rendering/lightmaps.md)
+
+
+  - [Ayarlar](./rendering/settings.md)
+
+- [Render Geçişi](./rendering/render_pass.md)
+
+- [Normal Haritalar](./rendering/normal_maps.md)
+
+- [Kaynak Yönetimi](./resources/resources.md)
+
+- [Modeller](./resources/model.md)
+
+- [Dokular](./resources/texture.md)
+
+- [Ses Tamponları](./resources/sound.md)
+  - [Özel Kaynak](./resources/custom.md)
+
+
+  - [Sıcak Yeniden Yükleme](./resources/hot_reloading.md)
+
+- [Olaylar](./resources/events.md)
+
+- [Motor](./engine/engine.md)
+
+- [Grafik Bağlam](./engine/graphics_context.md)
+  - [Pencere Yönetimi](./engine/windows.md)
+
+
+  - [Manuel Başlatma](./engine/manual_initialization.md)
+
+- [Ağ](./net/net.md)
+
+- [Temel Bilgiler](./net/basics.md)
+  - [Senkronizasyon](./net/sync.md)
+
+
+  - [Barındırma](./net/hosting.md)
+
+- [Kullanıcı Arayüzü](./ui/ui.md)
+
+- [Temel kavramlar](./ui/basic_concepts/basic_concepts.md)
+  - [Editör](./ui/editor/editor.md)
+
+
+  - [Rendering (Oluşturma)](./ui/rendering.md)
+
+- [Yazı tipleri](./ui/font.md)
+
+- [Stil](./ui/style.md)
+  - [Widget'lar](./ui/widgets.md)
+
+
+    - [Özel widget](./ui/custom.md)
+ 
+- [Düğme](./ui/button.md)
+
+- [Kenarlık](./ui/border.md)
+
+- [Tuval](./ui/canvas.md)
+    - [Onay kutusu](./ui/checkbox/check_box.md)
+
+
+    - [Eğri düzenleyici (WIP)](./ui/curve_editor.md)
+
+- [Dekoratör](./ui/decorator.md)
+
+- [Yerleştirme yöneticisi (WIP)](./ui/dock.md)
+    - [Açılır liste (WIP)](./ui/dropdown_list.md)
+
+
+    - [Genişletici](./ui/expander.md)
+
+- [Dosya tarayıcı (WIP)](./ui/file_browser.md)
+    - [Grid (Izgara)](./ui/grid.md)        
+
+
+    - [Görüntü](./ui/image.md)        
+
+- [İnspector (Denetleyici (WIP))](./ui/inspector.md)        
+
+
+    - [Liste görünümü (WIP)](./ui/list_view.md)
+            - [Menü (WIP)](./ui/menu.md)        
+
+
+    - [Mesaj kutusu (WIP)](./ui/message_box.md)        
+
+- [Sayısal alan](./ui/numeric.md)        
+
+
+    - [Açılır pencere (WIP)](./ui/popup.md)
+            - [İlerleme çubuğu (WIP)](./ui/progress_bar.md)        
+
+
+    - [Aralık (WIP)](./ui/range.md)        
+
+
+    - [Dikdörtgen (WIP)](./ui/rect.md)
+            - [Kaydırma çubuğu](./ui/scroll_bar.md)        
+
+
+    - [Kaydırma paneli](./ui/scroll_panel.md)        
+
+- [Kaydırma görüntüleyici](./ui/scroll_viewer.md)
+
+- [Ekran](./ui/screen.md)
+    - [Yığın paneli](./ui/stack_panel.md)        
+
+
+    - [Sekme kontrolü](./ui/tab_control.md)        
+
+- [Metin](./ui/text.md)        
+
+
+    - [Metin kutusu](./ui/text_box.md)
+            - [Ağaç](./ui/tree.md)        
+
+
+    - [Vektör görüntüsü](./ui/vector_image.md)        
+
+- [Pencere](./ui/window.md)        
+
+
+    - [Sarmalama paneli](./ui/wrap_panel.md)
+        
+- [Seri hale getirme](./serialization/index.md)
+
+- [Kaydedilmiş oyunlar](./serialization/save.md)
+
+- [Düzenleyici](./editor/index.md)
+
+- [Özellik düzenleyiciler](./editor/property_editors.md)
+
+- [Ayarlar](./editor/settings.md)
+  - [Eklentiler](./editor/plugins.md)
+
+
+- [Çeşitli](./misc/misc.md)
+
+- [Günlük](./misc/log.md)
+
+- [Shipping (Sevkiyat)](./shipping/shipping.md)
+
+- [PC](./shipping/pc.md)
   - [WebAssembly](./shipping/wasm.md)
+
+
   - [Android](./shipping/android.md)
-- [Tutorials](./tutorials/tutorials.md)
-  - [2D Platformer Tutorial](./tutorials/platformer/intro.md)
-    - [Character Controller](./tutorials/platformer/part1.md)
-    - [Bots and AI](./tutorials/platformer/part2.md)
-  - [RPG Tutorial](./tutorials/rpg/intro.md)
-    - [Character Controller](./tutorials/rpg/tutorial-1/tutorial-part-1.md)
-  - [FPS Tutorial](tutorials/fps/fps-intro.md)
-    - [Character Controller](tutorials/fps/tutorial-1/fps-tutorial.md)
-    - [Weapons](tutorials/fps/tutorial-2/fps-tutorial-2.md)
-    - [Bots and AI](tutorials/fps/tutorial-3/fps-tutorial-3.md)
-  - [User Interface Tutorial (WIP)](tutorials/ui/ui-tutorial.md)
-  - [Community Tutorials](tutorials/community.md)
-- [Performance](./performance/index.md)
+
+- [Öğreticiler](./tutorials/tutorials.md)
+
+- [2D Platform Oyunu Öğreticisi](./tutorials/platformer/intro.md)
+    - [Karakter Denetleyici](./tutorials/platformer/part1.md)
+
+
+    - [Botlar ve AI](./tutorials/platformer/part2.md)
+
+- [RPG Öğreticisi](./tutorials/rpg/intro.md)
+    - [Karakter Denetleyici](./tutorials/rpg/tutorial-1/tutorial-part-1.md)
+
+
+  - [FPS Öğreticisi](tutorials/fps/fps-intro.md)
+
+- [Karakter Denetleyici](tutorials/fps/tutorial-1/fps-tutorial.md)
+    - [Silahlar](tutorials/fps/tutorial-2/fps-tutorial-2.md)
+
+
+    - [Botlar ve AI](tutorials/fps/tutorial-3/fps-tutorial-3.md)
+  - [Kullanıcı Arayüzü Eğitimi (Çalışma Aşamasında)](tutorials/ui/ui-tutorial.md)
+
+
+  - [Topluluk Eğitimleri](tutorials/community.md)
+
+- [Performans](./performance/index.md)
