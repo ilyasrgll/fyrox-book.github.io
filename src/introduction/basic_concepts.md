@@ -1,31 +1,54 @@
-# Basic concepts
+# Temel kavramlar
 
-Let's briefly get over some basic concepts of the engine, there's not much, but all of them are crucial to understand
-design decisions made in the engine.
 
-## Classic OOP
 
-The engine uses somewhat classic OOP with composition over inheritance - complex objects in the engine can be constructed
-using simpler objects.
+Motorun bazı temel kavramlarını kısaca gözden geçirelim. Çok fazla değil, ancak hepsi motorun tasarım kararlarını anlamak için çok önemlidir.
 
-## Scenes
+## Klasik OOP
 
-In Fyrox, you break down your game in a set of reusable scenes. Pretty much anything can be a scene: a player, a weapon,
-a bot, level parts, etc. Scenes can be nested one into another, this helps you to break down complex scenes into reusable
-parts. A Scene in Fyrox also plays the role of a prefab, there's pretty much no difference between them.
 
-## Nodes and Scene Graph
 
-A scene is made of one or more nodes (every scene must have at least one root node, to which everything else is attached).
-A scene node contains specific set of properties as well as _one_ optional script instance which is responsible for custom
-game logic. 
+Motor, miras yerine bileşim kullanarak biraz klasik OOP kullanır. Motordaki karmaşık nesneler, daha basit nesneler kullanılarak oluşturulabilir.
 
-The typical structure of a scene node can be represented by the following example. The base object for every scene node is 
-a `Base` node, it contains a transform, a list of children, etc. A more complex node, that _extends_ functionality of the `Base` 
-node stores an instance of `Base` inside it, i.e. composition. For example, a `Mesh` node is a `Base` node _plus_ some specific info 
-(a list of surfaces, material, etc.). The "hierarchy" depth is unlimited e.g. a `Light` node in the engine is an enumeration 
-of three possible types of light source: `Directional`, `Point`, and `Spot`. All three of these light sources all contain a `BaseLight` node,
-which in turn contains a `Base` node. Graphically it can be represented like so:
+
+
+## Scene
+
+
+
+Fyrox'ta, oyununuzu bir dizi yeniden kullanılabilir sahneye ayırırsınız. Neredeyse her şey sahne olabilir: bir oyuncu, bir silah, bir bot, seviye parçaları vb. Sahneler birbirinin içine yerleştirilebilir.
+
+
+Fyrox'ta, oyununuzu bir dizi yeniden kullanılabilir sahneye böler. Hemen hemen her şey bir sahne olabilir: bir oyuncu, bir silah,
+
+bir bot, seviye parçaları vb. Sahneleri birbirinin içine yerleştirebilirsiniz, bu da karmaşık sahneleri yeniden kullanılabilir
+
+parçalara ayırmanıza yardımcı olur. Fyrox'ta bir sahne aynı zamanda prefab rolünü de oynar, aralarında neredeyse hiç fark yoktur.
+
+## Düğümler ve Scene Graph
+
+
+
+Bir sahne, bir veya daha fazla düğümden oluşur (her sahnenin, diğer her şeyin bağlı olduğu en az bir kök düğümü olmalıdır).
+
+Bir sahne düğümü, belirli bir özellik kümesinin yanı sıra, özel
+
+oyun mantığından sorumlu olan _bir_ isteğe bağlı komut dosyası örneği içerir.
+
+
+
+Bir sahne düğümünün tipik yapısı aşağıdaki örnekle gösterilebilir. Her sahne düğümünün temel nesnesi 
+
+bir `Base` düğümüdür ve bir dönüşüm, bir alt öğe listesi vb. içerir. `Base` düğümünün işlevselliğini _genişleten_ daha karmaşık bir düğüm
+ 
+
+içinde bir `Base` örneği, yani bir bileşim saklar. Örneğin, bir `Mesh` düğümü, bir `Base` düğümü _artı_ bazı belirli bilgiler 
+
+(yüzeylerin listesi, malzeme vb.). “Hiyerarşi” derinliği sınırsızdır, örneğin motor içindeki bir `Light` düğümü, üç olası ışık kaynağı türünün bir numaralandırmasıdır
+
+: `Directional`, `Point` ve `Spot`. Bu üç ışık kaynağının tümü bir `BaseLight` düğümü içerir ve
+
+bu düğüm de bir `Base` düğümü içerir. Grafiksel olarak şöyle gösterilebilir:
 
 ```text
 `Point`
@@ -36,16 +59,25 @@ which in turn contains a `Base` node. Graphically it can be represented like so:
       |__ Base Node Properties (transform, children nodes, etc.)
 ```
 
-As you can see, this forms the nice tree (graph) that shows what the object contains. This is a very natural way of describing
-scene nodes, it gives you the full power of building an object of any complexity.
+Gördüğünüz gibi, bu, nesnenin içeriğini gösteren güzel bir ağaç (grafik) oluşturur. Bu, sahne düğümlerini tanımlamanın çok doğal bir yoludur
 
-## Plugins
+ve size herhangi bir karmaşıklıkta nesne oluşturma konusunda tam güç sağlar.
 
-Plugin is a container for "global" game data and logic, its main usage is to provide scripts with some data and to 
-manage global game state.
 
-## Scripts
 
-Script - is a separate piece of data and logic, that can be attached to scene nodes. This is the primary (but not only)
-way of adding custom game logic.
+## Plugin
 
+
+
+Eklenti, “global” oyun verileri ve mantığı için bir konteynerdir, ana kullanımı, komut dosyalarına bazı veriler sağlamak ve 
+
+global oyun durumunu yönetmektir.
+
+
+## Komut Dosyaları (Script)
+
+
+
+Komut dosyası, sahne düğümlerine eklenebilen ayrı bir veri ve mantık parçasıdır. Bu, özel oyun mantığı eklemenin birincil (ancak tek değil)
+
+yoludur.

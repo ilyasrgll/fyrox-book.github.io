@@ -1,18 +1,32 @@
-# Model resources
+# Model kaynakları
 
-## Supported formats
 
-Fyrox supports these file formats for 3D models:
 
-- FBX - standard game development industry 3D model exchange format
-- RGS - native scenes format produced by Fyroxed (the editor)
+## Desteklenen formatlar
 
-The list could be extended in the future.
 
-## Instantiation
 
-Model must be instantiated in your scene, there is no other way of using it. To do this, you can either use drag'n'drop
-from Asset Browser in the editor or instantiate the model dynamically from code:
+Fyrox, 3D modeller için şu dosya formatlarını destekler:
+
+
+
+- FBX - standart oyun geliştirme endüstrisi 3D model değişim formatı
+
+- RGS - Fyroxed (editör) tarafından üretilen yerel sahne formatı
+
+
+
+Liste gelecekte genişletilebilir.
+
+
+
+## Örnekleme
+
+
+
+Model, sahnenizde örneklenmelidir, başka şekilde kullanılamaz. Bunu yapmak için, düzenleyicideki Varlık Tarayıcı'dan sürükle ve bırak
+
+yöntemini kullanabilir veya modeli koddan dinamik olarak örneklendirebilirsiniz:
 
 ```rust,no_run,edition2018
 {{#include ../code/snippets/src/resource/model.rs:instantiate_model}}
@@ -20,22 +34,37 @@ from Asset Browser in the editor or instantiate the model dynamically from code:
 
 ## Material import
 
-The engine tries to import materials as close as possible to originals in the model, however it is not always possible
-because some 3D modelling software could use different shading models. By default, the engine tries to convert
-everything to PBR materials, so if you have a 3D model with a special material made for cartoon shading, the
-engine will still import it as PBR material (with lots of missing textures of course). You should take this into
-account when working with something other than PBR materials. 
 
-In cases when your 3D model have some weird materials, you should create appropriate materials and shaders _manually_,
-the engine is not a magic tool, it has some defaults that do not cover all possible cases.
 
-It is also possible to specify how to resolve textures while loading a 3D model, select your model in the `Asset Browser`
-and there will be import options right below the model preview:
+Motor, malzemeleri modeldeki orijinallerine mümkün olduğunca yakın bir şekilde içe aktarmaya çalışır, ancak bu her zaman mümkün değildir
 
-![model import](model_import.png)
+çünkü bazı 3D modelleme yazılımları farklı gölgelendirme modelleri kullanabilir. Varsayılan olarak, motor
 
-It is also possible to specify such options manually. To do that, you need to create import options file with the 
-following content near your 3D model (this is what the editor does for you):
+her şeyi PBR malzemelerine dönüştürmeye çalışır, bu nedenle çizgi film gölgelendirme için özel olarak yapılmış bir malzemeye sahip bir 3D modeliniz varsa,
+
+motor yine de PBR malzeme olarak içe aktaracaktır (tabii ki birçok doku eksik olacaktır). PBR malzemelerinden başka malzemelerle çalışırken bunu
+
+dikkate almalısınız. 
+
+
+
+3D modelinizde garip malzemeler varsa, uygun malzemeleri ve gölgelendiricileri _manuel olarak_ oluşturmalısınız.
+
+Motor sihirli bir araç değildir, tüm olası durumları kapsamayan bazı varsayılan ayarları vardır.
+
+
+
+3D modeli yüklerken dokuların nasıl çözüleceğini de belirlemek mümkündür. `Asset Browser`
+
+'da modelinizi seçin, model önizlemesinin hemen altında içe aktarma seçenekleri olacaktır:
+
+
+
+![model içe aktarma](model_import.png)
+
+
+
+Bu seçenekleri manuel olarak da belirlemek mümkündür. Bunu yapmak için, 3D modelinizin yanına aşağıdaki içeriğe sahip bir içe aktarma seçenekleri dosyası oluşturmanız gerekir (bu, editörün sizin için yaptığı işlemdir):
 
 ```text
 (
@@ -43,18 +72,30 @@ following content near your 3D model (this is what the editor does for you):
 )
 ```
 
-The file must have the `.options` additional extension. For example, if you have a `foo.fbx` model, the options
-file should have `foo.fbx.options` name. Even if it is possible to modify it by hand, it is strongly advised to use
-the editor to edit import options, because it reduces the chance of messing up.
+Dosya, `.options` ek uzantısına sahip olmalıdır. Örneğin, `foo.fbx` modeliniz varsa, seçenekler
 
-## Tips for Blender
+dosyasının adı `foo.fbx.options` olmalıdır. Elle değiştirilebilse bile, karışıklık olasılığını azaltmak için
 
-Blender's FBX exporter has exporting scale properties usually set to 100%, this may lead to incorrect scale
-of your model in the engine. It will have `(100.0, 100.0, 100.0)` scale which is very huge. To fix that, set
-the scale in the exporter to `0.01`.
+dışa aktarma seçeneklerini düzenlemek için düzenleyiciyi kullanmanız şiddetle tavsiye edilir.
 
-## Tips for 3Ds Max
 
-Latest versions of 3Ds max have node-based material editor which creates some "junk" nodes which may mess up
-material import. To prevent any issues with that, you should clean all assignments to material slots to use
-maps directly.
+
+## Blender için ipuçları
+
+
+
+Blender'ın FBX dışa aktarıcısı, dışa aktarma ölçek özelliklerini genellikle %100 olarak ayarlar, bu da modelinizin motor içinde yanlış ölçeklenmesine neden olabilir.
+
+ Ölçek, `(100.0, 100.0, 100.0)` gibi çok büyük bir değer alır. Bunu düzeltmek için
+
+dışa aktarıcıdaki ölçeği `0.01` olarak ayarlayın.
+
+
+
+## 3Ds Max için ipuçları
+
+
+
+3Ds max'in son sürümlerinde, malzeme içe aktarımını bozabilecek bazı “gereksiz” düğümler oluşturan düğüm tabanlı malzeme düzenleyici vardır.
+
+ Bununla ilgili sorunları önlemek için, haritaları doğrudan kullanmak üzere malzeme yuvalarına yapılan tüm atamaları temizlemelisiniz.

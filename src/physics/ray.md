@@ -1,15 +1,15 @@
-# Ray Casting
+# Işın Atma
 
-Ray casting allows you to query intersections of a ray with rigid bodies in a scene. Typical usage for ray casting is
-hit-scan weapons (weapons that shoots high-speed projectiles), AI collision avoidance, etc. To query intersections,
-use physics world instance of a scene graph:
+Işın atma, bir sahnedeki katı cisimler ile ışının kesişim noktalarını sorgulamanızı sağlar. Işın atmanın tipik kullanım alanları arasında
+vuruş taramalı silahlar (yüksek hızlı mermiler ateşleyen silahlar), AI çarpışma önleme vb. bulunur. Kesişim noktalarını sorgulamak için
+sahne grafiğinin fizik dünyası örneğini kullanın:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/ray.rs:do_ray_cast}}
 ```
 
-The function above will return a collection of intersections that are sorted by intersection distance (a distance from
-beginning of the ray to an intersection point). Each intersection is represented by the following structure:
+Yukarıdaki işlev, kesişme mesafesine göre sıralanmış (ışının başlangıcından kesişme noktasına olan mesafe) kesişme noktalarının bir koleksiyonunu döndürür. Her kesişme noktası aşağıdaki yapı ile temsil edilir:
+
 
 ```rust,no_run
 pub struct Intersection {
@@ -21,24 +21,24 @@ pub struct Intersection {
 }
 ```
 
-- `collider` - a handle of the collider with which intersection was detected. To obtain a handle to rigid body, borrow
-the `collider` and fetch its `parent` field: `graph[collider].parent()`.
-- `normal` - a normal at the intersection position in world coordinates.
-- `position` - a position of the intersection in world coordinates.
-- `feature` - additional data that contains a kind of the feature with which intersection was detected as well as its
-index. FeatureId::Face might have index that is greater than number of triangles in a triangle mesh, this means that
-intersection was detected from "back" side of a face. To "fix" that index, simply subtract number of triangles of a
-triangle mesh from the value.
-- `toi` - (`time of impact`) a distance from ray's origin to `position`.
+- `collider` - kesişmenin algılandığı çarpışmanın tanıtıcısı. Katı cismin tanıtıcısını elde etmek için, `collider`'ı ödünç alın ve `parent` alanını getirin: `graph[collider].parent()`.
 
-## Avoiding unnecessary allocations
+- `normal` - dünya koordinatlarında kesişme konumundaki normal.
 
-As you might've noticed, the function above return `Vec<Intersection>` which allocates intersections on heap. This is
-relatively slow and could be sped up a lot by using static array on stack:
+- `position` - dünya koordinatlarında kesişmenin konumu.
+- `feature` - kesişmenin algılandığı özelliğin türünü ve indeksini içeren ek veriler.
+FeatureId::Face, üçgen ağındaki üçgen sayısından daha büyük bir indekse sahip olabilir; bu, kesişmenin yüzün “arka” tarafından algılandığı anlamına gelir. Bu indeksi “düzeltmek” için, üçgen ağındaki üçgen sayısını değerden çıkarmanız yeterlidir.
+
+- `toi` - (`time of impact`) ışının başlangıç noktasından `position` konumuna olan mesafe.
+- `toi` - (`çarpışma zamanı`) ışının başlangıç noktasından `konum`a olan mesafe.
+
+## Gereksiz tahsislerden kaçınmak
+
+Fark etmiş olabileceğiniz gibi, yukarıdaki işlev `Vec<Intersection>` döndürür ve bu da kesişimleri yığın üzerinde tahsis eder. Bu,
+nispeten yavaştır ve yığın üzerinde statik dizi kullanılarak çok daha hızlı hale getirilebilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/ray.rs:do_static_ray_cast}}
 ```
 
-`usage_example` shows how to use the `do_static_ray_cast` function - all you need to do is to specify maximum number of
-intersections you're interested in as a generic parameter.
+`usage_example`, `do_static_ray_cast` işlevinin nasıl kullanıldığını gösterir - tek yapmanız gereken, ilgilendiğiniz maksimum kesişme sayısını genel parametre olarak belirtmektir.

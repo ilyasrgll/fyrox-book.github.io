@@ -1,5 +1,9 @@
-# Introduction
+# Giriş
 
-This section of the book contains brief overview of engine's features, it should help you to decide if the engine suits
-your needs and will it be easy enough for you to use. Following chapters takes you into a tour over engine's features,
-its editor, basic concepts and design philosophy.
+
+
+Kitabın bu bölümü, motorun özelliklerine ilişkin kısa bir genel bakış içermektedir. Bu bölüm, motorun ihtiyaçlarınıza uygun olup olmadığını ve
+
+kullanımının sizin için yeterince kolay olup olmayacağını belirlemenize yardımcı olacaktır. Sonraki bölümlerde motorun özellikleri,
+
+editörü, temel kavramları ve tasarım felsefesi hakkında bilgi verilmektedir.

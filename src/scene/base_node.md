@@ -1,78 +1,88 @@
-# Base node
+# Temel düğüm
 
-Base node is a scene node that stores hierarchical information (a handle to the parent node and a set of handles
-to children nodes), local and global transform, name, tag, lifetime, etc. It has self-describing name - it
-is used as a base node for every other scene node (via composition).
 
-It has no graphical information, so it is invisible all the time, but it is useful as a "container" for children
-nodes.
 
-## How to create
+Temel düğüm, hiyerarşik bilgileri (üst düğüme bir tanıtıcı ve alt düğümlere bir dizi tanıtıcı),
+yerel ve genel dönüşümleri, adı, etiketini, ömrünü vb. depolayan bir sahne düğümüdür. Kendini tanımlayan bir adı vardır ve
+diğer tüm sahne düğümleri için (kompozisyon yoluyla) temel düğüm olarak kullanılır.
 
-Use the `PivotBuilder` to create an instance of the Pivot node (remember `Base` node itself is used only to build other
-node types):
+
+
+Grafiksel bilgisi yoktur, bu nedenle her zaman görünmez, ancak alt düğümler için bir “konteyner” olarak kullanışlıdır
+.
+
+
+
+## Nasıl oluşturulur
+
+
+
+Pivot düğümünün bir örneğini oluşturmak için `PivotBuilder` kullanın (`Base` düğümünün yalnızca diğer düğüm türlerini oluşturmak için kullanıldığını unutmayın
+
+):
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/base.rs:build_node}}
 ```
 
-## Building a complex hierarchy
+## Karmaşık bir hiyerarşi oluşturma
 
-To build a complex hierarchy of some nodes, use `.with_children()` method of the `BaseBuilder`, it allows you
-to build a hierarchy of any complexity:
+
+
+Bazı düğümlerin karmaşık bir hiyerarşisini oluşturmak için, `BaseBuilder`'ın `.with_children()` yöntemini kullanın. Bu yöntem,
+herhangi bir karmaşıklıkta bir hiyerarşi oluşturmanıza olanak tanır:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/base.rs:build_complex_node}}
 ```
 
-Note that when we're building a `Camera` instance, we're passing a new instance of `BaseBuilder` to it, this
-instance can also be used to set some properties and a set of children nodes.
-
-The "fluent syntax" is not mandatory to use, the above code snipped could be rewritten like this:
+Bir `Camera` örneği oluştururken, ona yeni bir `BaseBuilder` örneği aktardığımızı unutmayın. Bu
+örnek, bazı özellikleri ve bir dizi alt düğümü ayarlamak için de kullanılabilir.
+“Akıcı sözdizimi” kullanılması zorunlu değildir, yukarıdaki kod parçacığı şu şekilde yeniden yazılabilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/base.rs:build_complex_node_flat}}
 ```
 
-However, it looks less informative, because it loses the hierarchical view and it is harder to tell the relations
-between objects.
+Ancak, hiyerarşik görünümü kaybettiği ve nesneler arasındaki ilişkileri anlamak daha zor olduğu için daha az bilgilendirici görünür.
 
-## Transform
+## Dönüştür
 
-Base node has a local transform that allows you to translate/scale/rotate/etc. your node as you want to. For example,
-to move a node at specific location you could use this:
+Temel düğüm, düğümü istediğiniz gibi çevirmenize/ölçeklendirmenize/döndürmenize vb. olanak tanıyan yerel bir dönüştürme özelliğine sahiptir. Örneğin, bir düğümü belirli bir konuma taşımak için şunu kullanabilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/base.rs:translate_node}}
 ```
 
-You could also chain multiple `set_x` calls, like so:
+Aşağıdaki gibi birden fazla `set_x` çağrısını zincirleyebilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/base.rs:transform_node}}
 ```
 
-See more info about transformations [here](./transform.md).
+Dönüşümler hakkında daha fazla bilgiyi [burada](./transform.md) bulabilirsiniz.
 
-## Visibility
+## Görünürlük
 
-`Base` node stores all info about local visibility and global visibility (with parent's chain visibility included).
-Changing node's visibility could be useful if you want to improve performance by hiding distant objects (however it 
-strongly advised to use level-of-detail for this) or to hide some objects in your scene. There are three main methods
-to set or fetch visibility:
+`Base` düğümü, yerel görünürlük ve genel görünürlük (üst zincirin görünürlüğü dahil) hakkındaki tüm bilgileri depolar.
+Düğümün görünürlüğünü değiştirmek, uzak nesneleri gizleyerek performansı artırmak (ancak 
+bunun için ayrıntı düzeyi kullanılması şiddetle tavsiye edilir) veya sahnedeki bazı nesneleri gizlemek için yararlı olabilir. Görünürlüğü ayarlamak veya almak için üç ana yöntem
+vardır:
 
-- `set_visibility` - sets local visibility for a node.
-- `visibility` - returns current local visibility of a node.
-- `global_visibility` - returns combined visibility of a node. It includes visibility of every parent node in the 
-hierarchy, so if you have a parent node with some children nodes and set parent's visibility to `false`, global visibility
-of children nodes will be `false` too, even if local visibility is `true`. This is useful technique for hiding complex
-objects with lots of children nodes.
 
-## Enabling/disabling scene nodes
 
-A scene node could be enabled or disabled. Disabled nodes are excluded from a game loop and has almost zero CPU consumption
-(their global transform/visibility/enabled state is still updated due to limitations of the engine). Disabling a node
-could be useful if you need to completely freeze some hierarchy and do keep it in this state until it is enabled again.
-It could be useful to disable parts of a scene with which a player cannot interact to improve performance. Keep in mind,
-that enabled state is hierarchical like visibility. When you're disabling a parent node with some children nodes, the
-children nodes will be disabled too.
+- `set_visibility` - bir düğümün yerel görünürlüğünü ayarlar.
+- `visibility` - bir düğümün mevcut yerel görünürlüğünü döndürür.
+- `global_visibility` - bir düğümün birleşik görünürlüğünü döndürür. Hiyerarşideki her ana düğümün görünürlüğünü içerir,
+ bu nedenle, bazı alt düğümleri olan bir ana düğümünüz varsa ve ana düğümün görünürlüğünü `false` olarak ayarlarsanız, yerel görünürlük `true` olsa bile
+alt düğümlerin genel görünürlüğü de `false` olur. Bu, çok sayıda alt düğümü olan karmaşık
+nesneleri gizlemek için kullanışlı bir tekniktir.
+
+## Sahne düğümlerini etkinleştirme/devre dışı bırakma
+
+Bir sahne düğümü etkinleştirilebilir veya devre dışı bırakılabilir. Devre dışı bırakılan düğümler oyun döngüsünden çıkarılır ve CPU tüketimi neredeyse sıfırdır
+(motorun sınırlamaları nedeniyle global dönüşüm/görünürlük/etkin durumları hala güncellenir). Bir düğümü devre dışı bırakmak,
+ bazı hiyerarşileri tamamen dondurmanız ve tekrar etkinleştirilene kadar bu durumda tutmanız gerektiğinde yararlı olabilir.
+Performansı artırmak için oyuncunun etkileşime giremeyeceği bir sahnenin bazı kısımlarını devre dışı bırakmak yararlı olabilir.
+Etkin durumun görünürlük gibi hiyerarşik olduğunu unutmayın. Bazı alt düğümleri olan bir üst düğümü devre dışı bıraktığınızda,
+alt düğümler de devre dışı bırakılır.

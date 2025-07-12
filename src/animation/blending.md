@@ -1,68 +1,123 @@
-# Animation Blending
+# Animasyon Karıştırma
 
-Animation blending is a powerful feature that allows you to mix multiple animations into one. Each animation
-is mixed with a various weights which in sum gives 1.0 (100%). By having opposite coefficients (k1 = 0 -> 1, k2 = 1 -> 0)
-changing in time it is possible to create transition effect. 
 
-Handling transitions with all the coefficients is a routine job, the engine can handle it for you giving you some nice
-features:
 
-- Multiple states with smooth transitions between them
-- Ability to blend multiple animations in one and use it as pose source for blending
-- Ability to specify a set of variables that will be used as blending coefficients and transition rules.
+Animasyon karıştırma, birden fazla animasyonu tek bir animasyona karıştırmanıza olanak tanıyan güçlü bir özelliktir. Her animasyon,
 
-All these features consolidated in so-called animation blending state machine (ABSM). Machine is used to blend multiple 
-animation as well as perform automatic "smooth" transition between states. In general, ABSM could be represented like
-this:
+ toplamı 1,0 (100%) olacak şekilde çeşitli ağırlıklarla karıştırılır. Zıt katsayılara (k1 = 0 -> 1, k2 = 1 -> 0)
+
+
+zaman içinde değişerek geçiş efekti oluşturmak mümkündür.
+ 
+
+
+Tüm katsayılarla geçişleri yönetmek rutin bir iştir, motor bunu sizin için hallederek size bazı güzel
+
+özellikler sunar:
+
+
+
+- Aralarında yumuşak geçişler olan birden fazla durum
+
+- Birden fazla animasyonu tek bir animasyonda karıştırma ve karıştırma için poz kaynağı olarak kullanma
+
+- Karıştırma katsayıları ve geçiş kuralları olarak kullanılacak bir dizi değişken belirleme
+
+
+
+Tüm bu özellikler, animasyon karıştırma durum makinesi (ABSM) olarak adlandırılan bir sistemde birleştirilmiştir. Makine, birden fazla 
+
+animasyonu karıştırmak ve durumlar arasında otomatik “pürüzsüz” geçişler gerçekleştirmek için kullanılır. Genel olarak, ABSM şu şekilde temsil edilebilir
+
+:
 
 ![ABSM Structure](absm_structure.png)
 
-At the first look it may seem very complicated, but in reality it uses quite simple techniques. Let's start from
-the left side of the picture and go to the right. Yellow rectangle at the left depicts an animation player node
-that contains a bunch of animations, that will be used for blending. Two center blocks (layer 0 and layer 1) depicts
-separate layers (ABSM could have any number of layers in it). Each layer can contain an arbitrary nodes (green
-shapes), states (blue shapes), transitions (thick yellow arrows). 
+İlk bakışta çok karmaşık görünebilir, ancak aslında oldukça basit teknikler kullanılır.
 
-Nodes serves as a source of poses, that can be blended in any desired way. States are the part of the inner state 
-machine, only one state could be active at the same time. Transitions are used to specify state transition rules. 
 
-At the "exit" of each layer there's a layer filter, it is responsible for filtering out values for specific
-scene nodes and could be used to prevent some scene nodes from being animated by a certain layer. Please note
-that despite the look of it, layer filter not necessarily be applied after all animations and states are blended -
-it could be done at any moment and drawn like so only for simplicity reasons.
+resmin sol tarafından başlayıp sağa doğru ilerleyelim. Soldaki sarı rectangle,
 
-The last, but not the least, important thing on the picture is the parameters container on the right side of the
-picture. Parameter either a transition rule, blending weight, or sampling point. If you look closely at the 
-transitions or animation blending nodes you'll see small text marks. This is the names of the respective parameters.
+karıştırma için kullanılacak bir dizi animasyon içeren bir animasyon oynatıcı düğümünü temsil eder. Ortadaki iki blok (katman 0 ve katman 1)
 
-In general, any state machine works like this - ABSM nodes are used to blend or fetch animations and their resulting
-poses are used by ABSM states. Active state provides final pose, which is then passes filtering and returned to
-you. After the last stage, you can apply the pose to a scene graph to make the resulting animation to have effect.
+ayrı katmanları temsil eder (ABSM içinde herhangi bir sayıda katman olabilir). Her katman, rastgele düğümler (yeşil
 
-## How to create
 
-As always, there are two major ways of creating things in Fyrox - from the editor or from code. Take your pick.
+şekiller), durumlar (mavi şekiller) ve geçişler (kalın sarı oklar) içerebilir.
+ 
 
-## From editor
 
-Use [ABSM Editor](absm_editor.md) for to create animation blending state machines. 
+Düğümler, istenen şekilde karıştırılabilen pozların kaynağı olarak işlev görür. Durumlar, iç durum 
 
-## From code
 
-You can always create an ABSM from code, a simple ABSM could be created like this:
+makinesinin bir parçasıdır ve aynı anda yalnızca bir durum etkin olabilir. Geçişler, durum geçiş kurallarını belirtmek için kullanılır.
+ 
+
+
+Her katmanın “çıkışında” bir katman filtresi bulunur. Bu filtre, belirli
+
+sahne düğümleri için değerleri filtrelemekten sorumludur ve bazı sahne düğümlerinin belirli bir katman tarafından canlandırılmasını önlemek için kullanılabilir.
+
+Görünüşüne rağmen, katman filtresi tüm animasyonlar ve durumlar karıştırıldıktan sonra uygulanması gerekmez -
+
+bu işlem herhangi bir anda yapılabilir ve sadece basitlik amacıyla bu şekilde çizilmiştir.
+
+
+
+Resimde son olarak, ancak en az değil, önemli olan şey, resmin sağ tarafındaki parametre konteyneridir.
+
+ Parametre, bir geçiş kuralı, karıştırma ağırlığı veya örnekleme noktasıdır. Geçişlere veya animasyon karıştırma düğümlerine yakından bakarsanız,
+
+ küçük metin işaretleri göreceksiniz. Bunlar, ilgili parametrelerin adlarıdır.
+
+
+
+Genel olarak, tüm durum makineleri bu şekilde çalışır - ABSM düğümleri animasyonları karıştırmak veya almak için kullanılır ve bunların sonuçta ortaya çıkan
+
+pozları ABSM durumları tarafından kullanılır. Etkin durum, son pozu sağlar, bu poz daha sonra filtrelemeden geçer ve size geri döndürülür.
+
+ Son aşamadan sonra, pozu bir sahne grafiğine uygulayarak sonuçta ortaya çıkan animasyonun etkili olmasını sağlayabilirsiniz.
+
+## Nasıl oluşturulur
+
+
+
+Her zaman olduğu gibi, Fyrox'ta bir şeyler oluşturmanın iki ana yolu vardır: düzenleyiciden veya koddan. Seçim sizin.
+
+## Editörden
+
+
+
+Animasyon karıştırma durum makineleri oluşturmak için [ABSM Editor](absm_editor.md) kullanın.
+
+## Koddan
+
+
+
+Her zaman koddan bir ABSM oluşturabilirsiniz. Basit bir ABSM şu şekilde oluşturulabilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/animation/blending.rs:create_absm}}
 ```
 
-Here we have Walk, Idle and Run states which use different sources of poses:
-- Walk - is the most complicated here - it uses result of blending between `Aim` and `Walk` animations with different
-  weights. This is useful if your character can only walk or can walk *and* aim at the same time. Desired pose determined
-  by Walk Weight and Aim Weight parameters combination.
-- Run and idle both directly use animation as pose source.
+Burada, farklı poz kaynakları kullanan Yürüme, Boşta ve Koşma durumları vardır:
 
-There are four transitions between three states each with its own rule. Rule is just a boolean parameter that indicates
-that transition should be activated. Let's look at the code example of the above state graph:
+- Yürüme - burada en karmaşık olanıdır - farklı ağırlıklarla `Aim` ve `Walk` animasyonlarının karıştırılmasının sonucunu kullanır.
 
-As you can see, everything is quite straightforward. Even such simple state machine requires quite a lot of code, which
-can be removed by using ABSM editor. Read the next chapter to learn about it.
+ Bu, karakterinizin sadece yürüyebilmesi veya aynı anda yürüyüp *ve* nişan alabilmesi durumunda kullanışlıdır. İstenen poz,
+
+ Yürüme Ağırlığı ve Nişan Ağırlığı parametrelerinin kombinasyonu ile belirlenir.
+
+- Run ve idle, poz kaynağı olarak doğrudan animasyonu kullanır.
+
+
+
+Üç durum arasında, her birinin kendi kuralı olan dört geçiş vardır. Kural, geçişin etkinleştirilmesi gerektiğini belirten bir boole parametresidir.
+
+ Yukarıdaki durum grafiğinin kod örneğine bakalım:
+
+
+
+Gördüğünüz gibi, her şey oldukça basit. Bu kadar basit bir durum makinesi bile oldukça fazla kod gerektirir, ancak
+
+bu kod ABSM editörü kullanılarak kaldırılabilir. Bununla ilgili bilgi için bir sonraki bölüme geçin.

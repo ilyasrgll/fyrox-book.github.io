@@ -1,189 +1,327 @@
-# Introduction to Fyrox
+# Fyrox'a Giriş
 
-Fyrox is a feature-rich, general purpose game engine that is suitable for any kind of games. It is capable to power
-games with small- or medium-sized worlds, large-sized world most likely will require some manual work. 
 
-Games made with the engine are capable to run on desktop platforms (PC, Mac, Linux) and Web (WebAssembly). Mobile is
-planned for future releases.
 
-## What can the engine do?
+Fyrox, her türlü oyun için uygun, zengin özelliklere sahip, genel amaçlı bir oyun motorudur.
 
-You can create pretty much any kind of game or interactive applications. Here's some examples of what the engine can 
-do:
+
+küçük veya orta büyüklükteki dünyalara sahip oyunları çalıştırabilir, büyük dünyalar için ise muhtemelen bazı manuel çalışmalar gerekecektir.
+ 
+
+
+Motorla yapılan oyunlar masaüstü platformlarda (PC, Mac, Linux) ve Web'de (WebAssembly) çalışabilir. Mobil
+
+gelecek sürümlerde planlanmaktadır.
+
+
+
+## Motor ne yapabilir?
+
+
+
+Hemen hemen her tür oyun veya etkileşimli uygulama oluşturabilirsiniz. Motorun yapabileceklerinin bazı örnekleri 
+
+şunlardır:
 
 ![Station Iapetus](game_example1.jpg)
 ![Fish Folly](game_example2.jpg)
 ![2D Platformer](game_example3.jpg)
 
-## How does the engine work?
+## Motor nasıl çalışır?
 
-The engine consists of two parts that you'll be actively using: the framework and the editor. The framework is a 
-foundation of the engine, it manages rendering, sound, scripts, plugins, etc. While the editor contains lots of tools 
-that can be used to create game worlds, manage assets, edit game objects, scripts and more.
+
+
+Motor, aktif olarak kullanacağınız iki bölümden oluşur: çerçeve ve editör. Çerçeve, motorun temelini oluşturur ve görüntüleme, ses, komut dosyaları, eklentiler vb. işlemleri yönetir. Editör ise oyun dünyaları oluşturmak, varlıkları yönetmek, oyun nesnelerini, komut dosyalarını ve daha fazlasını düzenlemek için kullanılabilecek birçok araç içerir.
 
 ![Fish Folly](editor.png)
 
-## Programming languages
+## Programlama dilleri
 
-Everything of your game can be written entirely in Rust, utilizing its safety guarantees as well as speed. However, it
-is possible to use any scripting language that you want, but other languages may have no built-in support, and you will need to implement this
-manually.
+Oyununuzun tamamı, güvenliği ve hızı ile Rust ile yazılabilir. Ancak,
 
-## Engine Features
+istediğiniz herhangi bir betik dilini kullanabilirsiniz, ancak diğer dillerde yerleşik destek olmayabilir ve bunu manuel olarak uygulamanız gerekebilir.
 
-This is a more or less complete (yet, it can be outdated) list of engine features:
+## Motor Özellikleri
 
-### General
+Bu, motor özelliklerinin aşağı yukarı eksiksiz (ancak güncel olmayabilir) bir listesidir:
 
-- Exceptional safety, reliability, and speed.
-- PC (Windows, Linux, macOS), Android, [Web (WebAssembly) support](https://fyrox.rs/examples).
-- Modern, PBR rendering pipeline.
-- Comprehensive [documentation](https://docs.rs/Fyrox).
-- [Guide book](https://fyrox-book.github.io)
-- 2D support.
-- Integrated editor.
-- Fast iterative compilation.
-- Classic object-oriented design.
-- Lots of examples.
+### Genel
+
+- Olağanüstü güvenlik, güvenilirlik ve hız.
+
+- PC (Windows, Linux, macOS), Android, [Web (WebAssembly) desteği](https://fyrox.rs/examples).
+
+- Modern, PBR renderleme boru hattı.
+
+- Kapsamlı [belgeler](https://docs.rs/Fyrox).
+
+- [Kılavuz kitap](https://fyrox-book.github.io)
+
+- 2D desteği.
+
+- Entegre editör.
+
+- Hızlı yinelemeli derleme.
+
+- Klasik nesne yönelimli tasarım.
+
+- Çok sayıda örnek.
 
 ### Rendering
 
-- Custom shaders, materials, and rendering techniques.
-- Physically-based rendering.
-- Metallic workflow.
-- High dynamic range (HDR) rendering.
-- Tone mapping.
-- Color grading.
-- Auto-exposure.
-- Gamma correction.
-- Deferred shading.
-- Directional light.
-- Point lights + shadows.
-- Spotlights + shadows.
-- Screen-Space Ambient Occlusion (SSAO).
-- Soft shadows.
-- Volumetric light (spot, point).
-- Batching.
-- Instancing.
-- Fast Approximate Anti-Aliasing (FXAA).
-- Normal mapping.
-- Parallax mapping.
-- Render in texture.
-- Forward rendering for transparent objects.
-- Sky box.
-- Deferred decals.
-- Multi-camera rendering.
-- Lightmapping.
-- Soft particles.
-- Fully customizable vertex format.
-- Compressed textures support.
-- High-quality mip-map on-demand generation.
+- Özel gölgelendiriciler, malzemeler ve render teknikleri.
+
+- Fizik tabanlı render.
+
+- Metalik iş akışı.
+
+- Yüksek dinamik aralık (HDR) render.
+
+- Ton eşleme.
+
+- Renk derecelendirme.
+
+- Otomatik pozlama.
+
+- Gama düzeltme.
+
+- Ertelenmiş gölgelendirme.
+
+- Yönlü ışık.
+
+- Nokta ışıklar + gölgeler.
+
+- Spot ışıklar + gölgeler.
+
+- Ekran Alanı Ortam Kapama (SSAO).
+
+- Yumuşak gölgeler.
+
+- Hacimsel ışık (spot, nokta).
+
+- Toplu işleme.
+
+- Örnekleme.
+
+- Hızlı Yaklaşık Kenar Yumuşatma (FXAA).
+
+- Normal eşleme.
+
+- Paralaks haritalama.
+
+- Doku içinde render.
+
+- Şeffaf nesneler için ileri render.
+
+- Gökyüzü kutusu.
+
+- Ertelenmiş çıkartmalar.
+
+- Çoklu kamera render.
+
+- Işık haritalama.
+
+- Yumuşak parçacıklar.
+
+- Tamamen özelleştirilebilir köşe formatı.
+
+- Sıkıştırılmış doku desteği.
+
+- İsteğe bağlı yüksek kaliteli mip-map oluşturma.
 
 ### Scene
 
-- Multiple scenes.
-- Full-featured scene graph.
-- Level-of-detail (LOD) support.
+- Çoklu sahne.
+
+- Tam özellikli sahne grafiği.
+
+- Ayrıntı düzeyi (LOD) desteği.
+
 - GPU Skinning.
-- Various scene nodes:
-    - Pivot.
-    - Camera.
-    - Decal.
-    - Mesh.
-    - Particle system.
+
+- Çeşitli sahne düğümleri:
+
+- Pivot.
+
+- Kamera.
+
+- Decal.
+
+- Mesh.
+
+    - Parçacık sistemi.
+
     - Sprite.
-    - Multilayer terrain.
-    - Rectangle (2D Sprites)
-    - Rigid body + Rigid Body 2D
-    - Collider + Collider 2D
-    - Joint + Joint 2D
 
-### Sound
+- Çok katmanlı arazi.
 
-- [High quality binaural sound with HRTF support](https://github.com/FyroxEngine/Fyrox/tree/master/fyrox-sound).
-- Generic and spatial sound sources.
-- Built-in streaming for large sounds.
-- Raw samples playback support.
-- WAV/OGG format support.
-- HRTF support for excellent positioning and binaural effects.
-- Reverb effect.
+- Rectangle (2D Sprites)
 
-### Serialization
+- Rigid body + Rigid Body 2D
 
-- Powerful serialization system
-- Almost every entity of the engine can be serialized
-- No need to write your own serialization.
+- Collider + Collider 2D
 
-### Animation
+- Joint + Joint 2D
 
-- Animation blending state machine - similar to Mecanim in Unity Engine.
-- Animation retargetting - allows you to remap animation from one model to another.
+### Ses
 
-### Asset management
 
-- Advanced asset manager.
-- Fully asynchronous asset loading.
-- PNG, JPG, TGA, DDS, etc. textures.
-- FBX models loader.
-- WAV, OGG sound formats.
-- Compressed textures support (DXT1, DXT3, DTX5).
 
-### Artificial Intelligence (AI)
+- [HRTF desteği ile yüksek kaliteli binaural ses](https://github.com/FyroxEngine/Fyrox/tree/master/fyrox-sound).
 
-- A* pathfinder.
+- Genel ve uzamsal ses kaynakları.
+
+- Büyük sesler için yerleşik akış.
+
+- Ham örnek çalma desteği.
+
+- WAV/OGG formatı desteği.
+
+- Mükemmel konumlandırma ve binaural efektler için HRTF desteği.
+
+- Yankı efekti.
+
+
+
+### Seri hale getirme
+
+- Güçlü seri hale getirme sistemi
+
+- Motorun neredeyse tüm öğeleri seri hale getirilebilir
+
+- Kendi seri hale getirme kodunuzu yazmanıza gerek yoktur.
+
+
+### Animasyon
+
+
+- Animasyon karıştırma durum makinesi - Unity Engine'deki Mecanim'e benzer.
+
+- Animasyon yeniden hedefleme - animasyonu bir modelden diğerine yeniden eşleyebilir.
+
+
+### Varlık yönetimi
+
+
+- Gelişmiş varlık yöneticisi.
+
+- Tamamen asenkron varlık yükleme.
+
+- PNG, JPG, TGA, DDS vb. dokular.
+
+- FBX model yükleyici.
+
+- WAV, OGG ses formatları.
+
+- Sıkıştırılmış doku desteği (DXT1, DXT3, DTX5).
+
+
+### Yapay Zeka (AI)
+
+
+- AI yol bulucu.
+
 - Navmesh.
-- Behavior trees.
 
-### User Interface (UI)
+- Davranış ağaçları.
 
-- [Advanced node-based UI](https://github.com/FyroxEngine/Fyrox/tree/master/fyrox-ui) with lots of widgets.
-- More than 32 widgets
-- Powerful layout system.
-- Full TTF/OTF fonts support.
-- Based on message passing.
-- Fully customizable.
-- GAPI-agnostic.
-- OS-agnostic.
-- Button widget.
-- Border widget.
-- Canvas widget.
-- Color picker widget.
-- Color field widget.
-- Check box widget.
-- Decorator widget.
-- Drop-down list widget.
-- Grid widget.
-- Image widget.
-- List view widget.
-- Popup widget.
-- Progress bar widget.
-- Scroll bar widget.
-- Scroll panel widget.
-- Scroll viewer widget.
-- Stack panel widget.
-- Tab control widget.
-- Text widget.
-- Text box widget.
-- Tree widget.
-- Window widget.
-- File browser widget.
-- File selector widget.
-- Docking manager widget.
-- NumericUpDown widget.
-- `Vector3<f32>` editor widget.
-- Menu widget.
-- Menu item widget.
-- Message box widget.
-- Wrap panel widget.
-- Curve editor widget.
-- User defined widget.
+### Kullanıcı Arayüzü (UI)
 
-### Physics
 
-- Advanced physics (thanks to the [rapier](https://github.com/dimforge/rapier) physics engine)
+
+- Çok sayıda widget içeren [gelişmiş düğüm tabanlı UI](https://github.com/FyroxEngine/Fyrox/tree/master/fyrox-ui).
+
+- 32'den fazla widget
+
+- Güçlü düzen sistemi.
+
+- Tam TTF/OTF yazı tipi desteği.
+- Mesaj aktarımına dayalı.
+
+- Tamamen özelleştirilebilir.
+
+- GAPI'dan bağımsız.
+
+- İşletim sisteminden bağımsız.
+
+- Düğme widget'ı.
+
+- Kenarlık widget'ı.
+
+- Tuval widget'ı.
+
+- Renk seçici widget'ı.
+
+- Renk alanı widget'ı.
+
+- Onay kutusu widget'ı.
+
+- Dekoratör widget'ı.
+
+- Açılır liste widget'ı.
+
+- Izgara widget'ı.
+- Resim widget'ı.
+
+- Liste görünümü widget'ı.
+
+- Açılır widget'ı.
+
+- İlerleme çubuğu widget'ı.
+
+- Kaydırma çubuğu widget'ı.
+
+- Kaydırma paneli widget'ı.
+
+- Kaydırma görüntüleyici widget'ı.
+
+- Yığın paneli widget'ı.
+
+- Sekme kontrol widget'ı.
+
+- Metin widget'ı.
+
+- Metin kutusu widget'ı.
+- Ağaç widget'ı.
+
+- Pencere widget'ı.
+
+- Dosya tarayıcı widget'ı.
+
+- Dosya seçici widget'ı.
+
+- Yerleştirme yöneticisi widget'ı.
+
+- NumericUpDown widget'ı.
+
+- `Vector3<f32>` düzenleyici widget'ı.
+
+- Menü widget'ı.
+
+- Menü öğesi widget'ı.
+
+- Mesaj kutusu widget'ı.
+
+- Sarmalama paneli widget'ı.
+
+- Eğri düzenleyici widget'ı.
+
+- Kullanıcı tanımlı widget.
+
+### Fizik
+
+
+
+- Gelişmiş fizik [rapier](https://github.com/dimforge/rapier) fizik motoru sayesinde)
+
 - Rigid bodies.
-- Rich set of various colliders.
-- Joints.
+
+- Zengin çeşitli çarpışmalar.
+
+- Eklemler.
+
 - Ray cast.
-- Many other useful features.
-- 2D support.
+
+- Diğer birçok kullanışlı özellik.
+
+- 2D desteği.

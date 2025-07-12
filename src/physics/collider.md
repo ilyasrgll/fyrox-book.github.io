@@ -1,81 +1,130 @@
-# Collider node
+# Çarpışan düğüm
 
-Collider is a geometrical shape that is used for collision detection, contact manifold generation, etc. Colliders are used
-in pair with rigid bodies, they make rigid body participate in collisions.
 
-**Important:** Colliders only works in pair with rigid bodies! Colliders won't be used by the engine, unless they're
-direct children of a rigid body. Read [this chapter](./rigid_body.md#colliders) for more info. 
 
-## Shapes
+Çarpışan, çarpışma algılama, temas manifold oluşturma vb. için kullanılan geometrik bir şekildir. Çarpışanlar
 
-Collider can have almost any shape, the engine offers the following shapes for 3D:
+rigid body ile birlikte kullanılır ve rigid body'nin çarpışmalara katılmasını sağlar.
+**Önemli:** Çarpışanlar sadece rigid body ile birlikte çalışır! Çarpışanlar, bir rigid body'nin doğrudan çocukları olmadıkça motor tarafından kullanılmaz.
 
-- Ball - dynamic sphere shape.
-- Cylinder - dynamic cylinder shape.
-- Cone - dynamic cone shape.
-- Cuboid - dynamic box shape.
-- Capsule - dynamic capsule shape.
-- Segment - dynamic segment ("line") shape
-- Triangle - simple dynamic triangle shape
-- Triangle mesh - static concave shape, can be used together with any static level geometry (wall, floors, ceilings,
-anything else)
-- Height field - static height field shape, can be used together with terrains.
-- Polyhedron - dynamic concave shape.
+Daha fazla bilgi için [bu bölümü](./rigid_body.md#colliders) okuyun.
 
-Also, there is a similar, but smaller set for 2D (because some shapes degenerate in 2D):
+## Şekiller
 
-- Ball - dynamic circle shape.
-- Cuboid - dynamic rectangle shape.
-- Capsule - dynamic capsule shape.
-- Segment - dynamic segment ("line") shape.
-- Triangle - dynamic triangle shape.
-- Trimesh - static triangle mesh shape.
-- Heightfield - static height field shape.
 
-_Dynamic_ in both lists means that such shapes can be used together with _dynamic_ rigid bodies, they'll correctly handle
-all collisions and simulation will look as it should. _Static_ means that such shape should be used only with _static_
-rigid bodies.
 
-## How to create
+Collider hemen hemen her şekle sahip olabilir, motor 3D için aşağıdaki şekilleri sunar:
 
-Use ColliderBuilder to create an instance of collider from code with any shape you want.
+
+
+- Top - dinamik küre şekli.
+
+- Silindir - dinamik silindir şekli.
+
+- Koni - dinamik koni şekli.
+
+- Küboid - dinamik kutu şekli.
+
+- Kapsül - dinamik kapsül şekli.
+
+- Segment - dinamik segment (“çizgi”) şekli
+
+- Üçgen - basit dinamik üçgen şekli
+
+- Üçgen ağ - statik içbükey şekil, herhangi bir statik seviye geometrisiyle (duvar, zemin, tavan,
+
+diğer her şey)
+
+- Yükseklik alanı - statik yükseklik alanı şekli, arazilerle birlikte kullanılabilir.
+
+- Çok yüzlü - dinamik içbükey şekil.
+
+
+
+Ayrıca, 2D için benzer ancak daha küçük bir set vardır (çünkü bazı şekiller 2D'de bozulur):
+
+
+
+- Top - dinamik daire şekli.
+
+- Küboid - dinamik rectangle şekli.
+
+- Kapsül - dinamik kapsül şekli.
+
+- Segment - dinamik segment (“çizgi”) şekli.
+
+- Üçgen - dinamik üçgen şekli.
+
+- Trimesh - statik üçgen ağ şekli.
+
+- Heightfield - statik yükseklik alanı şekli.
+
+
+
+Her iki listede de _Dynamic_ , bu tür şekillerin _dynamic_ rigid bodies ile birlikte kullanılabileceği, tüm çarpışmaları doğru şekilde işleyeceği ve simülasyonun olması gerektiği gibi görüneceği anlamına gelir. _Static_ , bu tür şekillerin yalnızca _static_
+
+rigid bodies ile birlikte kullanılması gerektiği anlamına gelir.
+
+
+
+## Nasıl oluşturulur
+
+
+
+ColliderBuilder'ı kullanarak koddan istediğiniz şekle sahip bir çarpışıcı örneği oluşturun.
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/collider.rs:create_capsule_collider}}
 ```
 
-In the editor you can use `MainMenu -> Create -> Physics -> Collider`, or right-click on a node in `World Viewer` and
-select `Add Child -> Physics -> Collider`. Collider must be direct child of a rigid body, colliders do nothing on
-their own!
+Editörde `MainMenu -> Create -> Physics -> Collider` komutunu kullanabilir veya `World Viewer` içinde bir düğüme sağ tıklayıp
 
-## Collision filtering
+`Add Child -> Physics -> Collider` seçeneğini seçebilirsiniz. Çarpışan nesneler, rigid body nesnelerinin doğrudan alt öğeleri olmalıdır, çarpışan nesneler tek başlarına hiçbir şey yapmazlar
 
-Sometimes there's a need to prevent collision between various groups of colliders. Fyrox supports bit-wise collision 
-filtering exactly for this purpose. For instance, you may have two groups of colliders: actors and powerups, and you
-want the actors to completely ignore collisions with powerups (and vice versa). In this case you can set collision
-groups for actors like so:
+!
+
+## Collision filtreleme
+
+
+
+Bazen çeşitli çarpışan gruplar arasında çarpışmayı önlemek gerekir. Fyrox, tam da bu amaçla bit bazında çarpışma 
+
+filtrelemeyi destekler. Örneğin, iki çarpışan grubunuz olabilir: aktörler ve güçlendiriciler, ve
+
+aktörlerin güçlendiricilerle çarpışmaları tamamen yok saymasını (ve tersi) istiyorsunuz. Bu durumda, aktörler için çarpışma
+
+gruplarını şu şekilde ayarlayabilirsiniz:
 
 ![actors collision groups](./collision_groups_a.png)
 
-And set the collision groups for powerups like so:
+Ve güçlendiriciler için çarpışma gruplarını şu şekilde ayarlayın:
 
 ![powerups collision groups](./collision_groups_b.png)
 
-As you can see, actors and powerups now have separate `memberships` (read - groups) and filters. This way, the actors
-will collide with everything, but powerups and vice versa.
+Gördüğünüz gibi, aktörler ve güçlendiriciler artık ayrı `üyelikler` (okuma - gruplar) ve filtrelere sahiptir. Bu şekilde, aktörler
 
-## Using colliders for hit boxes
+her şeyle çarpışacak, ancak güçlendiricilerle çarpışmayacak ve bunun tersi de geçerli olacaktır.
 
-You can use colliders to simulate hit boxes for your game characters. It can be done by creating a rigid body with
-`KinematicPositionBased` type and an appropriate collider as a child node. As the last step you need to attach the body
-to a bone in your character's model. Here's a quick example from the editor:
+## Hit kutuları için çarpışmaların kullanılması
+
+
+
+Çarpışmaları kullanarak oyun karakterleriniz için hit kutularını simüle edebilirsiniz. Bu,
+
+`KinematicPositionBased` türüne sahip bir rigid body ve uygun bir çarpışma nesnesi oluşturarak yapılabilir. Son adım olarak, bu nesneyi karakterinizin modelindeki bir kemiğe eklemeniz gerekir.
+
+İşte editörden hızlı bir örnek:
 
 ![hitbox](./hitbox.png)
 
-As you can see, the rigid body has a capsule collider as a child and the body is attached to the neck bone. The body
-has `KinematicPositionBased` type, which will ensure that the body won't be simulated, instead its position will be 
-synchronized with the position of the parent bone.
+Gördüğünüz gibi, rigid body bir kapsül çarpıştırıcıya sahiptir ve gövde boyun kemiğine bağlıdır. Gövde
 
-To actually use the hit boxes in your game, you can either use a ray-casting to perform a hit scan or you can use 
-contacts information to fetch the stuff with which a hit box was contacted. See [Ray casting](./ray.md) chapter of the
-section.
+KinematicPositionBased tipindedir, bu da gövdenin simüle edilmeyeceğini, bunun yerine konumunun 
+
+ana kemiğin konumu ile senkronize edileceğini garanti eder.
+
+
+
+Oyununuzda vuruş kutularını gerçekten kullanmak için, bir vuruş taraması gerçekleştirmek üzere ışın izleme kullanabilir veya 
+
+temas bilgilerini kullanarak vuruş kutusunun temas ettiği öğeleri alabilirsiniz. Bkz. bölümün [Işın izleme](./ray.md) bölümü.

@@ -1,90 +1,125 @@
-# Light node
+# Işık düğümü
 
-The engine offers complex lighting system with various types of light sources.
 
-## Light types
 
-There are three main types of light sources: directional, point, and spotlights.
+Motor, çeşitli ışık kaynakları ile karmaşık bir aydınlatma sistemi sunar.
 
-### Directional light
 
-Directional light does not have a position, its rays are always parallel, and it has a particular direction in space.
-An example of directional light in real-life could be our Sun. Even if it is a point light, it is so far away from
-the Earth, so we can assume that its rays are always parallel. Directional light sources are suitable for outdoor
-scenes.
 
-A directional light source could be created like this:
+## Işık türleri
+
+
+
+Üç ana ışık kaynağı türü vardır: yönlü, nokta ve spot ışıklar.
+
+
+
+### Yönlü ışık
+
+
+
+Yönlü ışığın bir konumu yoktur, ışınları her zaman paraleldir ve uzayda belirli bir yönü vardır.
+
+Gerçek hayatta yönlü ışığa örnek olarak Güneş verilebilir. Noktasal bir ışık olsa bile,
+
+Dünya'dan çok uzakta olduğu için ışınlarının her zaman paralel olduğunu varsayabiliriz. Yönlü ışık kaynakları dış mekan
+
+sahneleri için uygundur.
+
+
+
+Yönlü bir ışık kaynağı şu şekilde oluşturulabilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:create_directional_light}}
 ```
 
-By default, the light source will be oriented to lit "the ground". In other words its direction will be faced towards
-`(0.0, -1.0, 0.0)` vector. You can rotate it as you want by setting local transform of it while building. Something
-like this:
+Varsayılan olarak, ışık kaynağı “zemini” aydınlatacak şekilde yönlendirilir. Başka bir deyişle, yönü
+
+`(0.0, -1.0, 0.0)` vektörüne bakacaktır. Oluştururken yerel dönüşümünü ayarlayarak istediğiniz gibi döndürebilirsiniz.
+
+Şunun gibi:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:create_oriented_directional_light}}
 ```
 
-### Point light
+### Nokta ışık
 
-Point light is a light source that emits lights in all directions, it has a position, but does not have an orientation.
-An example of a point light source: light bulb.
+
+
+Nokta ışık, her yöne ışık yayan bir ışık kaynağıdır, bir konumu vardır ancak yönü yoktur.
+
+Nokta ışık kaynağı örneği: ampul.
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:create_point_light}}
 ```
 
-### Spotlight
+### Spot ışığı
 
-Spotlight is a light source that emits lights in cone shape, it has a position and orientation. An example of
-a spotlight source: flashlight.
+
+
+Spot ışığı, koni şeklinde ışık yayan bir ışık kaynağıdır, bir konumu ve yönü vardır.
+
+Spot ışığı kaynağına bir örnek: el feneri.
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:create_spot_light}}
 ```
 
-## Light scattering
+## Işık saçılması
 
 ![scattering](scattering.png)
 
-Spot and point lights support light scattering effect. Imagine you're walking with a flashlight in a foggy weather,
-the fog will scatter the light from your flashlight making it, so you'll see the "light volume". Light scattering is
-**enabled by default**, so you don't have to do anything to enable it. However, in some cases you might want to disable
-it, you can do this either while building a light source or change light scattering options on existing light source.
-Here is the small example of how to do that.
+Spot ve nokta ışıklar ışık saçılma efektini destekler. Sisli bir havada el fenerinizle yürüdüğünüzü hayal edin,
+
+sis el fenerinizden gelen ışığı saçarak “ışık hacmi”ni görmenizi sağlar. Işık saçılma
+
+**varsayılan olarak etkindir**, bu yüzden etkinleştirmek için hiçbir şey yapmanız gerekmez. Ancak, bazı durumlarda devre dışı bırakmak isteyebilirsiniz
+
+. Bunu, bir ışık kaynağı oluştururken veya mevcut ışık kaynağındaki ışık saçılma seçeneklerini değiştirerek yapabilirsiniz.
+
+Bunu nasıl yapacağınızla ilgili küçük bir örnek aşağıda verilmiştir.
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:disable_light_scatter}}
 ```
 
-You could also change the amount of scattering per each color channel, using this you could imitate the
-[Rayleigh scattering](https://en.wikipedia.org/wiki/Rayleigh_scattering):
+Ayrıca, her renk kanalı için saçılma miktarını değiştirebilirsiniz. Bunu kullanarak
+
+[Rayleigh saçılması](https://en.wikipedia.org/wiki/Rayleigh_scattering)
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:use_rayleigh_scattering}}
 ```
 
-## Shadows
+## Gölgeler
 
-By default, light sources cast shadows. You can change this by using `set_cast_shadows` method of a light source. You
-should carefully manage shadows: shadows giving the most significant performance impact, you should keep the number of
-light sources that can cast shadows at lowest possible to keep performance at good levels. You can also turn
-on/off shadows when you need:
+Varsayılan olarak, ışık kaynakları gölgeler oluşturur. Bunu, bir ışık kaynağının `set_cast_shadows` yöntemini kullanarak değiştirebilirsiniz.
+
+Gölgeleri dikkatli bir şekilde yönetmelisiniz: Gölgeler performansı en çok etkileyen unsurlardır, performansı iyi seviyede tutmak için gölge oluşturabilen ışık kaynaklarının sayısını mümkün olduğunca düşük tutmalısınız.
+
+Ayrıca, gerektiğinde gölgeleri açıp kapatabilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/light.rs:switch_shadows}}
 ```
 
-Not every light should cast shadows, for example a small light that a player can see only in a distance can have
-shadows disabled. You should set the appropriate values depending on your scene, just remember: the fewer the shadows
-the better the performance. The most expensive shadows are from point lights, the less, from spotlights and directional
-lights.
+Her ışık gölge oluşturmamalıdır, örneğin bir oyuncunun sadece uzaktan görebileceği küçük bir ışığın
 
-## Performance
+gölgeleri devre dışı bırakılabilir. Sahnenize göre uygun değerleri ayarlamalısınız, sadece şunu unutmayın: gölgeler ne kadar az
 
-Lights are not cheap, every light source has some performance impact. As a general rule, try to keep the amount
-of light sources at reasonable levels and especially try to avoid creating tons of light sources in a small area.
-Keep in mind that the less area the light needs to "cover", the higher the performance. This means that you can have
-tons of small light sources for free.
+olursa performans o kadar iyi olur. En pahalı gölgeler nokta ışıklardan, en ucuz gölgeler spot ışıklardan ve yönlü
+
+ışıklardan
+
+## Performans
+
+
+
+Işıklar ucuz değildir, her ışık kaynağı performansı bir şekilde etkiler. Genel bir kural olarak, ışık kaynağı sayısını
+
+makul seviyede tutmaya çalışın ve özellikle küçük bir alanda çok sayıda ışık kaynağı oluşturmaktan kaçının.
+
+Işığın “kaplaması” gereken alan ne kadar az olursa, performans o kadar yüksek olur. Bu, çok sayıda küçük ışık kaynağını ücretsiz olarak kullanabileceğiniz anlamına gelir.

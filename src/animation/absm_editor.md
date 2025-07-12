@@ -1,200 +1,262 @@
-# Animation Blending State Machine (ABSM) Editor
+# Animasyon Karıştırma Durum Makinesi (ABSM) Düzenleyicisi
 
-While it is possible to create and manage animation blending and state manually from code, it quickly becomes too 
-annoying and hardly manageable. To help you create and manage blending machines in easy way, the engine offers 
-an ABSM Editor tool. This chapter is an overview of the editor, it is quite complex, but the guide should help you
-to figure out which part is made for what. Next chapter will help you to create your first animation blending state
-machine.
+Animasyon karıştırma ve durumunu koddan manuel olarak oluşturmak ve yönetmek mümkün olsa da, bu işlem çok 
+can sıkıcı ve yönetilemez hale gelir. Karıştırma makinelerini kolay bir şekilde oluşturmanıza ve yönetmenize yardımcı olmak için motor, 
+bir ABSM Editör aracı sunar. Bu bölüm, editörün genel bir özetidir. Oldukça karmaşıktır, ancak kılavuz, hangi bölümün ne için olduğunu anlamanıza
+yardımcı olacaktır. Bir sonraki bölüm, ilk animasyon karıştırma durum makinenizi oluşturmanıza yardımcı olacaktır.
 
 ![absm editor](./absm.png)
 
-The editor has four main parts (panels):
+Editör dört ana bölümden (panelden) oluşur:
 
-1. `Toolbar` - contains a set of tools to edit animation layers and enable/disable preview mode. See [Toolbar](#toolbar)
-section for more info.
-2. `Parameters` - allows you to edit various variables that are responsible for transitions, weight parameters for 
-blending, etc. See [Parameters](./absm_parameters.png) section for more info.
-3. `State Graph` - allows you to create, delete, edit states and transition between them. See [State Graph](#state-graph)
-section for more info.
-4. `State Viewer` - allows you to edit pose source for a state. Pose source can be represented either by a single 
-node that plays an animation, or a series of play animation nodes connected to blending nodes (which can be connected
-to other blending nodes, etc.). See [State Viewer](#state-viewer) section for more info.
+1. `Araç Çubuğu` - animasyon katmanlarını düzenlemek ve önizleme modunu etkinleştirmek/devre dışı bırakmak için bir dizi araç içerir. Daha fazla bilgi için [Araç Çubuğu](#toolbar)
+bölümüne bakın.
 
-The editor can be opened in two ways - using `Utils -> ABSM Editor` or by selecting an animation blending state machine
-node and clicking `Open ABSM Editor...` button:
+2. `Parametreler` - geçişlerden, karıştırma için ağırlık parametrelerinden sorumlu çeşitli değişkenleri düzenlemenizi sağlar. Daha fazla bilgi için [Parametreler](./absm_parameters.png) bölümüne bakın.
+
+3. `Durum Grafiği` - durumlar oluşturmanıza, silmenize, düzenlemenize ve bunlar arasında geçiş yapmanıza olanak tanır. Daha fazla bilgi için [Durum Grafiği](#state-graph) bölümüne bakın.
+
+4. `Durum Görüntüleyici` - bir durumun poz kaynağını düzenlemenizi sağlar. Poz kaynağı, bir animasyonu oynatan tek bir
+düğüm veya karıştırma düğümlerine bağlı bir dizi oynatma animasyonu düğümü (diğer karıştırma düğümlerine bağlanabilir
+vb.) ile temsil edilebilir. Daha fazla bilgi için [Durum Görüntüleyici](#state-viewer) bölümüne bakın.
+
+
+Editör iki şekilde açılabilir: `Utils -> ABSM Editor` kullanarak veya bir animasyon karıştırma durum makinesi
+düğmesini seçip `Open ABSM Editor...` düğmesini tıklayarak:
 
 ![open1](./absm_open1.png)
 
 ![open1](./absm_open2.png)
 
-In both ways you still need to select an an animation blending state machine node for editing.
+Her iki durumda da, düzenleme için bir animasyon karıştırma durum makinesi düğümü seçmeniz gerekir.
 
 ## Toolbar
 
 ![toolbar](./absm_toolbar.png)
 
-1. `Preview Switch` - enables or disables preview mode for the ABSM. See [Preview Mode](#preview-mode) section for more
-info.
-2. `Layer Name` - name of the selected layer. Type a new name here to rename currently selected layer (hit enter or just
-click elsewhere to rename).
-3. `Add Layer` - adds a new layer with the name in the `Layer Name` text box to the ABSM. ABSM can have multiple layers
-with the same name, but it strongly advised to set unique names here.
-4. `Remove Current Layer` - removes currently selected layer. You can delete all layers, but in this case your ABSM won't
-have any effect.
-5. `Layer Selector` - allows you to select a layer for editing, default selection is none.
-6. `Layer Mask` - opens a `Layer Mask Editor` and helps you to edit the layer mask of the current layer. See 
-[Layer Mask](#layer-mask) section for more info.
+1. `Önizleme Anahtarı` - ABSM için önizleme modunu etkinleştirir veya devre dışı bırakır. Daha fazla bilgi için [Önizleme Modu](#preview-mode) bölümüne bakın.
+
+2. `Katman Adı` - seçilen katmanın adı. Seçili katmanı yeniden adlandırmak için buraya yeni bir ad yazın (Enter tuşuna basın veya yeniden adlandırmak için başka bir yere tıklayın).
+
+3. `Katman Ekle` - `Katman Adı` metin kutusuna yazılan adla ABSM'ye yeni bir katman ekler. ABSM'de aynı ada sahip birden fazla katman olabilir, ancak burada benzersiz adlar belirlemeniz şiddetle tavsiye edilir.
+
+4. `Mevcut Katmanı Kaldır` - seçili katmanı kaldırır. Tüm katmanları silebilirsiniz, ancak bu durumda ABSM'niz herhangi bir etki yapmayacaktır.
+
+5. `Katman Seçici` - düzenlemek için bir katman seçmenizi sağlar, varsayılan seçim yoktur.
+
+6. `Katman Maskesi` - bir `Katman Maskesi Düzenleyici` açar ve mevcut katmanın katman maskesini düzenlemenize yardımcı olur. Daha fazla bilgi için
+[Katman Maskesi](#layer-mask) bölümüne bakın.
 
 ## Parameters
 
-Parameter is a named and typed variable that provides the animation system with some data required for it to work. There
-are only three type of parameters:
+Parametre, animasyon sisteminin çalışması için gerekli bazı verileri sağlayan, adlandırılmış ve türlenmiş bir değişkendir.
 
-- `Rule` - boolean value that used as a trigger for transitions. When transition is using some rule, it checks the value
-of the parameter and if it is `true` transition starts.
-- `Weight` - real number (`f32`) that is used a weight when you're blending multiple animations into one.
-- `Index` - natural number (`i32`) that is used as an animation selector.
+Sadece üç tür parametre vardır:
+
+
+
+- `Rule` - geçişler için tetikleyici olarak kullanılan boole değeri. Geçiş bir kural kullanıyorsa, parametrenin değerini kontrol eder
+ve `true` ise geçiş başlar.
+
+- `Weight` - Birden fazla animasyonu tek bir animasyona karıştırırken ağırlık olarak kullanılan gerçek sayı (`f32`).
+
+- `Index` - Animasyon seçici olarak kullanılan doğal sayı (`i32`).
 
 ![parameters](./absm_parameters.png)
 
-1. `Add Parameters` - adds a new parameter to the parameters' container.
-2. `Remove a Parameter` - removes selected parameter from the parameters' container.
-3. `Parameter Name` - allows you to set a parameter name.
-4. `Parameter Type` - allows you to select the type of the parameter.
-5. `Parameter Value` - allows you to set parameter value.
+1. `Parametre Ekle` - parametreler konteynerine yeni bir parametre ekler.
+
+2. `Parametre Kaldır` - parametreler konteynerinden seçilen parametreyi kaldırır.
+
+3. `Parametre Adı` - parametre adı belirlemenizi sağlar.
+
+4. `Parametre Türü` - parametrenin türünü seçmenizi sağlar.
+
+5. `Parametre Değeri` - parametre değerini ayarlamanızı sağlar.
 
 ## State Graph
 
-State Graph allows you to create states and transitions between them. 
+Durum Grafiği, durumlar ve bunlar arasındaki geçişleri oluşturmanıza olanak tanır. 
 
 ![state graph](./absm_state_graph.png)
 
-1. `State` - state is final animation for a set of scene nodes, only one state can be active at a time.
-2. `Transition` - is an _ordered_ connection between two states, it defines how much time it needed to perform 
-blending of two states.
-3. `Root State` - is an entry state of the current layer.
+1. `State` - durum, bir dizi sahne düğümü için son animasyondur, bir seferde yalnızca bir durum etkin olabilir.
+
+2. `Transition` - iki durum arasındaki _sıralı_ bağlantıdır, iki durumun 
+
+karışması için gereken süreyi tanımlar.
+
+3. `Root State` - geçerli katmanın giriş durumudur.
 
 ### State Context Menu
 
 ![state context menu](./absm_state_context_menu.png)
 
-- `Create Transition` - starts transition creation from the current state to some other.
-- `Remove` - removes the state.
-- `Set As Entry State` - marks the state as an entry state (this state will be active at beginning).
+- `Geçiş Oluştur` - mevcut durumdan başka bir duruma geçiş oluşturmaya başlar.
+
+- `Kaldır` - durumu kaldırır.
+
+- `Giriş Durumu Olarak Ayarla` - durumu giriş durumu olarak işaretler (bu durum başlangıçta etkin olacaktır).
 
 ### Transition Context Menu
 
 ![transition context menu](./absm_transition_context_menu.png)
 
-- `Remove Transition` - removes selected transition.
+- `Remove Transition` - seçilen geçişi kaldırır.
 
 ### State Properties
 
-Select a `State` node to edit the following properties:
+Aşağıdaki özellikleri düzenlemek için bir `State` düğümü seçin:
 
 ![state properties](./absm_state_properties.png)
 
-- `Position` - is a location of the state on the canvas.
-- `Name` - name of the state.
-- `Root` - handle of the backing animation node inside the state.
+- `Position` - tuval üzerindeki durumun konumu.
+
+- `Name` - durumun adı.
+
+- `Root` - durum içindeki destek animasyon düğümünün tanıtıcısı.
 
 ### Transition Properties
 
-Select a `Transition` node to edit the following properties:
+Aşağıdaki özellikleri düzenlemek için bir `Transition` düğümü seçin:
 
 ![transition properties](./absm_transition_properties.png)
 
-- `Name` - name of the state.
-- `Transition Time` - amount of time for blending between two states (in seconds).
-- `Elapsed Time` - starting amount of blending time.
-- `Source` - handle of a source state.
-- `Desc` - handle of a destination state.
-- `Rule` - a name of `Rule` type parameter that defines whether the transition can be activated or not.
-- `Invert Rule` - defines whether to invert the value of `Rule` or not.
-- `Blend Factor` - defines a percentage (in `0..1` range) of how much transition was active. 
+- `Name` - durumun adı.
+
+- `Transition Time` - iki durum arasında geçiş süresi (saniye cinsinden).
+
+- `Elapsed Time` - geçiş süresinin başlangıç değeri.
+
+- `Source` - kaynak durumun tanıtıcısı.
+
+- `Desc` - hedef durumun tanıtıcısı.
+
+- `Rule` - geçişin etkinleştirilip etkinleştirilemeyeceğini tanımlayan `Rule` türü parametrenin adı.
+
+- `Invert Rule` - `Rule` değerinin tersine çevrilip çevrilmeyeceğini tanımlar.
+
+- `Blend Factor` - geçişin ne kadarının etkin olduğunu yüzde olarak (`0..1` aralığında) tanımlar.
 
 ## State Viewer
 
-State Viewer allows you to edit contents of states. You can create animation blending chains of any complexity, the
-simplest content of a state is just a single `Play Animation` node. Currently, the engine supports just three animation
-blending nodes:
+Durum Görüntüleyici, durumların içeriğini düzenlemenizi sağlar. Herhangi bir karmaşıklıkta animasyon karıştırma zincirleri oluşturabilirsiniz;
 
-- `Play Animation` - takes animation pose directly from specified animation, does nothing to it.
-- `Blend Animations` - takes multiple animation poses from respective animations and blends them together with 
-respective blend weights.
-- `Blend Animations By Index` - takes multiple animation poses from respective animations and switches between them 
-with "smooth" transition using an index parameter.
+bir durumun en basit içeriği tek bir `Animasyonu Oynat` düğümüdür. Şu anda motor sadece üç animasyon
+
+karıştırma düğümünü desteklemektedir:
+
+
+
+- `Animasyonu Oynat` - animasyon pozunu doğrudan belirtilen animasyondan alır, üzerinde hiçbir işlem yapmaz.
+
+- `Blend Animations` - ilgili animasyonlardan birden fazla animasyon pozunu alır ve bunları 
+
+ilgili karıştırma ağırlıklarıyla birleştirir.
+
+- `Blend Animations By Index` - ilgili animasyonlardan birden fazla animasyon pozunu alır ve bunları 
+
+bir indeks parametresi kullanarak “yumuşak” bir geçişle aralarında değiştirir.
 
 ![state viewer](./absm_state_viewer.png)
 
-1. `Node` - is a source of animation for blending.
-2. `Connection` - defines how nodes are connected to each other. To create a new connection, click on a small dot on a
-node, hold the button and start dragging to a dot on some other node. 
-3. `Root Node` - root node is marked green; root node is a final source of animation for the parent state. 
+1. `Düğüm` - karıştırma için animasyon kaynağıdır.
 
-### `Play Animation` Properties
+2. `Bağlantı` - düğümlerin birbirine nasıl bağlandığını tanımlar. Yeni bir bağlantı oluşturmak için, bir düğümdeki küçük noktaya tıklayın,
 
-Select a `Play Animation` node to edit the following properties:
+ düğmeyi basılı tutun ve başka bir düğümdeki noktaya sürüklemeye başlayın. 
 
-![play animation properties](./absm_play_animation_properties.png)
+3. `Kök Düğüm` - kök düğüm yeşil renkle işaretlenmiştir; kök düğüm, üst durum için nihai animasyon kaynağıdır. 
+### `Animasyonu Oynat` Özellikleri
 
-- `Position` - is a location of the node on the canvas.
-- `Animation` - an animation to fetch the pose from.
+
+
+Aşağıdaki özellikleri düzenlemek için bir `Animasyonu Oynat` düğümü seçin:
+
+
+
+![animasyonu oynat özellikleri](./absm_play_animation_properties.png)
+
+
+
+- `Konum` - düğümün tuval üzerindeki konumu.
+
+- `Animasyon` - pozun alınacağı animasyon.
 
 ### `Blend Animations` Properties
 
-Select a `Blend Animations` node to edit the following properties:
+Aşağıdaki özellikleri düzenlemek için bir `Blend Animations` düğümü seçin:
 
 ![blend animations properties](./absm_blend_animations_properties.png)
 
-- `Position` - is a location of the node on the canvas.
-- `Pose Sources` - a set of input poses. To add a pose either click on `+` or `+Input` on the node itself. Don't forget
-to connect some nodes to the new input poses.
-  - `Weight` - a weight of the pose; could be either a constant value or some parameter.
+- `Konum` - düğümün tuval üzerindeki konumu.
 
-### `Blend Animations By Index` Properties
+- `Poz Kaynakları` - bir dizi giriş pozu. Bir poz eklemek için düğümün üzerindeki `+` veya `+Giriş` düğmesine tıklayın. Bazı düğümleri yeni giriş pozlarına bağlamayı unutmayın
 
-Select a `Blend Animations By Index` node to edit the following properties:
+.
+
+- `Ağırlık` - pozun ağırlığı; sabit bir değer veya bir parametre olabilir.
+
+### `Dizinle Animasyonları Karıştır` Özellikleri
+
+Aşağıdaki özellikleri düzenlemek için bir `Blend Animations By Index` düğümü seçin:
 
 ![blend animations by index properties](./absm_blend_animations_by_index_properties.png) 
 
-- `Position` - is a location of the node on the canvas.
-- `Index Parameter` - a name of an indexing parameter (must be `Index` type).
-- `Inputs` - a set of input poses. To add a pose either click on `+` or `+Input` on the node itself. Don't forget to
-connect some nodes to the new input poses.
-  - `Blend Time` - defines how much time is needed to transition to the pose.
+- `Konum` - düğümün tuval üzerindeki konumu.
 
-### Connection Context Menu
+- `Dizin Parametresi` - bir dizin parametresinin adı (`Dizin` türü olmalıdır).
 
-Every connection has a context menu that can be shown by a right-click on a connection.
+- `Girişler` - bir dizi giriş pozu. Bir poz eklemek için düğümün üzerinde `+` veya `+Giriş` seçeneğine tıklayın. Bazı düğümleri yeni giriş pozlarına bağlamayı unutmayın.
+
+- `Poz` - düğümün kanvas üzerinde konumunu tanımlar.
+
+- `Poz Süresi` - düğümün pozda kalacağı süreyi tanımlar.
+
+### Bağlantı Bağlam Menüsü
+
+Her bağlantının, bağlantıya sağ tıklayarak görüntülenebilen bir bağlam menüsü vardır.
 
 ![connection context menu](./absm_connection_context_menu.png)
 
-- `Remove Connection` - removes the connection between parent nodes.
+- `Bağlantıyı Kaldır` - ana düğümler arasındaki bağlantıyı kaldırır.
 
-### Node Context Menu
 
-Every node has a context menu that can be shown by a right-click on a connection.
+
+### Düğüm Bağlam Menüsü
+
+
+
+Her düğüm, bağlantıya sağ tıklayarak görüntülenebilen bir bağlam menüsüne sahiptir.
 
 ![node context menu](./absm_node_context_menu.png)
 
-- `Set As Root` - sets the node as the final pose source of the parent state. 
-- `Remove` - removes the node from the state.
+- `Kök Olarak Ayarla` - düğümü, üst durumun son poz kaynağı olarak ayarlar. 
 
-## Layer Mask
+- `Kaldır` - düğümü durumdan kaldırır.
+
+
+
+## Katman Maskesi
 
 ![layer mask](./absm_layer_mask.png)
 
-Layer mask editor allows you to select which nodes **won't** be animated by the current animation layer. Selected nodes
-are marked with dark color. To select multiple nodes at once, hold `Ctrl` and click on items. The text box at the top
-of the window allows you to search for a particular scene node. To save edited layer mask click `OK`.
+Katman maskesi düzenleyicisi, mevcut animasyon katmanı tarafından animasyon uygulanmayacak düğümleri seçmenizi sağlar. Seçilen düğümler
+
+koyu renkle işaretlenir. Birden fazla düğümü aynı anda seçmek için `Ctrl` tuşunu basılı tutun ve öğelere tıklayın. Pencerenin üst kısmındaki metin kutusu
+
+belirli bir sahne düğümünü aramanızı sağlar. Düzenlenen katman maskesini kaydetmek için `Tamam` düğmesine tıklayın.
 
 ## Preview Mode
 
-Preview mode turns on the animation blending state machine and its animation player and allows you to see the result
-of the work of the machine. Any significant changes in the scene automatically disables the preview mode and any
-changes done by the machine is discarded. While the preview mode is active, you can freely change the values of the 
-parameters to see how the machine will react to this. This helps you to debug your state machine, it is especially 
-useful for complex state machines with lots of layers. Here's how the preview mode works:
+Önizleme modu, animasyon karıştırma durum makinesini ve animasyon oynatıcısını etkinleştirir ve makinenin çalışmasının sonucunu görmenizi sağlar
+
+. Sahne içindeki önemli değişiklikler önizleme modunu otomatik olarak devre dışı bırakır ve makine tarafından yapılan tüm
+
+değişiklikler silinir. Önizleme modu etkinken, parametrelerin değerlerini serbestçe değiştirerek 
+
+makinenin buna nasıl tepki vereceğini görebilirsiniz. Bu, durum makinenizi hata ayıklamanıza yardımcı olur ve özellikle 
+
+çok sayıda katman içeren karmaşık durum makineleri için kullanışlıdır. Önizleme modu şu şekilde çalışır:
 
 ![absm](./absm.gif)

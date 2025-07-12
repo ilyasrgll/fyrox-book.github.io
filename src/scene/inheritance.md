@@ -1,56 +1,97 @@
-# Property Inheritance
+# Özellik Kalıtımı
 
-Property inheritance is used to propagate changes of unmodified properties from a prefab to its instances. For example,
-you can change scale of a node in a prefab and its instances will have the same scale too, unless the scale is
-set explicitly in an instance. Such feature allows you to tweak instances, add some unique details to them, but take
-general properties from parent prefabs.
 
-Property inheritance works for prefab hierarchies of any depth, this means that you can create something like this:
-a room prefab can have multiple instances of various furniture prefabs in it, while the furniture prefabs can also be
-constructed from other prefabs and so on. In this case if you modify a property in one of the prefabs in the chain, 
-all instance will immediately sync their unmodified properties. 
 
-## How To Create Inheritable Properties
+Özellik kalıtımı, değiştirilmemiş özelliklerin bir prefabrikten örneklerine yayılması için kullanılır. Örneğin, bir prefabrikteki bir düğümün ölçeğini değiştirebilirsiniz ve ölçek bir örnekte açıkça belirtilmedikçe, örneklerin ölçeği de aynı olacaktır. Bu özellik, örnekleri ayarlamanıza, onlara bazı benzersiz ayrıntılar eklemenize, ancak genel özellikleri ana prefablardan almanızı sağlar.
 
-It is possible to use property inheritance for script variables. To make a property of your script inheritable, all you
-need is to wrap its value using `InheritableVariable` wrapper.
+
+
+Özellik mirası, herhangi bir derinlikteki prefab hiyerarşileri için çalışır. Bu, şunun gibi bir şey oluşturabileceğiniz anlamına gelir:
+Bir oda prefabında çeşitli mobilya prefablarının birden fazla örneği bulunabilir, mobilya prefabları da diğer prefablardan oluşturulabilir ve bu şekilde devam edebilir. Bu durumda, zincirdeki prefablardan birinde bir özelliği değiştirirseniz, tüm örnekler değiştirilmemiş özelliklerini hemen senkronize eder. 
+
+
+
+## Kalıtsal Özellikler Nasıl Oluşturulur
+
+
+
+Özellik kalıtımı, komut dosyası değişkenleri için de kullanılabilir. Komut dosyanızdaki bir özelliği kalıtsal hale getirmek için, değerini `InheritableVariable` sarmalayıcısıyla sarmalamanız yeterlidir.
+
+
 
 ```rust,no_run
+
 {{#include ../code/snippets/src/scene/inheritance.rs:my_script}}
+
 ```
 
-The engine will automatically resolve the correct value for the property when a scene with the script is loaded. If your
-property was modified, then its value will remain the same, it won't be overwritten by parent's value. Keep in mind,
-that the type of the inheritable variable must be cloneable and support reflection.
 
-`InheritableVariable` implements the `Deref<Target = T> + DerefMut` traits, this means that any access via the `DerefMut` trait
-will mark the property as modified. This could be undesired in some cases so `InheritableVariable` supports special `xxx_silent` 
-methods that don't touch the internal modifiers and allows you to substitute the value with some other "silently" -
-without marking the variable as modified.
 
-## Which Fields Should Be Inheritable?
+Motor, komut dosyasının bulunduğu sahne yüklendiğinde özelliğin doğru değerini otomatik olarak çözer.
 
-Inheritable variables intended to be "atomic" - it means that the variable stores some simple variable (`f32`, `String`,
-`Handle<Node>`, etc.). While it is possible to store "compound" variables (`InheritableVariable<YourStruct>`), it is
-not advised because of inheritance mechanism. When the engine sees inheritable variable, it searches the same variable
-in a parent entity and copies its value to the child, thus completely replacing its content. In this case, even if you
-have inheritable variables inside compound field, they won't be inherited correctly. Let's demonstrate this in the
-following code snippet:
+özelliğiniz değiştirilirse, değeri aynı kalır ve üst öğenin değeriyle üzerine yazılmaz. Unutmayın ki,
+
+ miras alınabilir değişkenin türü klonlanabilir olmalı ve yansıtmayı desteklemelidir.
+
+
+
+`InheritableVariable`, `Deref<Target = T> + DerefMut` özelliklerini uygular; bu, `DerefMut` özelliği aracılığıyla yapılan her erişimin
+
+özelliği değiştirilmiş olarak işaretlenir. Bu, bazı durumlarda istenmeyen bir durum olabilir, bu nedenle `InheritableVariable`, iç değiştiricilere dokunmayan ve değeri “sessizce” başka bir değerle değiştirmenize olanak tanıyan özel `xxx_silent` 
+
+yöntemlerini destekler -
+
+değişkeni değiştirilmiş olarak işaretlemeden.
+
+
+
+## Hangi Alanlar Kalıtsal Olmalıdır?
+
+
+
+“Atomik” olması amaçlanan miras alınabilir değişkenler - bu, değişkenin bazı basit değişkenleri (`f32`, `String`,
+
+`Handle<Node>`, vb.) depoladığı anlamına gelir. “Bileşik” değişkenleri (`InheritableVariable<YourStruct>`) depolamak mümkün olmakla birlikte,
+
+ miras alma mekanizması nedeniyle tavsiye edilmez. 
+Motor, miras alınabilir bir değişken gördüğünde, aynı değişkeni
+
+üst varlıkta arar ve değerini alt varlığa kopyalar, böylece içeriğini tamamen değiştirir. Bu durumda, bileşik alan içinde miras alınabilir değişkenler olsa bile, bunlar doğru şekilde miras alınmaz.
+
+Bunu aşağıdaki kod parçacığında gösterelim:
+
+
 
 ```rust,no_run
+
 {{#include ../code/snippets/src/scene/inheritance.rs:complex_inheritance}}
+
 ```
 
-This code snippet should clarify, that inheritable fields should contain some "simple" data, and almost never - complex
-structs.
 
-## Editor
 
-The editor wraps all inheritable properties in a special widget that supports property reversion. Reversion allows you
-to drop current changes and take the parent's property value. This is useful if you want a property to inherit its parent's 
-value. In the Inspector it looks like this:
+Bu kod parçacığı, miras alınabilir alanların bazı “basit” veriler içermesi gerektiğini ve neredeyse hiçbir zaman karmaşık
+
+yapılar içermemesi gerektiğini açıklığa kavuşturmalıdır.
+
+
+
+## Editör
+
+
+
+Editör, tüm miras alınabilir özellikleri, özellik geri alma özelliğini destekleyen özel bir widget ile sarar. Geri alma,
+
+mevcut değişiklikleri silmenize ve ebeveynin özellik değerini almanıza olanak tanır. Bu, bir özelliğin ebeveyninin değerini miras almasını istediğinizde kullanışlıdır.
+
+ Denetçide şöyle görünür:
+
+
 
 ![revert](./revert.png)
 
-Clicking on the `<` button will take the value from the parent prefab and the property won't be marked as modified anymore. In case
-there is no parent prefab, the button will just drop `modified` flag.
+
+
+`<` düğmesine tıklandığında, ebeveyn prefab'dan değer alınır ve özellik artık değiştirilmiş olarak işaretlenmez.
+
+Ebeveyn prefab yoksa, düğme sadece `modified` bayrağını kaldırır.

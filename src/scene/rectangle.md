@@ -1,41 +1,54 @@
-# Rectangle node
+# Rectangle düğümü
 
-Rectangle is the simplest "2D" node, it can be used to create "2D" graphics. 2D is in quotes here because the node
-is actually a 3D node, like everything else in the engine. Here is an example scene made with the rectangle nodes and 
-an orthographic camera:
+
+
+Rectangle, en basit “2D” düğümdür ve “2D” grafikler oluşturmak için kullanılabilir. 2D burada tırnak içinde yazılmıştır çünkü düğüm,
+
+ motorun diğer tüm öğeleri gibi aslında bir 3D düğümdür. Aşağıda, rectangle düğümleri ve 
+
+ortografik kamera kullanılarak oluşturulmuş bir örnek sahne gösterilmektedir:
 
 ![2d scene](2d_scene.PNG)
 
-As you can see it is a good basis for 2D games.
+Gördüğünüz gibi, 2D oyunlar için iyi bir temel oluşturmaktadır.
 
-## How to create
+## Nasıl oluşturulur
 
-Use the RectangleBuilder to create Rectangle nodes:
+Rectangle düğümleri oluşturmak için RectangleBuilder'ı kullanın:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/rectangle.rs:create_rect}}
 ```
 
-## Specifying image portion for rendering
+## Render için görüntü kısmını belirleme
 
-By default, Rectangle node uses entire image for rendering, but for some applications it is not enough. For example,
-you may want to use sprite sheets to animate your 2D entities. In this case you need to be able to use only portion
-of an image. It is possible to do by using `set_uv_rect` method of the Rectangle node. Here's an example of setting
-right-top quarter of an image to be used by a Rectangle node:
+
+
+
+Varsayılan olarak, Rectangle düğümü render için görüntünün tamamını kullanır, ancak bazı uygulamalar için bu yeterli değildir. Örneğin,
+
+
+
+2D varlıklarınızı canlandırmak için sprite sayfalarını kullanmak isteyebilirsiniz. Bu durumda, görüntünün sadece bir kısmını
+
+kullanabilmeniz gerekir. Bunu, Rectangle düğmesinin `set_uv_rect` yöntemini kullanarak yapabilirsiniz. Aşağıda, bir Rectangle düğmesi tarafından kullanılacak görüntünün sağ üst çeyreğini ayarlama örneği verilmiştir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/rectangle.rs:set_2nd_quarter_image_portion}}
 ```
 
-Keep in mind that every part of uv rectangle is proportional. For example 0.5 means 50%, 1.5 = 150% and so on. If width
-or height is exceeding 1.0 and the texture being used is set to Wrapping mode at respective axis, the image will tile
-across axes.
+UV rectangle'ın her bir parçası orantılıdır. Örneğin 0.5, %50, 1.5 = %150 vb. anlamına gelir. Genişlik
 
-## Animation
+veya yükseklik 1.0'ı aşarsa ve kullanılan doku ilgili eksende Wrapping moduna ayarlanmışsa, görüntü eksenler boyunca döşenecektir.
+
+## Animasyon
 
 See [Sprite Animation](../animation/spritesheet/spritesheet.md) chapter for more info.
 
-## Performance
+## Performans
 
-Rectangles use specialized renderer that is heavily optimized to render tons of rectangles at once, so you can use 
-rectangles almost for everything in 2D games.
+
+
+Dikdörtgenler, aynı anda çok sayıda dikdörtgeni işlemek için büyük ölçüde optimize edilmiş özel bir işleyici kullanır, böylece 
+
+dikdörtgenleri 2D oyunlarda hemen hemen her şey için kullanabilirsiniz.

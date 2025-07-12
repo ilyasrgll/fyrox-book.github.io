@@ -1,43 +1,66 @@
-# Prefabs
+# Prefabrikler
 
-A prefab is a separate scene that can be instantiated in some other scene, while preserving links between properties
-of its instances and of its parent prefab. Prefabs allow you to create a part of a scene and have multiple instances of
-it in other scenes.
 
-Let's quickly check what that means on practice. The engine has a prefab system which allows you to build 
-hierarchical scenes which can include any number of other scenes as child scenes. Child scenes can have their own child
-scenes and so on. This is very efficient decoupling mechanism that allows you to put pieces of the scene in separate 
-scenes (prefabs) and modify them independently. The changes in child scenes will be automatically reflected to all parent
-scenes. Here is the very simple example of why this is important: imagine you need to populate a town with 3D models of
-cars. Each kind of car has its own 3D model and for example, a collision body that won't allow the player to walk through
-cars. How would you do this? The simplest (and dumbest) solution is to copy dozens of car models in the scene, and
-you're done. Imagine that now you need to change something in your car, for example, add a trunk that can be opened.
-What will you do? Of course, you should "iterate" over each car model and do the required changes, you simply don't have
-any other option. This will eat huge amount of time and in general it is very non-productive.
 
-This is where prefabs will save you hours of work. All you need to do is to create a car prefab and instantiate it
-multiple times in your scene. When you'll need to change something in the car, you simply go to the prefab and change
-it. After that every prefab instance will have your changes!
+Prefabrik, başka bir sahnede örneklenebilen ayrı bir sahnedir ve örneklerinin ve ana prefabriklerin özellikleri arasındaki bağlantıları korur.
 
-Prefabs can be used to create self-contained entities in your game, examples of this includes: visual effects, 
-any scripted game entities (bots, turrets, player, doors, etc.). Such prefabs can be either directly instantiated in
-a scene in the editor, or instantiated at runtime when needed.
+Prefabrikler, bir sahnenin bir bölümünü oluşturmanıza ve diğer sahnelerde bunun birden fazla örneğini oluşturmanıza olanak tanır.
 
-## How to create and use a prefab
 
-All you need to do is to make a scene in the editor with all required objects and save it! After that, you can use the
-scene in other scenes and just do its instantiation, as in usual 3D models. You can either instantiate it from the
-editor by drag'n'drop a prefab to scene previewer, or do standard [model resource instantiation](../resources/model.md#instantiation)
 
-## Property inheritance
+Bunun pratikte ne anlama geldiğini hızlıca kontrol edelim. Motor, 
 
-As already mentioned in the intro section, instances inherit properties from their parent prefabs. For example, you
-can change position of an object in prefab and every instance will reflect that change - the object's instances will
-also move. This works until there's no manual change to a property in instance, if you do so, your change is 
-considered with higher priority. See [this chapter](./inheritance.md) for more info.
+hiyerarşik sahneler oluşturmanıza olanak tanıyan bir prefab sistemi içerir. Bu sahneler, alt sahne olarak istediğiniz sayıda başka sahne içerebilir. Alt sahneler de kendi alt
 
-## Hierarchical Prefabs
+sahneleri içerebilir ve bu şekilde devam eder. Bu, sahnenin parçalarını ayrı 
 
-Prefabs can have other prefab instances inside it. This means that you can, for example, create a room populated with
-instances of other prefabs (bookshelves, chairs, tables, etc.) and then use the room prefab to build a bigger scene.
-The changes in the base prefabs will be reflected in their instances, regardless of how deep the hierarchy is.
+sahnelere (prefabler) yerleştirip bağımsız olarak değiştirebilmenizi sağlayan çok verimli bir ayırma mekanizmasıdır. Alt sahnelerde yapılan değişiklikler, tüm ana
+
+sahnelere otomatik olarak yansıtılır. Bunun neden önemli olduğunun çok basit bir örneği: Bir kasabayı 3D model arabalarla doldurmanız gerektiğini düşünün.
+
+Her araba türünün kendi 3D modeli ve örneğin oyuncunun arabaların içinden geçmesini engelleyen bir çarpışma gövdesi vardır.
+ Bunu nasıl yapardınız? En basit (ve en aptalca) çözüm, sahneye düzinelerce araba modelini kopyalamaktır ve
+işiniz biter. Şimdi arabanızda bir şey değiştirmeniz gerektiğini düşünün, örneğin açılabilen bir bagaj eklemek.
+Ne yaparsınız? Elbette, her araba modelini “tekrarlayıp” gerekli değişiklikleri yapmanız gerekir, başka
+
+seçeneğiniz yoktur. Bu çok zaman alır ve genellikle çok verimsizdir.
+
+
+İşte bu noktada prefabrikler size saatlerce sürecek işten kurtarır. Tek yapmanız gereken bir araba prefabriği oluşturmak ve bunu sahnenizde birden çok kez örneklendirmektir. Arabada bir şeyi değiştirmeniz gerektiğinde, prefabriğe gidip onu değiştirmeniz yeterlidir. Bundan sonra, her prefabrik örneği değişikliklerinizi yansıtacaktır!
+
+Prefabrikler, oyununuzda bağımsız varlıklar oluşturmak için kullanılabilir. Buna örnek olarak görsel efektler, 
+herhangi bir komut dosyası içeren oyun varlıkları (botlar, taretler, oyuncular, kapılar vb.) verilebilir. Bu tür prefabrikler,
+editördeki bir sahnede doğrudan örneklenebilir veya gerektiğinde çalışma zamanında örneklenebilir.
+
+## Prefabrik nasıl oluşturulur ve kullanılır?
+
+Tek yapmanız gereken, editörde gerekli tüm nesneleri içeren bir sahne oluşturmak ve kaydetmek! Bundan sonra,
+
+
+sahneyi diğer sahnelerde kullanabilir ve normal 3D modellerde olduğu gibi sadece örneklendirme işlemini yapabilirsiniz. Örneklemeyi,
+
+editeden sahne önizleyicisine bir prefab sürükleyip bırakarak veya standart [model kaynağı örneklendirme](../resources/model.md#instantiation)
+
+## Özellik mirası
+
+
+
+Giriş bölümünde de belirtildiği gibi, örnekler özelliklerini üst prefab'lardan miras alır. Örneğin,
+
+prefab'daki bir nesnenin konumunu değiştirdiğinizde, tüm örnekler bu değişikliği yansıtır ve nesnenin örnekleri de
+
+hareket eder. Bu, örnekteki bir özelliğe manuel olarak değişiklik yapılmadığı sürece geçerlidir. Manuel değişiklik yaparsanız, sizin değişiklikleriniz 
+
+
+daha yüksek öncelikli olarak değerlendirilir. Daha fazla bilgi için [bu bölüme](./inheritance.md) bakın.
+
+## Hiyerarşik Prefabrikler
+
+
+
+
+Prefabriklerin içinde başka prefabrik örnekleri olabilir. Bu, örneğin,
+
+diğer prefabriklerin örnekleriyle (kitap rafları, sandalyeler, masalar vb.) dolu bir oda oluşturabilir ve ardından oda prefabriklerini kullanarak daha büyük bir sahne oluşturabilirsiniz.
+
+Temel prefabriklerdeki değişiklikler, hiyerarşinin derinliği ne olursa olsun, örneklerine yansıtılacaktır.

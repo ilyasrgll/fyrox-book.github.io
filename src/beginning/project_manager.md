@@ -1,86 +1,129 @@
-# Project Manager
+# Proje Yöneticisi
 
-This chapter explains how to use various parts of the project manager, what it can do in general, and why you should
-prefer it over good ol' console commands.
 
-## Overview
+Bu bölümde, proje yöneticisinin çeşitli bölümlerinin nasıl kullanıldığı, genel olarak neler yapabildiği ve neden eski konsol komutlarına tercih edilmesi gerektiği açıklanmaktadır.
 
-![project manager](project_manager.png)
 
-Project manager is a tool that is able to create projects, import existing projects, configure and build them, etc. Its 
-main purpose is to reduce the complexity of project management to the minimum. For example, a new project can be created
-and built in a few clicks. While the same is possible to be done manually, it requires some juggling with console commands
-that in some cases (code hot reloading) contains a lot of unexpected parts.
+## Genel Bakış
 
-## Creating a New Project
 
-To create a new project simply click on `+Create` button, and you should see the following window:
+![proje yöneticisi](project_manager.png)
+
+
+Proje yöneticisi, projeler oluşturmak, mevcut projeleri içe aktarmak, yapılandırmak ve derlemek gibi işlemleri gerçekleştirebilen bir araçtır. 
+
+Ana amacı, proje yönetiminin karmaşıklığını en aza indirmektir. Örneğin, birkaç tıklama ile yeni bir proje oluşturulabilir ve derlenebilir. Aynı işlem manuel olarak da yapılabilir, ancak bu durumda konsol komutlarıyla uğraşmak gerekir ve bazı durumlarda (kodun yeniden yüklenmesi) bu komutlar birçok beklenmedik bölüm içerebilir.
+
+## Yeni Proje Oluşturma
+
+Yeni bir proje oluşturmak için `+create` düğmesine tıklayın, ardından aşağıdaki pencere açılacaktır:
 
 ![project manager wizard](pm_create_project.png)
 
-This window contains four major options for your project:
+Bu pencere, projeniz için dört ana seçenek içerir:
 
-- `Path` - specifies a parent directory in which a project's directory will be created and then filled with the
-project's files.
-- `Name` - project name, it must follow specific rules. The name must start either from a letter or underscore (`_`),
-the rest of the characters must be letters, numbers, hyphens (`-`), underscore (`_`). The project manager performs 
-name validation for you:
+
+
+- `Yol` - projenin dizinlerinin oluşturulacağı ve daha sonra projenin dosyalarıyla doldurulacağı üst dizini belirtir.
+
+- `Ad` - proje adı, belirli kurallara uymalıdır. Ad, bir harf veya alt çizgi (`_`) ile başlamalıdır, geri kalan karakterler harf, rakam, tire (`-`)
+
+- `Ad` - proje adı, belirli kurallara uymalıdır. Ad, bir harf veya alt çizgi (`_`) ile başlamalıdır,
+
+geri kalan karakterler harf, rakam, tire (`-`) veya alt çizgi (`_`) olmalıdır. Proje yöneticisi 
+
+adınızı sizin için doğrular:
 
 ![project manager name validation](pm_validation.png)
 
-- `Style` - defines initial content of the default scene. In general, it does not restrict you to a specific number
-of dimensions—you can still use both 2D and 3D or mix them.
-- `Version Control` - allows you to select a desired version control system (VCS) for your project. It is Git by default,
-but you can select any VCS you like or disable it completely by selecting `None` option.
+- `Stil` - varsayılan sahnenin ilk içeriğini tanımlar. Genel olarak, sizi belirli bir boyut sayısıyla sınırlamaz
 
-Every project has its own item in the list of projects, it shows important information about the project:
+; 2D ve 3D'yi birlikte kullanabilir veya karıştırabilirsiniz.
+
+- `Sürüm Kontrolü` - projeniz için istediğiniz sürüm kontrol sistemini (VCS) seçmenizi sağlar. Varsayılan olarak Git'tir,
+
+ancak istediğiniz herhangi bir VCS'yi seçebilir veya `Yok` seçeneğini seçerek tamamen devre dışı bırakabilirsiniz.
+
+
+
+Her projenin proje listesinde kendi öğesi vardır, proje hakkında önemli bilgileri gösterir:
 
 ![project info](pm_project_info.png)
 
-1. Project name.
-2. Full path to the project.
-3. Version of the engine the project uses.
-4. Code hot reloading marker. 
+1. Proje adı.
 
-## Project Management
+2. Projenin tam yolu.
+
+3. Projenin kullandığı motorun sürümü.
+
+4. Kodun sıcak yeniden yükleme işaretçisi.
+
+## Proje Yönetimi
 
 ![project management](pm_management.png)
 
-When a project is selected, it is possible to manage it using the toolbar on the right side. The available options 
-are the following:
+Bir proje seçildiğinde, sağ taraftaki araç çubuğunu kullanarak projeyi yönetebilirsiniz. Kullanılabilir seçenekler 
 
-- `Hot Reloading` - allows you to enable or disable code hot reloading. Code hot reloading is a handy feature
-for rapid prototyping. See [the respective chapter](./hot_reloading.md) for more info.
-- `Edit` - builds and runs the editor.
-- `Run` - builds and runs the game. Final builds of the game should be produced using the project exporter tool of the
-editor. See [the respective chapter](../shipping/shipping.md) for more info. 
-- `Open IDE` - opens the specified IDE to edit the project's source code. 
-- `Upgrade` - opens a separate tool that allows you to select a desired engine version. See 
-[the section below](#project-upgrade) for more info.
-- `Clean` - removes all build artifacts from the project. Essentially it just runs `cargo clean` command for your project.
-- `Locate` - opens the project directory in the file system explorer.
-- `Delete` - deletes the project. This is a destructive operation, and it is "gated" with a separate confirmation dialog.
-- `Exclude` - removes the project from the list of projects.
+şunlardır:
 
-## Project Upgrade
+
+
+- `Hot Reloading` - kodun sıcak yeniden yüklenmesini etkinleştirir veya devre dışı bırakır. Kodun sıcak yeniden yüklenmesi, hızlı prototip oluşturma için kullanışlı bir özelliktir.
+
+ Daha fazla bilgi için [ilgili bölüme](./hot_reloading.md) bakın.
+
+- `Edit` - editörü oluşturur ve çalıştırır.
+
+- `Run` - oyunu oluşturur ve çalıştırır. Oyunun son sürümleri,
+
+
+editörünün proje dışa aktarma aracı kullanılarak üretilmelidir. Daha fazla bilgi için [ilgili bölüme](../shipping/shipping.md) bakın.
+ 
+- `IDE'yi aç` - projenin kaynak kodunu düzenlemek için belirtilen IDE'yi açar.
+
+- `Yükselt` - istediğiniz motor sürümünü seçmenize olanak tanıyan ayrı bir araç açar. Daha fazla bilgi için
+
+aşağıdaki bölüme bakın.
+
+- `Temizle` - projeden tüm derleme kalıntılarını kaldırır. Esasen, projeniz için `cargo clean` komutunu çalıştırır.
+
+- `Bul` - dosya sistemi gezgininde proje dizinini açar.
+
+- `Sil` - projeyi siler. Bu, geri dönüşü olmayan bir işlemdir ve ayrı bir onay iletişim kutusu ile “kilitlenir”.
+
+- `Hariç tut` - projeyi proje listesinden kaldırır.
+
+## Proje Güncellemesi
 
 ![project manager upgrade](pm_upgrade.png)
 
-This tiny tool allows you to select a desired version of the engine in a few clicks. Available options are the following:
+Bu küçük araç, birkaç tıklama ile istediğiniz motor sürümünü seçmenizi sağlar. Kullanılabilir seçenekler şunlardır:
 
-- `Specific` - specific version of the engine. The version must comply with semver rules (for example - `0.36.0`).
-- `Nightly` - latest possible _potentially unstable_ version of the engine directly from the development branch (`master`)
-of the [GitHub repo](https://github.com/FyroxEngine/Fyrox). Use it if you need latest features and bugfixes.
-- `Local` - special option that allows you to switch the engine to local copy of the engine repository. The engine must
-be located in the parent folder of your project's directory.
 
-## Settings
+
+- `Specific` - motorun belirli bir sürümü. Sürüm, semver kurallarına uygun olmalıdır (örneğin - `0.36.0`).
+
+
+- `Nightly` - geliştirme dalından doğrudan alınan, mümkün olan en son _potansiyel olarak kararsız_ motor sürümü (`master`)
+
+[GitHub deposundan](https://github.com/FyroxEngine/Fyrox). En son özelliklere ve hata düzeltmelerine ihtiyacınız varsa kullanın.
+
+- `Local` - motoru motor deposunun yerel kopyasına geçirmeyi sağlayan özel seçenek. Motor
+
+projenizin dizinindeki üst klasörde bulunmalıdır.
+
+## Ayarlar
 
 ![project manager settings](pm_settings.png)
 
-Project manager has its own settings, it is not much for now, but it will grow over time. Currently, there's only one
-option—an IDE that can be used to edit source code of your project.
+Proje yöneticisinin kendi ayarları vardır, şimdilik çok fazla değildir, ancak zamanla gelişecektir. Şu anda tek bir
 
-All that you need to is to specify a name of the executable of your IDE. The image above uses `RustRover` IDE. Keep in
-mind, that you must modify your `PATH` environment variable to include full path to the specified executable, otherwise
-this option will not work correctly!
+seçenek vardır: projenizin kaynak kodunu düzenlemek için kullanılabilen bir IDE.
+
+
+
+Tek yapmanız gereken, IDE'nizin yürütülebilir dosyasının adını belirtmektir. Yukarıdaki görüntüde `RustRover` IDE kullanılmıştır.
+
+Belirtilen yürütülebilir dosyaya tam yolun eklenmesi için `PATH` ortam değişkenini değiştirmeniz gerektiğini unutmayın, aksi takdirde
+
+bu seçenek düzgün çalışmayacaktır!

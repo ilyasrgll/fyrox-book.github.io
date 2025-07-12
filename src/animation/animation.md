@@ -1,10 +1,13 @@
-# Animation
+# Animasyon
 
-Animation allows you to change properties of scene nodes at runtime using a set of key frames. Animation
-consists of multiple tracks, where each track is bound to a property of a scene node. A track can animate
-any numeric properties, starting from numbers (including `bool`) end ending by 2/3/4 dimensional vectors.
-Each component (number, x/y/z/w vector components) is stored in a _parametric curve_. Every parametric curve contains zero or more _key frames_.
-Graphically this could be represented like so:
+
+
+Animasyon, bir dizi anahtar kare kullanarak sahne düğümlerinin özelliklerini çalışma zamanında değiştirmenize olanak tanır. Animasyon,
+ her biri bir sahne düğümünün bir özelliğine bağlı olan birden çok parçadan oluşur. Bir parça, sayılardan (`bool` dahil) başlayıp 2/3/4 boyutlu vektörlerle biten
+herhangi bir sayısal özelliği canlandırabilir.
+Her bileşen (sayı, x/y/z/w vektör bileşenleri) bir _parametrik eğri_ içinde saklanır. Her parametrik eğri sıfır veya daha fazla _anahtar kare_ içerir.
+
+Grafiksel olarak bu şekilde gösterilebilir:
 
 ```text
                                          Timeline
@@ -22,118 +25,176 @@ Graphically this could be represented like so:
            | ............  |.....................................
 ```
 
-Each key frame is just a real number with interpolation mode. Interpolation mode tells the engine how to
-calculate intermediate values between key frames. There are three kinds of interpolation used in animations
-(you can skip "boring math" if you want):
+Her anahtar kare, enterpolasyon moduna sahip bir gerçek sayıdır. Enterpolasyon modu, motora anahtar kareler arasındaki ara değerleri nasıl hesaplayacağını söyler.
 
-- **Constant** - intermediate value will be calculated using leftmost value of two. Constant "interpolation" is
-  usually used to create step-like behaviour, the most common case is to "interpolate" two boolean values.
-- **Linear** - intermediate value will be calculated using linear interpolation `i = left + (right - left) / t`,
-  where `t = (time_position - left) / (right - left)`. `t` is always in `0..1` range. Linear interpolation is usually
-  used to create "straight" transitions between two values.
-- **Cubic** - intermediate value will be calculated using Hermite cubic spline:
+ Animasyonlarda üç tür enterpolasyon kullanılır
+
+(isterseniz “sıkıcı matematik” kısmını atlayabilirsiniz):
+
+
+
+- **Constant** - ara değer, ikisinin en soldaki değeri kullanılarak hesaplanır. Sabit “interpolasyon”
+
+ genellikle adım adım davranış oluşturmak için kullanılır, en yaygın durum iki boolean değerini “interpolasyon” yapmaktır.
+
+- **Linear** - ara değer, doğrusal interpolasyon `i = left + (right - left) / t` kullanılarak hesaplanır,
+
+  
+burada `t = (time_position - left) / (right - left)`. `t` her zaman `0..1` aralığındadır. Doğrusal interpolasyon genellikle
+
+  iki değer arasında “düz” geçişler oluşturmak için kullanılır.
+
+- **Kübik** - ara değer Hermite kübik spline kullanılarak hesaplanır:
   `i = (2t^3 - 3t^2 + 1) * left + (t^3 - 2t^2 + t) * left_tangent + (-2t^3 + 3t^2) * right + (t^3 - t^2) * right_tangent`,
-  where `t = (time_position - left) / (right - left)` (`t` is always in `0..1` range), `left_tangent` and `right_tangent`
-  is usually a `tan(angle)`. Cubic interpolation is usually used to create "smooth" transitions between two values.
+  
+burada `t = (time_position - left) / (right - left)` (`t` is always in `0..1` range), `left_tangent` and `right_tangent`
 
-## Web Demo
+  genellikle `tan(angle)`'dir. Kübik enterpolasyon genellikle iki değer arasında “pürüzsüz” geçişler oluşturmak için kullanılır.
 
-You can explore animation system capabilities in this [web demo](https://fyrox.rs/assets/demo/animation/index.html). Keep
-in mind, that it was designed to run on PC and wasn't tested on mobile devices.
+## Web Demosu
 
-## Track binding
 
-Each track is always bound to a property in a node, either by its name or by a special binding. The name is used to fetch the
-property using reflection, the special binding is a faster way of fetching built-in properties. It is usually used to animate
-position, scale and rotation (these are the most common properties available in every scene node).
 
-## Time slice and looping
-While key frames on the curves can be located at arbitrary position in time, animations usually plays a specific time slice.
-By default, each animation will play on a given time slice infinitely - it is called _animation looping_, it works in both
-playback directions.
+Bu [web demosunda](https://fyrox.rs/assets/demo/animation/index.html) animasyon sisteminin özelliklerini keşfedebilirsiniz.
 
-## Speed
-You can vary playback speed in wide range, by default every animation has playback speed multiplier set to 1.0. The multiplier
-tells how faster (>1) or slower (<1) the animation needs to be played. Negative speed multiplier values will reverse playback.
+Bu demo PC'lerde çalışmak üzere tasarlanmıştır ve mobil cihazlarda test edilmemiştir.
 
-## Enabling or disabling animations
-Sometimes there's a need to disable/enable an animation or check if it is enabled or not, you can do this by using the pair
-of respective methods - `Animation::set_enabled` and `Animation::is_enabled`.
+## Parça bağlama
 
-## Signals
-Signal is a named marker on specific time position on the animation timeline. Signal will emit an event if the animation playback
-time passes signal's position from left-to-right (or vice versa depending on playback direction). Signals are usually used to
-attach some specific actions to a position in time. For example, you can have a walking animation and you want to emit sounds
-when character's feet touch ground. In this case you need to add a few signals at times when each foot touches the ground.
-After that all you need to do is to fetch animation events one-by-one and emit respective sounds. See respective 
-[chapter](signal.md) for more info.
 
-## Creating From Code
 
-Usually, animations are created from the editor or some external tool and then imported in the engine. Before trying the example
-below, please read the docs for `AnimationPlayer` node, it is much more convenient way of animating
-other nodes. The node can be created from the editor, and you don't even need to write any code.
-Use the following example code as a guide **only** if you need to create procedural animations:
+Her parça, adıyla veya özel bir bağlama ile bir düğümdeki bir özelliğe her zaman bağlanır. Ad, yansıma kullanarak özelliği almak için kullanılır,
+ özel bağlama ise yerleşik özellikleri almak için daha hızlı bir yoldur. Genellikle konum, ölçek ve döndürme animasyonları için kullanılır
+(bunlar her sahne düğümünde bulunan en yaygın özelliklerdir).
+
+
+
+## Zaman dilimi ve döngü
+
+Eğrilerdeki anahtar kareler zaman içinde rastgele konumlara yerleştirilebilir, ancak animasyonlar genellikle belirli bir zaman diliminde oynatılır.
+Varsayılan olarak, her animasyon belirli bir zaman diliminde sonsuza kadar oynatılır. Buna _animasyon döngüsü_ denir ve her iki
+oynatma yönünde de çalışır.
+
+
+
+## Hız
+
+Oynatma hızını geniş bir aralıkta değiştirebilirsiniz, varsayılan olarak her animasyonun oynatma hızı çarpanı 1,0 olarak ayarlanmıştır. Çarpan,
+ animasyonun ne kadar daha hızlı (>1) veya daha yavaş (<1) oynatılması gerektiğini belirtir. Negatif hız çarpanı değerleri oynatmayı tersine çevirir.
+
+
+
+## Animasyonları etkinleştirme veya devre dışı bırakma
+
+Bazen bir animasyonu devre dışı bırakmak/etkinleştirmek veya etkin olup olmadığını kontrol etmek gerekebilir. Bunu, ilgili yöntemler olan
+
+`Animation::set_enabled` ve `Animation::is_enabled` çiftini kullanarak yapabilirsiniz.
+
+## Sinyaller
+
+Sinyal, animasyon zaman çizelgesinde belirli bir zaman konumunda bulunan adlandırılmış bir işaretçidir. Sinyal, animasyonun oynatma
+zamanı sinyalin konumunu soldan sağa (veya oynatma yönüne bağlı olarak tersi) geçerse bir olay yayar. Sinyaller genellikle
+
+
+belirli eylemleri zaman içindeki bir konuma eklemek için kullanılır. Örneğin, bir yürüme animasyonunuz var ve karakterin ayakları yere değdiğinde
+sesleri yaymak istiyorsunuz. Bu durumda, her ayağın yere değdiği anlara birkaç sinyal eklemeniz gerekir.
+
+Bundan sonra tek yapmanız gereken, animasyon olaylarını tek tek almak ve ilgili sesleri yaymaktır. Daha fazla bilgi için ilgili 
+[bölüme](signal.md) bakın.
+
+## Koddan Oluşturma
+
+
+
+Genellikle animasyonlar editörden veya bazı harici araçlardan oluşturulur ve ardından motora içe aktarılır. Aşağıdaki örneği denemeden önce,
+
+ `AnimationPlayer` düğümüyle ilgili belgeleri okuyun, bu diğer düğümleri canlandırmak için çok daha uygun bir yoldur.
+
+ Düğüm editörden oluşturulabilir ve herhangi bir kod yazmanıza bile gerek yoktur.
+
+Prosedürel animasyonlar oluşturmanız gerekiyorsa **sadece** aşağıdaki örnek kodu kılavuz olarak kullanın:
 
 ```rust,no_run
 {{#include ../code/snippets/src/animation/mod.rs:create_animation}}
 ```
 
-The code above creates a simple animation that moves a node along X axis in various ways. The usage of the animation
-is only for the sake of completeness of the example. In the real games you need to add the animation to an animation
-player scene node, and it will do the job for you.
+Yukarıdaki kod, bir düğümü X ekseni boyunca çeşitli şekillerde hareket ettiren basit bir animasyon oluşturur. Animasyonun
 
-## Importing
+kullanımı, örneği tamamlamak amacıyla yapılmıştır. Gerçek oyunlarda, animasyonu bir animasyon
 
-It is also possible to import an animation from external source (such as FBX files). You can do this in two major
-ways: from code or from the editor. The following sections shows how to use both ways.
+oynatıcı sahne düğümüne eklemeniz gerekir; bu, işi sizin için yapacaktır.
 
-### From Editor
 
-At first, make sure that you have your 3D model instantiated in the scene. The following example has `agent.fbx`
-instance in the scene (to do that, just drag'n'drop your 3D model in the scene from the Asset Browser). To import 
-an animation you need to create an `Animation Player` scene node, open the [Animation Editor](anim_editor.md) and
-click the button with arrow-down icon:
+
+## İçe Aktarma
+
+
+
+Dış kaynaklardan (FBX dosyaları gibi) animasyon içe aktarmak da mümkündür. Bunu iki ana
+
+yol ile yapabilirsiniz: koddan veya düzenleyiciden. Aşağıdaki bölümlerde her iki yolun nasıl kullanıldığı gösterilmektedir.
+
+### Editörden
+
+
+
+İlk olarak, 3D modelinizin sahnede örneklendiğinden emin olun. Aşağıdaki örnekte sahnede `agent.fbx`
+
+örneği içerir (bunu yapmak için, 3D modelinizi Varlık Tarayıcıdan sahneye sürükleyip bırakın). Bir animasyonu içe aktarmak için 
+
+bir `Animation Player` sahne düğümü oluşturmanız, [Animation Editor](anim_editor.md) penceresini açmanız ve
+
+aşağı ok simgeli düğmeyi tıklamanız gerekir:
 
 ![Step 1](import_animation_1.png)
 
-Now you need to pick the root node of your 3D model to which you'll import your animation. Usually it will be called
-the same as your 3D model (`agent.fbx` on the screenshot below):
+Şimdi, animasyonunuzu içe aktaracağınız 3D modelinizin kök düğümünü seçmeniz gerekir. Genellikle bu düğüm,
+
+3D modelinizle aynı ada sahiptir (aşağıdaki ekran görüntüsünde `agent.fbx`):
 
 ![Step 2](import_animation_2.png)
 
-The last thing you need to do is to pick the animation you want to import:
+Son olarak, içe aktarmak istediğiniz animasyonu seçmeniz gerekir:
 
 ![Step 3](import_animation_3.png)
 
-If everything is correct, you can preview your animation by clicking `Preview` checkbox:
+Her şey doğruysa, `Önizleme` onay kutusunu tıklayarak animasyonunuzu önizleyebilirsiniz:
 
 ![Step 4](import_animation_4.png)
 
-### From Code
+### Koddan
 
-You can do the same as in the previous section, but from code:
+
+
+Önceki bölümde yaptığınızın aynısını koddan da yapabilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/animation/mod.rs:create_animated_character}}
 ```
 
-As you can see, at first this code creates an instance of a 3D model. Then it loads an animation and creates its
-instance in the animation player. Please note, that this code uses `async`, which produces a future which should
-be driven by some executor. You can use `block_on` method to execute it at call site (this won't work on WebAssembly).
+Gördüğünüz gibi, bu kod ilk olarak bir 3D model örneği oluşturur. Ardından bir animasyon yükler ve
 
-It is advised to prefer the editor to code approach, because it hides all this tedious code and properly handles 
-asynchronous loading on all platforms.
+animasyon oynatıcıda örneğini oluşturur. Bu kodun, bir yürütücü tarafından çalıştırılması gereken bir gelecek üreten `async` kullandığını lütfen unutmayın.
 
-## Playing an Animation
+ Bunu çağrı yerinde yürütmek için `block_on` yöntemini kullanabilirsiniz (bu, WebAssembly'de çalışmaz).
+Tüm bu sıkıcı kodu gizlediği ve tüm platformlarda eşzamansız yüklemeyi düzgün bir şekilde işlediği için, kodlama yaklaşımını tercih etmeniz önerilir
 
-Animations will be played automatically if the respective animation player is has the property `Auto Apply` set to
-`true`. Since the animation player can contain multiple animations, all of them will be played at once. You can 
-enable/disable animations when needed by finding them by name from code and switching `Enabled` property:
+.
+
+## Animasyon Oynatma
+
+
+
+Animasyonlar, ilgili animasyon oynatıcısının `Auto Apply` özelliği
+
+`true` olarak ayarlanmışsa otomatik olarak oynatılır. Animasyon oynatıcı birden fazla animasyon içerebileceğinden, tüm animasyonlar aynı anda oynatılır. 
+
+Animasyonları gerektiğinde etkinleştirebilir/devre dışı bırakabilirsiniz. Bunun için kodda animasyonların adını bulun ve `Enabled` özelliğini değiştirin:
 
 ```rust,no_run
 {{#include ../code/snippets/src/animation/mod.rs:enable_animation}}
 ```
 
-This code could also be used to change animation properties at runtime. To do that, replace `set_enabled` with some
-other methods, such as `set_speed`, `set_loop`, `set_root_motion_settings` etc.
+Bu kod, çalışma zamanında animasyon özelliklerini değiştirmek için de kullanılabilir. Bunu yapmak için, `set_enabled` ifadesini
+
+`set_speed`, `set_loop`, `set_root_motion_settings` vb. gibi başka yöntemlerle değiştirin.

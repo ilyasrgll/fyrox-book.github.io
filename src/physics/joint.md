@@ -1,52 +1,78 @@
 # Joint
 
-Joint is a configurable link between two rigid bodies, it restricts relative motion of two bodies. Fyrox provides a 
-fixed set of joints that are suitable for various applications.
+Eklem, iki rijit cisim arasındaki yapılandırılabilir bir bağlantıdır ve iki cismin göreceli hareketini kısıtlar. Fyrox, 
+çeşitli uygulamalar için uygun sabit bir eklem seti sunar.
 
-- Fixed Joint - hard link between two bodies, it is the same is if two rigid bodies were "welded" to each other with 
-a metal rod.
-- Revolute Joint - restricts all translational movement and any rotations around Y and Z axes, but leaves rotation
-around local X axis free. An example of the joint from real world is a door hinge, it allows the door to rotate around 
-single axis, but not move.
-- Prismatic Joint - restricts all rotations, movement is allowed along single axis (local X of the joint). An example
-of the joint from real world could be a slider that supports drawers on a table.
-- Ball Joint - restricts all movement, but leaves rotations unrestricted. An example of a ball joint from real world 
-could be human shoulder.
+- Sabit Eklem - iki cisim arasındaki sert bağlantı, iki rijit cismin metal bir çubukla birbirine “kaynaklanmış” olmasıyla aynıdır.
 
-2D joints does not have revolute joints, because it degenerates into ball joint.
+- Döner Eklem - tüm öteleme hareketlerini ve Y ve Z eksenleri etrafındaki tüm dönüşleri kısıtlar, ancak yerel X ekseni etrafındaki dönüşleri serbest bırakır.
+ Gerçek dünyadan bir eklem örneği, kapı menteşesidir; kapının tek bir eksen etrafında dönmesine izin verir, ancak hareket etmesine izin vermez
+.
 
-## Bodies Binding
 
-When the joint is created and all bodies are set to it, it uses self global transform and bodies global transforms to
-calculate local frames for bodies. This process is called _binding_, it happens once when the joint is created, but
-can be initiated by moving the joint to some other position by changing local transform of the joint.
+- Prizmatik Eklem - tüm dönüşleri kısıtlar, hareket tek bir eksen boyunca (eklemin yerel X ekseni) izin verilir. 
+Gerçek hayatta bu eklemin bir örneği, masadaki çekmeceleri destekleyen bir sürgü olabilir.
 
-## How to create
+- Bilyalı Eklem - tüm hareketleri kısıtlar, ancak dönmeleri kısıtlamaz. Gerçek hayatta bilyalı eklemin bir örneği 
+insan omuzu olabilir.
 
-To create a joint from code use `JointBuilder`:
+
+
+2D eklemlerde dönme eklemleri yoktur, çünkü bunlar bilyalı eklemlere dönüşür.
+
+## Bedenleri Bağlama
+
+
+
+Eklem oluşturulduğunda ve tüm bedenler ona ayarlandığında, kendi küresel dönüşümünü ve bedenlerin küresel dönüşümlerini kullanarak
+
+bedenler için yerel çerçeveleri hesaplar. Bu işleme _bağlama_ denir ve eklem oluşturulduğunda bir kez gerçekleşir, ancak
+
+eklemin yerel dönüşümünü değiştirerek eklemi başka bir konuma taşıyarak başlatılabilir.
+
+## Nasıl oluşturulur
+
+Koddan bir eklem oluşturmak için `JointBuilder` kullanın:
 
 ```rust,no_run
+
 {{#include ../code/snippets/src/scene/joint.rs:create_joint}}
+
 ```
 
-Once the joint is created, it will bind given bodies, using the process describe in the above section.
+Eklem oluşturulduktan sonra, yukarıdaki bölümde açıklanan işlemleri kullanarak verilen gövdeleri birbirine bağlar.
 
-To create a joint from editor, use  `MainMenu -> Create -> Physics -> Joint`, select the new joint and find `Body1` and
-`Body2` properties. Assign the fields by holding `Alt` key and drag'n'drop a rigid body to a field. Move the joint to 
-correct position to ensure the binding will happen as intended.
+Editörden bir eklem oluşturmak için  `MainMenu -> Create -> Physics -> Joint` seçin, yeni eklemi seçin ve `Body1` ve
+`Body2` özelliklerini bulun. `Alt` tuşunu basılı tutarak alanları atayın ve bir rigid body'yi bir alana sürükleyip bırakın. Bağlanmanın istenildiği gibi gerçekleşmesini sağlamak için eklemi 
+doğru konuma taşıyın.
 
-## Limits 
+## Sınırlar
 
-You can restrict motion on primary joint axis (rotational and translational) by setting a limit to desired axis. 
 
-- Ball Joint have three angular limits, one per rotation around an axis. The angle range is given in radians.
-- Prismatic Joint have only one limit it is maximum linear distance between two bodies along primary joint axis.
-- Revolute Joint have a single angular limit around primary axis. The angle range is given in radians.
-- Fixed Joint does not have any limit setting, because it locks all degrees of freedom.
 
-## Usage
+İstenilen eksene bir sınır ayarlayarak birincil eklem eksenindeki hareketi (dönme ve öteleme) kısıtlayabilirsiniz.
 
-Joints can be used to create many game entities, such as doors, chains and rag dolls. The most interesting here is 
-rag doll. It is used to create realistic behaviour for humans and creatures in games. In general, it is a set of 
-rigid bodies, colliders and joints. Where each joint configured to match joints of a creature, for example ball joint
-could be used for shoulders, revolute joints for knees and elbows.
+
+
+- Bilyeli Eklem, eksen etrafındaki her dönüş için bir tane olmak üzere üç açısal sınıra sahiptir. Açı aralığı radyan cinsinden verilir.
+
+- Prizmatik Eklem, birincil eklem ekseni boyunca iki cisim arasındaki maksimum doğrusal mesafe olmak üzere tek bir sınıra sahiptir.
+
+- Döner Eklem, birincil eksen etrafında tek bir açısal limite sahiptir. Açı aralığı radyan cinsinden verilir.
+
+- Sabit Eklem, tüm serbestlik derecelerini kilitlediği için herhangi bir limit ayarı yoktur.
+
+
+
+## Kullanım
+
+
+
+
+Eklemler, kapılar, zincirler ve bez bebekler gibi birçok oyun nesnesi oluşturmak için kullanılabilir. Burada en ilginç olanı 
+
+bez bebek. Oyunlarda insanlar ve yaratıklar için gerçekçi davranışlar oluşturmak için kullanılır. Genel olarak, bir dizi 
+
+rigid body, çarpıştırıcı ve eklemden oluşur. Her eklem, bir yaratığın eklemlerine uyacak şekilde yapılandırılır; örneğin, top eklem
+
+omuzlar için, revolute eklemler dizler ve dirsekler için kullanılabilir.

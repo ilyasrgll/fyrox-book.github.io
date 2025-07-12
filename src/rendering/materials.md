@@ -1,68 +1,98 @@
 # Materials
 
-Material defines a set of values for a shader. Materials usually contains textures (diffuse, normal, height, emission and other maps), numerical values (floats, integers), vectors, booleans, matrices and arrays of each type, except
-textures. Each parameter can be changed in runtime giving you the ability to create animated materials. However,
-in practice, most materials are static, this means that once it's created, it won't be changed anymore.
 
-Please keep in mind that the actual "rules" of drawing an entity are stored in the shader,
-**material is only a storage** for specific uses of the shader.
 
-Multiple materials can share the same shader, for example standard shader covers 95% of most common use cases,
-and it is shared across multiple materials. The only difference are property values, for example you can draw
-multiple cubes using the same shader, but with different textures.
+Malzeme, bir gölgelendirici için bir dizi değer tanımlar. Malzemeler genellikle dokular (dağınık, normal, yükseklik, emisyon ve diğer haritalar), sayısal değerler (kayan noktalı sayılar, tamsayılar), vektörler, boole değerleri, matrisler ve her türden diziler içerir, ancak
+dokular hariç. Her parametre çalışma zamanında değiştirilebilir, bu da size animasyonlu malzemeler oluşturma olanağı sağlar. Ancak,
+uygulamada çoğu malzeme statiktir, yani bir kez oluşturulduktan sonra artık değiştirilemez.
 
-Material itself can be shared across multiple places as well as the shader. This gives you the ability to render
-multiple objects with the same material efficiently.
+Bir varlığı çizmenin gerçek “kuralları” gölgelendiricide saklanır,
+**malzeme sadece gölgelendiricinin belirli kullanımları için bir depolama alanıdır**.
 
-## Performance
 
-It is very important re-use materials as much as possible, because the number of materials used per frame
-significantly correlates with performance. The more unique materials you have per frame, the more work
-the renderer and video driver need in order to render a frame and more time the frame will require for
-rendering, thus lowering your FPS.
 
-## Standard material
+Birden fazla malzeme aynı gölgelendiriciyi paylaşabilir, örneğin standart gölgelendirici en yaygın kullanım durumlarının %95'ini kapsar
+ve birden fazla malzeme tarafından paylaşılır. Tek fark, özellik değerleridir; örneğin, aynı gölgelendiriciyi kullanarak
+farklı dokularla birden fazla küp çizebilirsiniz.
 
-The engine offers a standard PBR material, PBR stands for "Physically-Based Rendering" which gives you the quality
-of shading which is very close to materials in real world (to some extent of course).
 
-The standard material can cover 95% of use cases, and it is suitable for almost any kind of game, except maybe
-some cartoon-ish or stylized games.
 
-The standard material has quite a lot of properties that can be used to fully utilize the power of PBR rendering:
+Malzeme, gölgelendirici gibi birden fazla yerde paylaşılabilir. Bu, aynı malzemeye sahip birden fazla nesneyi verimli bir şekilde render etme olanağı sağlar.
+aynı malzemeyi kullanarak birden fazla nesneyi verimli bir şekilde render etme olanağı sağlar.
 
-- **diffuseColor** - an RGBA color that will be used as a base color for you object. **Caveat:** the opacity value
-(alpha) will be used only with `Forward` render path! This means that you will need to switch render path on your
-mesh ([see below](#transparency))
-- **diffuseTexture** - a 2D texture containing the unlit "basic" colors of your object, this is the most commonly
-used texture. For example, you can assign a brick wall texture to this property and your object will look like a brick
-wall.
-- **normalTexture** - a 2D texture containing per-pixel normal vectors.
-- **metallicTexture** - a 2D texture containing per-pixel metallic factor, where 0 - dielectric, 1 - metal.
-In simple words it defines whether your object reflects (1.0) the environment or not (0.0).
-- **roughnessTexture** - a 2D texture containing per-pixel roughness factor, where 0 - completely flat, 1 -
-very rough.
-- **heightTexture** - a 2D texture containing per-pixel displacement value, it is used with parallax mapping to
-crate an effect of volume on a flat surface.
-- **emissionTexture** - a 2D texture containing per-pixel emission lighting. You could use this to create emissive
-surfaces like small lamps on wall of sci-fi ship, or to create glowing eyes for your monsters that will scare
-the player.
-- **lightmapTexture** - a 2D texture containing per-pixel **static** lighting. It is used to apply precomputed
-light to your 3D models, and the most common use case is to lit a static object using a static light. Precomputed
-light is very cheap. The engine offers built-in lightmapper that can generate lightmaps for you.
-- **aoTexture** - a 2D texture containing per-pixel shading values, allows you to "bake" shadows in for your 3D
-object.
-- **texCoordScale** - a 2D vector that allows you to scale texture coordinates used to sample the textures
-mentioned above (except lightmaps, they're using separate texture coordinates)
-- **layerIndex** - a natural number that is used for decals masking, a decal will only be applied to your mesh
-if and only if the decal has matching index.
-- **emissionStrength** - a 3D vector that allows you to set the strength of emission per-channel (R, G, B) for
-your `emissionTexture`
+
+
+## Performans
+
+
+
+Malzemeleri mümkün olduğunca yeniden kullanmak çok önemlidir, çünkü kare başına kullanılan malzeme sayısı
+performansla önemli ölçüde ilişkilidir. Kare başına ne kadar benzersiz malzeme varsa, renderlayıcı ve video sürücüsünün bir kareyi renderlamak için o kadar fazla iş yapması gerekir ve kare
+, bu da FPS'nizi düşürür.
+
+
+
+## Standart malzeme
+
+
+
+Motor, standart bir PBR malzeme sunar. PBR, “Fiziksel Tabanlı Render” anlamına gelir ve size gerçek dünyadaki malzemelere çok yakın (tabii ki bir dereceye kadar) gölgeleme kalitesi
+sağlar.
+
+
+
+Standart malzeme, kullanım durumlarının %95'ini kapsayabilir ve belki bazı karikatürize veya stilize oyunlar hariç, hemen hemen her tür oyun için uygundur.
+
+
+
+Standart malzeme, PBR render işleminin gücünü tam olarak kullanmak için kullanılabilecek birçok özelliğe sahiptir:
+
+
+
+- **diffuseColor** - nesneniz için temel renk olarak kullanılacak bir RGBA rengi. **Uyarı:** opaklık değeri
+
+(alfa) yalnızca `Forward` render yolunda kullanılır! Bu, render yolunu mesh'inizde değiştirmeniz gerektiği anlamına gelir
+
+([aşağıya bakın](#transparency))
+
+- **diffuseTexture** - nesnenizin aydınlatılmamış “temel” renklerini içeren 2D doku, bu en yaygın
+kullanılan dokudur. Örneğin, bu özelliğe bir tuğla duvar dokusu atayabilirsiniz ve nesneniz tuğla
+duvar gibi görünecektir.
+
+- **normalTexture** - piksel başına normal vektörleri içeren 2D doku.
+
+- **metallicTexture** - piksel başına metalik faktör içeren 2D doku, burada 0 - dielektrik, 1 - metal.
+Basit bir ifadeyle, nesnenizin çevreyi yansıtıp yansıtmadığını (1.0) veya yansıtmadığını (0.0) tanımlar.
+
+- **roughnessTexture** - piksel başına pürüzlülük faktörü içeren 2D doku, burada 0 - tamamen düz, 1 -
+çok pürüzlü.
+
+- **heightTexture** - piksel başına yer değiştirme değeri içeren 2D doku, paralaks haritalama ile birlikte kullanılarak
+düz bir yüzeyde hacim etkisi yaratmak için kullanılır.
+
+- **emissionTexture** - piksel başına emisyon aydınlatmasını içeren 2D doku. Bunu, bilim kurgu gemilerinin duvarlarındaki küçük lambalar gibi ışık yayan
+yüzeyler oluşturmak veya oyuncuları korkutacak canavarlarınız için parlayan gözler oluşturmak için kullanabilirsiniz.
+
+- **lightmapTexture** - piksel başına **statik** ışıklandırma içeren 2D doku. Önceden hesaplanmış
+ışığı 3D modellerinize uygulamak için kullanılır ve en yaygın kullanım örneği, statik bir ışık kullanarak statik bir nesneyi aydınlatmaktır. Önceden hesaplanmış
+ışık çok ucuzdur. Motor, sizin için ışık haritaları oluşturabilen yerleşik bir ışık haritalayıcı sunar.
+
+- **aoTexture** - piksel başına gölgeleme değerleri içeren 2D doku, 3D nesneleriniz için gölgeleri “pişirmenize” olanak tanır.
+
+- **texCoordScale** - yukarıda bahsedilen dokuları örneklemek için kullanılan doku koordinatlarını ölçeklendirmenize olanak tanıyan 2D vektör
+(ışık haritaları hariç, bunlar ayrı doku koordinatları kullanır)
+
+- **layerIndex** - çıkartma maskeleme için kullanılan doğal bir sayı, bir çıkartma yalnızca
+çıkartmanın eşleşen indeksi varsa
+
+- **emissionStrength** - `emissionTexture`
+için kanal başına (R, G, B) emisyon gücünü ayarlamanıza olanak tanıyan bir 3D vektör
 
 ## Transparency
 
-The standard material offers very basic transparency support, to use it you have to explicitly switch render
-path on your mesh object. It could be done in this way:
+Standart malzeme çok temel şeffaflık desteği sunar, bunu kullanmak için mesh nesnenizdeki render
+
+yolunu açıkça değiştirmeniz gerekir. Bu şekilde yapılabilir:
 
 ```rust,no_run
 # extern crate fyrox;
@@ -78,23 +108,26 @@ path on your mesh object. It could be done in this way:
 # }
 ```
 
-After this, your mesh will be rendered using a specialized render pass called Forward which supports alpha-blending
-and transparent objects. **Caveat:** Current forward renderer implementation does not support any kind of lighting,
-if you need lighting, you will need to use custom shader for that!
+Bundan sonra, ağınız alfa karıştırma
+
+ve şeffaf nesneleri destekleyen Forward adlı özel bir render geçişi kullanılarak render edilecektir. **Uyarı:** Mevcut forward renderer uygulaması herhangi bir ışıklandırma türünü desteklememektedir,
+
+ışıklandırmaya ihtiyacınız varsa, bunun için özel bir gölgelendirici kullanmanız gerekecektir!
 
 ## Material import
 
-When you're loading a 3D model in the engine, the engine tries to convert the materials stored inside to standard
-material. In most cases there is no way to create 100% matching material on the fly, instead the engine tries
-to do its best to make sure the material will be imported as closely as possible to the original one. Various 3D modelling
-tools use different material system, but all of them allow you to export your 3D model in one of the commonly
-used formats (such as FBX).
+Motora bir 3D model yüklediğinizde, motor içinde depolanan malzemeleri standart
+malzemeye dönüştürmeye çalışır. Çoğu durumda, anında %100 eşleşen malzeme oluşturmanın bir yolu yoktur, bunun yerine motor
+malzemenin orijinaline mümkün olduğunca yakın bir şekilde içe aktarılmasını sağlamak için elinden geleni yapar. Çeşitli 3D modelleme
+araçları farklı malzeme sistemleri kullanır, ancak hepsi 3D modelinizi yaygın olarak
+kullanılan formatlardan birinde (FBX gibi)
 
 ### Blender
 
-When using Blender, make sure you are using **Principled BSDF** material, it is the closest material that can be converted
-to engine's standard material at almost 100% fidelity.
+Blender'ı kullanırken, **Principled BSDF** malzemeyi kullandığınızdan emin olun, bu malzeme
+
+motorun standart malzemesine neredeyse %100 doğrulukla dönüştürülebilen en yakın malzemedir.
 
 ### 3Ds max
 
-It highly depends on the version of the 3Ds max, but in general the default material should work fine.
+Bu, 3Ds max sürümüne bağlı olarak değişir, ancak genel olarak varsayılan malzeme sorunsuz çalışmalıdır.

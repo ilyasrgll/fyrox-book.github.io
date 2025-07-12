@@ -1,13 +1,25 @@
-# Shipping
+# Nakliye
 
-This chapter explains how to build your game for various target platforms. On most platforms (PC, WebAssembly) you can
-use automated build system:
 
-![PC Build](pc_build.png)
 
-The editor provides a special tool that can create a build for shipping in a few clicks. It can be opened by going to
-`File -> Export Project...`. At first, you need to select a target platform from the list of available platforms.
-Then specify the data folders, ignored extensions of assets, data folders, etc. Finally, click `Export` and wait until
-your game build is done. It can take from few minutes to tens of minutes, depending on the size of your game.
+Bu bölümde, çeşitli hedef platformlar için oyununuzu nasıl oluşturacağınız açıklanmaktadır. Çoğu platformda (PC, WebAssembly)
 
-See next chapters, to learn more info about desired target platform.
+otomatik oluşturma sistemini kullanabilirsiniz:
+
+
+
+![PC Oluşturma](pc_build.png)
+
+
+
+Editör, birkaç tıklamayla dağıtım için bir derleme oluşturabilen özel bir araç sağlar. Bu araç,
+
+`File->Export Project...` (Dosya -> Projeyi Dışa Aktar...) seçeneğine giderek açılabilir. İlk olarak, kullanılabilir platformlar listesinden bir hedef platform seçmeniz gerekir.
+
+Ardından veri klasörlerini, yok sayılacak varlık uzantılarını, veri klasörlerini vb. belirtin. Son olarak, `Export`'a tıklayın ve
+
+oyun derlemeniz tamamlanana kadar bekleyin. Oyununuzun boyutuna bağlı olarak bu işlem birkaç dakika ile birkaç on dakika arasında sürebilir.
+
+
+
+İstenen hedef platform hakkında daha fazla bilgi için sonraki bölümlere bakın.

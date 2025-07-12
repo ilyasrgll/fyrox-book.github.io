@@ -1,26 +1,51 @@
-# Sprite Animation
+# Sprite Animasyonu
 
-Sprites can be animated using a series of pre-made images. For performance reasons they're usually packed
-into a rectangular texture, where each individual image located in its own cell of a grid. Such texture is 
-called a sprite sheet, and it looks something like this:
 
-![sprite sheet example](sprite_sheet_example.png)
 
-As you can see, there are multiple frames for each animation (idle, run, sword swing, etc.) packed into a 
-single image. To play an animation, all we need to do is to change frames with some desired frequency and...
-that's pretty much all. That's the simplest animation technique one could imagine.
+Sprite'lar, önceden hazırlanmış bir dizi görüntü kullanılarak canlandırılabilir. Performans nedenleriyle, genellikle
 
-Sprite sheets usually made by artists, not programmers, so just search online for some sprite sheet or 
-order a new one from an artist. Programmer's art is pretty much always bad.
+dikdörtgen bir dokuya paketlenir ve her bir görüntü, bir ızgaranın kendi hücresinde bulunur. Bu tür dokuya 
 
-## How to use
+sprite sayfası denir ve şuna benzer:
+
+
+
+![sprite sayfası örneği](sprite_sheet_example.png)
+
+
+
+Gördüğünüz gibi, her animasyon için (boşta, koşma, kılıç sallama vb.) birden fazla kare tek bir 
+
+görüntüye paketlenmiştir. Bir animasyonu oynatmak için tek yapmamız gereken, kareleri istediğimiz sıklıkta değiştirmek ve...
+
+hepsi bu kadar. Bu, hayal edilebilecek en basit animasyon tekniğidir.
+
+
+
+Sprite sheet'ler genellikle programcılar tarafından değil, sanatçılar tarafından yapılır, bu yüzden internette sprite sheet arayın veya 
+
+bir sanatçıdan yeni bir tane sipariş edin. Programcıların sanatları neredeyse her zaman kötüdür.
+
+
+
+## Nasıl kullanılır
+
+
 
 ![sprite animation editor](sprite_animation_editor.png)
 
-Fyrox offers a built-in sprite animation system which has its own editor. To be able to use sprite animation
-all you need to do is to add a `SpriteSheetAnimation` field (or a bunch of them) to your script and put 
-the following code in its `on_update`:
+
+
+Fyrox, kendi editörüne sahip yerleşik bir sprite animasyon sistemi sunar. Sprite animasyonunu kullanabilmek için
+
+tek yapmanız gereken, komut dosyanıza bir (veya birkaç) `SpriteSheetAnimation` alanı eklemek ve 
+
+`on_update` alanına aşağıdaki kodu yazmaktır:
+
+
 
 ```rust
+
 {{#include ../../code/snippets/src/animation/mod.rs:animation}}
+
 ```

@@ -1,128 +1,198 @@
-# Particle system
+# Parçacık sistemi
 
-Particle system is a scene node that is used to create complex visual effects (VFX). It operates on huge amount
-of particles at once allowing you to do complex simulation that involves large number of particles. Typically,
-particle systems are used to create following visual effects: smoke, sparks, blood splatters, steam, etc.
+
+
+Parçacık sistemi, karmaşık görsel efektler (VFX) oluşturmak için kullanılan bir sahne düğümüdür.
+
+Aynı anda çok sayıda parçacık üzerinde çalışarak, çok sayıda parçacığın dahil olduğu karmaşık simülasyonlar yapmanızı sağlar. Genellikle
+
+parçacık sistemleri aşağıdaki görsel efektleri oluşturmak için kullanılır: duman, kıvılcımlar, kan sıçramaları, buhar vb.
 
 ![smoke](./particle_system_example.png)
 
-## Basic Concepts
+## Temel Kavramlar
 
-Particle system uses _single_ texture for every particle in the system, only Red channel is used. Red channel interpreted
-as an alpha for all particles.
 
-Every particle is affected by `Acceleration` parameters of the particle system. It defines acceleration
-(in m/s<sup>2</sup>) that will affect velocities of every particle. It is used to simulate gravity.
 
-### Particle
+Parçacık sistemi, sistemdeki her parçacık için _tek_ bir doku kullanır, yalnızca Kırmızı kanal kullanılır. Kırmızı kanal, tüm parçacıklar için alfa olarak yorumlanır
 
-Particle is a square (not quadrilateral, this is important) with a texture which is always facing towards camera. It
-has the following properties:
+.
 
-- `Position` - defines a position in _local_ coordinates of particle system (this means that if you rotate a particle
-system, all particles will be rotated too).
-- `Velocity` - defines a speed vector (in local coordinates) that will be used to modify local position of the particle
-each frame.
-- `Size` - size (in meters) of the square shape of the particle.
-- `Size Modifier` - a numeric value (in meters per second), that will be added to the Size at each frame, it is used
-to modify size of the particles.
-- `Lifetime` - amount of time (in seconds) that the particle can be active for.
-- `Rotation` - angle (in radians) that defines rotation around particle-to-camera axis (clockwise).
-- `Rotation Speed` - speed (in radians per second, rad/s) of rotation of the particle.
-- `Color` - RGBA color of the particle.
 
-### Emitters
 
-Particle system uses _emitters_ to define a set of zones where particles will be spawned, it also defines initial ranges of
-parameters of particles. Particle system must have at least one emitter to generate particles.
+Her parçacık, parçacık sisteminin `Acceleration` parametrelerinden etkilenir. Bu parametre, her parçacığın hızını etkileyecek ivmeyi
 
-Emitter can be one of the following types:
+(m/s<sup>2</sup> cinsinden) tanımlar. Yerçekimini simüle etmek için kullanılır.
 
-- `Cuboid` - emits particles uniformly in a cuboid shape, the shape cannot be rotated, only translated.
-- `Sphere` - emits particles uniformly in a sphere shape.
-- `Cylinder` - emits particle uniformly in a cylinder shape, the shape cannot be rotated, only translated.
+### Parçacık
 
-Each emitter have fixed set of parameters that affects _initial_ values for every spawned particle:
 
-- `Position` - emitter have its own _local_ position (position relative to parent particle system node), this helps you
-to create complex particle systems that may spawn particles from multiple zones in space at once.
-- `Max Particles` - maximum number of particles available for spawn. By default, it is `None`, which says that there is
-no limit.
-- `Spawn Rate` - rate (in units per second) defines how fast the emitter will spawn particles.
-- `Lifetime Range` - numeric range (in seconds) for particle lifetime values. The lower the beginning of the range
-the less spawned particles will live, and vice versa.
-- `Size Range` - numeric range (in meters) for particle size.
-- `Size Modifier Range` - numeric range (in meters per second, m/s) for particle size modifier parameter.
-- `X/Y/Z Velocity Range` - a numeric range (in meters per second, m/s) for a respective velocity axis (X, Y, Z)
-that defines initial speed along the axis.
-- `Rotation Range` - a numeric range (in radians) for initial rotation of a new particle.
-- `Rotation Speed Range` - a numeric range (in radians per second, rad/s) for rotation speed of a new particle.
 
-**Important:** Every range (like Lifetime Range, Size Range, etc.) parameter generates _random_ value for respective
-parameter of a particle. You can tweak the seed of current random number generator (`fyrox::core::thread_rng()`) to
-ensure that generated values will be different each time.
+Parçacık, her zaman kameraya bakan bir dokuya sahip bir kare (dörtgen değil, bu önemlidir) şeklindedir.
 
-## How to create
+Aşağıdaki özelliklere sahiptir:
 
-There are multiple ways of creating a particle system, pick one that best suits your current needs.
 
-### Using the editor
 
-The best way to create a particle system is to configure it in the editor, creating from code is possible too (see below),
-but way harder and may be not intuitive, because of the large number of parameters. The editor allows you see the result
-and tweak it very fast. Create a particle system by `Create -> Particle System` and then you can start editing its
-properties. By default, new particle system has one Sphere particle emitter, you can add new emitters by clicking `+`
-button at the right of `Emitters` property in the Inspector (or remove by clicking `-`). Here's a simple example:
+- `Konum` - parçacık sisteminin _yerel_ koordinatlarında bir konumu tanımlar (bu, bir parçacık
+
+sistemini döndürdüğünüzde tüm parçacıkların da döneceği anlamına gelir).
+
+- `Hız` - partikülün yerel konumunu değiştirmek için kullanılacak hız vektörünü (yerel koordinatlarda) tanımlar
+
+her kare.
+
+- `Boyut` - parçacığın kare şeklinin boyutu (metre cinsinden).
+
+- `Boyut Değiştirici` - her karede Boyut'a eklenecek sayısal bir değer (metre/saniye cinsinden), parçacıkların boyutunu değiştirmek için kullanılır
+
+.
+
+- `Ömür` - parçacığın aktif olabileceği süre (saniye cinsinden).
+
+- `Rotation` - parçacığın kamera ekseni etrafında dönüşünü tanımlayan açı (radyan cinsinden) (saat yönünde).
+
+- `Rotation Speed` - parçacığın dönüş hızı (saniye başına radyan cinsinden, rad/s).
+
+- `Color` - parçacığın RGBA rengi.
+
+### Yayıcılar
+
+Parçacık sistemi, parçacıkların ortaya çıkacağı bir dizi bölgeyi tanımlamak için _yayıcılar_ kullanır ve ayrıca parçacıkların başlangıç aralıklarını da tanımlar.
+
+Parçacık sistemi, parçacıklar oluşturmak için en az bir yayıcıya sahip olmalıdır.
+
+
+
+Yayıcı, aşağıdaki türlerden biri olabilir:
+
+- `Cuboid` - parçacıkları küboid şeklinde eşit olarak yayar, şekil döndürülemez, sadece kaydırılabilir.
+
+- `Sphere` - parçacıkları küre şeklinde eşit olarak yayar.
+
+- `Cylinder` - parçacıkları silindir şeklinde eşit olarak yayar, şekil döndürülemez, sadece kaydırılabilir.
+
+
+
+Her yayıcı, oluşturulan her parçacığın _başlangıç_ değerlerini etkileyen sabit bir parametre kümesine sahiptir:
+
+
+
+- `Position` - yayıcı kendi _yerel_ konumuna sahiptir (ana parçacık sistemi düğümüne göre konum), bu, uzayda birden fazla bölgeden aynı anda parçacıklar oluşturabilen karmaşık parçacık sistemleri oluşturmanıza yardımcı olur.
+
+
+- `Max Particles` - oluşturulabilecek maksimum parçacık sayısı.
+ Varsayılan olarak, bu değer `None`'dur, yani
+
+sınır yoktur.
+
+- `Spawn Rate` - hız (saniye başına birim cinsinden), yayıcının parçacıkları ne kadar hızlı üreteceğini belirler.
+
+- `Lifetime Range` - parçacık ömrü değerleri için sayısal aralık (saniye cinsinden). Aralığın başlangıcı ne kadar düşükse,
+
+ üretilen parçacıkların ömrü o kadar kısa olur ve tersi de geçerlidir.
+
+- `Boyut Aralığı` - parçacık boyutu için sayısal aralık (metre cinsinden).
+
+- `Boyut Değiştirici Aralığı` - parçacık boyutu değiştirici parametresi için sayısal aralık (saniye başına metre, m/s).
+
+- `X/Y/Z Hız Aralığı` - ilgili hız ekseni (X, Y, Z) için sayısal aralık (saniye başına metre, m/s)
+
+ekseni boyunca başlangıç hızını tanımlar.
+
+- `Rotasyon Aralığı` - yeni bir parçacığın başlangıç rotasyonu için sayısal aralık (radyan cinsinden).
+
+- `Rotasyon Hızı Aralığı` - yeni bir parçacığın rotasyon hızı için sayısal aralık (saniye başına radyan cinsinden, rad/s).
+
+**Önemli:** Her aralık (Ömür Aralığı, Boyut Aralığı vb.) parametresi, bir parçacığın ilgili
+
+parametresi için _rastgele_ bir değer üretir. Üretilen değerlerin her seferinde farklı olmasını sağlamak için mevcut rastgele sayı üretecinin tohumunu (`fyrox::core::thread_rng()`)
+
+değiştirebilirsiniz.
+
+## Nasıl oluşturulur
+
+Parçacık sistemi oluşturmanın birden fazla yolu vardır, mevcut ihtiyaçlarınıza en uygun olanı seçin.
+
+### Editör kullanarak
+
+Parçacık sistemi oluşturmanın en iyi yolu, editörde yapılandırmaktır. Koddan oluşturmak da mümkündür (aşağıya bakın),
+ancak çok sayıda parametre olduğu için çok daha zordur ve sezgisel olmayabilir. Editör, sonucu görmenizi
+ve çok hızlı bir şekilde ayarlamanızı sağlar. `create -> Particle System` ile bir parçacık sistemi oluşturun ve ardından
+özelliklerini düzenlemeye başlayabilirsiniz. Varsayılan olarak, yeni parçacık sistemi bir Sphere parçacık yayıcıya sahiptir, Inspector'da `Emitters` özelliğinin sağındaki `+`
+düğmesine tıklayarak yeni yayıcılar ekleyebilirsiniz (veya `-` düğmesine tıklayarak kaldırabilirsiniz). İşte basit bir örnek:
 
 ![particle system](./particle_system.png)
 
-Now start tweaking desired parameters, it is hard to give any recommendations of how to achieve a particular effect,
-only practice matters here.
+Şimdi istediğiniz parametreleri ayarlamaya başlayın. Belirli bir efekti nasıl elde edeceğinize dair herhangi bir öneride bulunmak zordur,
+burada sadece pratik yapmak önemlidir.
 
-### Using the code
+### Kodu kullanma
 
-You can also create particle systems from code (in case if you need some procedurally-generated effects):
+
+
+Koddan da parçacık sistemleri oluşturabilirsiniz (prosedürel olarak oluşturulmuş efektlere ihtiyacınız varsa):
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/particle_system.rs:create_smoke}}
 ```
 
-This code creates smoke effect with smooth dissolving (by using color-over-lifetime gradient). Please refer to
-[API docs](https://docs.rs/fyrox/latest/fyrox/scene/particle_system/index.html) for particle system for more information.
+Bu kod, yumuşak bir şekilde kaybolan duman efekti oluşturur (renk ömrü boyunca gradyan kullanarak). Daha fazla bilgi için
 
-### Using prefabs
+[API belgeleri](https://docs.rs/fyrox/latest/fyrox/scene/particle_system/index.html) partikül sistemi bölümüne bakın.
 
-If you need to create particle systems made in the editor, you can always use prefabs. Create a scene with desired
-particle system and then [instantiate](../resources/model.md#instantiation) it to your scene.
+### Prefab kullanma
 
-## Soft particles
 
-Fyrox used special technique, called soft particles, that smooths sharp transitions between particles and scene geometry:
+
+Editörde oluşturulmuş parçacık sistemleri oluşturmanız gerekiyorsa, her zaman prefabları kullanabilirsiniz. İstediğiniz
+
+parçacık sistemine sahip bir sahne oluşturun ve ardından sahnenize [örnekleyin](../resources/model.md#instantiation).
+
+## Yumuşak parçacıklar
+
+
+
+Fyrox, parçacıklar ve sahne geometrisi arasındaki keskin geçişleri yumuşatan “yumuşak parçacıklar” adlı özel bir teknik kullandı:
 
 ![soft particles](./soft_particles.png)
 
-This technique especially useful for effects such as smoke, fog, etc. where you don't want to see the "edge" between
-particles and scene geometry. You can tweak this effect using `Soft Boundary Sharpness Factor`, the larger the value
-the more "sharp" the edge will be and vice versa.
+Bu teknik, özellikle duman, sis vb. gibi efektler için kullanışlıdır, çünkü bu efektlerde parçacıklar ile sahne geometrisi arasındaki “kenar”ın görünmesini istemezsiniz.
 
-## Restarting emission
+ Bu efekti, `Yumuşak Sınır Keskinlik Faktörü` kullanarak ayarlayabilirsiniz; değer ne kadar büyükse
 
-You can "rewind" particle systems in the "initial" state by calling `particle_system.clear_particles()` method, it
-will remove all generated particles and emission will start over.
+kenar o kadar “keskin” olur ve tersi de geçerlidir.
 
-## Enabling or disabling particle systems
+## Emisyonun yeniden başlatılması
 
-By default, every particle system is enabled. Sometimes there is a need to create a particle system, but not enable
-it (for example for some delayed effect). You can achieve this by calling `particle_system.set_enabled(true/false)`
-method. Disabled particle systems will still be drawn, but emission and animation will be stopped. To hide particle
-system completely, use `particle_system.set_visibility(false)` method.
+`particle_system.clear_particles()` yöntemini çağırarak parçacık sistemlerini “başlangıç” durumuna “geri alabilirsiniz”. Bu,
 
-## Performance
+ oluşturulan tüm parçacıkları siler ve emisyon baştan başlar.
 
-Particle systems using special renderer that optimized to draw millions of particles with very low overhead, however
-particles simulated on CPU side and may significantly impact overall performance when there are many particle systems
-with lots of particles in each.
+## Parçacık sistemlerini etkinleştirme veya devre dışı bırakma
 
-## Limitations
 
-Particle systems does not interact with lighting, this means that particles will not be lit by light sources in the scene.
+
+Varsayılan olarak, tüm parçacık sistemleri etkindir. Bazen bir parçacık sistemi oluşturmak, ancak etkinleştirmemek
+
+(örneğin, bazı gecikmeli efektler için) gerekebilir. Bunu, `particle_system.set_enabled(true/false)`
+
+yöntemini çağırarak yapabilirsiniz. Devre dışı bırakılan parçacık sistemleri yine çizilir, ancak emisyon ve animasyon durdurulur. Parçacık
+
+sistemini tamamen gizlemek için `particle_system.set_visibility(false)` yöntemini kullanın.
+
+
+
+## Performans
+
+
+
+Partikül sistemleri, çok düşük ek yükle milyonlarca partikülü çizmek için optimize edilmiş özel bir renderer kullanır, ancak partiküller CPU tarafında simüle edilir ve her birinde çok sayıda partikül bulunan çok sayıda partikül sistemi olduğunda genel performansı önemli ölçüde etkileyebilir.
+
+
+
+## Sınırlamalar
+
+
+
+Partikül sistemleri ışıklandırma ile etkileşime girmez, bu da partiküllerin sahnedeki ışık kaynakları tarafından aydınlatılmayacağı anlamına gelir.

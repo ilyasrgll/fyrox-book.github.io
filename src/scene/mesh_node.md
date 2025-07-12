@@ -1,58 +1,68 @@
 # Mesh node
 
-Mesh is a scene node that represents a 3D model. This one of the most commonly used nodes in almost every game.
-Meshes could be easily created either programmatically or be made in some 3D modelling software (like Blender)
-and loaded in your scene.
+Mesh, bir 3D modeli temsil eden bir sahne düğümüdür. Bu, hemen hemen her oyunda en sık kullanılan düğümlerden biridir.
+
+Mesh'ler programlı olarak kolayca oluşturulabilir veya bazı 3D modelleme yazılımlarında (Blender gibi)
+
+ve sahnenize yüklenebilir.
 
 ## Surfaces
 
-Surface is a set of triangles that uses the same [material](../rendering/materials.md). Mesh node could contain zero of 
-more surfaces; each surface contains a set of vertices and indices that binds vertices with triangles. Mesh nodes split 
-into surfaces to be rendered effectively by modern GPUs.
+Yüzey, aynı [malzeme](../rendering/materials.md) kullanan bir dizi üçgendir. Mesh düğümü sıfır veya 
 
-## How to create
+daha fazla yüzey içerebilir; her yüzey, köşeleri üçgenlerle bağlayan bir dizi köşe ve indeks içerir. Mesh düğümleri, modern GPU'lar tarafından etkili bir şekilde işlenebilmesi için yüzeylere bölünür.
 
-There are basically two ways, how to pick one depends on your needs. In general, using a 3D modelling software is
-the way to go, especially with tons and tons of free 3D models available online.
+## Nasıl oluşturulur
 
-> ⚠️ The engine supports _only_ FBX and GLTF file format for 3D models! 
-> To use GLTF, specify `gltf` feature of the engine in your root Cargo.toml
+Temel olarak iki yol vardır, hangisini seçeceğiniz ihtiyaçlarınıza bağlıdır. Genel olarak, 3D modelleme yazılımı kullanmak
+en iyi yoldur, özellikle çevrimiçi olarak tonlarca ücretsiz 3D model mevcut olduğundan.
 
-### Using a 3D modelling software
+> ⚠️ Motor, 3D modeller için _sadece_ FBX ve GLTF dosya formatlarını destekler!
+> GLTF kullanmak için, kök Cargo.toml dosyanızda motorun `gltf` özelliğini belirtin.
 
-To create a 3D model, you could use [Blender](https://www.blender.org/) and then export it to `FBX` file format.
-To load your 3D model in the game, you should do few simple steps (loading a 3D model does not differ from a prefab 
-instantiation):
+### 3D modelleme yazılımı kullanarak
+
+3D model oluşturmak için [Blender](https://www.blender.org/) kullanabilir ve ardından `FBX` dosya formatına Export edebilirsiniz.
+
+3D modelinizi oyuna yüklemek için birkaç basit adım izlemelisiniz (3D model yüklemek prefab 
+instantiation'dan farklı değildir):
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/mesh.rs:load_model_to_scene}}
 ```
 
-This code snippet intentionally omits proper `async/await` usage (instead it just blocks current thread until
-model is loading) and error handling. In the real game you should carefully handle all errors and use `async/await`
-properly.
+Bu kod parçacığı, uygun `async/await` kullanımını (bunun yerine, model yüklenene kadar mevcut iş parçacığını engeller) ve hata işlemeyi kasıtlı olarak atlamaktadır. Gerçek oyunda, tüm hataları dikkatlice ele almalı ve `async/await`
+'i doğru şekilde kullanmalısınız.
 
-### Creating a procedural mesh
+### Prosedürel ağ oluşturma
 
-A mesh instance could be created from code, such meshes are called "procedural". They're suitable for cases when you
-cannot create a mesh in 3D modelling software.
+Bir mesh örneği koddan oluşturulabilir, bu tür mesh'lere “prosedürel” denir. Bunlar,
+3D modelleme yazılımında mesh oluşturamadığınız durumlar için uygundur.
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/mesh.rs:create_procedural_mesh}}
 ```
 
-As you can see, creating a mesh procedurally requires lots of manual work and not so easy.
+Gördüğünüz gibi, prosedürel olarak bir ağ oluşturmak çok fazla manuel çalışma gerektirir ve o kadar kolay değildir.
 
 ## Animation
 
-Mesh node supports bone-based animation (skinning) and blend shapes. See [Animation chapter](./../animation/animation.md) 
-for more info.
+Mesh node, kemik tabanlı animasyon (skinning) ve blend shapes'i destekler. Daha fazla bilgi için [Animasyon bölümü](./../animation/animation.md) 
 
-## Data Buffers
+bölümüne bakın.
 
-It is possible to access vertex buffer and index buffer of a mesh to either read or write some data there. 
-For example, the following code extracts world-space positions of every vertex of an animated mesh:
+## Veri Tamponları
+
+
+
+Bir mesh'in köşe tamponuna ve dizin tamponuna erişerek buradaki verileri okuyabilir veya yazabilirsiniz.
+
+Örneğin, aşağıdaki kod animasyonlu bir mesh'in her köşesinin dünya uzayındaki konumlarını çıkarır:
+
+
 
 ```rust ,no_run
+
 {{#include ../code/snippets/src/scene/mesh.rs:extract_world_space_vertices}}
+
 ```

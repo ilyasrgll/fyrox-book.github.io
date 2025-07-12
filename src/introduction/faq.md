@@ -1,27 +1,41 @@
-# Frequently Asked Questions
+# Sıkça Sorulan Sorular
 
-This chapter contains answers for frequently asked questions.
 
-## Which graphics API does the engine use?
 
-Fyrox uses OpenGL 3.3 on PC and OpenGL ES 3.0 on WebAssembly. Why? Mainly due to historical reasons. Back in the day 
-(Q4 of 2018), there weren't any good alternatives to it with a wide range of supported platforms. For example, `wgpu` 
-[didn't even exist](https://crates.io/crates/wgpu/0.1.0), as its first version was released in January 2019. Other crates were taking their first baby 
-steps and weren't ready for production.
+Bu bölümde sıkça sorulan soruların yanıtları yer almaktadır.
 
-### Why not use alternatives now?
 
-There is no need for it. The current implementation works and is more than good enough. So instead of focusing on 
-replacing something that works for little to no benefit, the current focus is on adding features that are missing as 
-well as improving existing features when needed.
 
-## Is the engine based on ECS?
+## Motor hangi grafik API'sini kullanıyor?
 
-No, the engine uses a mixed composition-based, object-oriented design with message passing and other different approaches 
-that fit the most for a particular task. Why not use ECS for everything, though? Pragmatism. Use the right tool for the job. 
-Don't use a microscope to hammer nails.
 
-## What kinds of games can I make using Fyrox?
+Fyrox, PC'de OpenGL 3.3 ve WebAssembly'de OpenGL ES 3.0 kullanıyor. Neden? Esas olarak tarihsel nedenlerden dolayı. Eskiden
 
-Pretty much any kind of games, except maybe games with vast open-worlds (since there's no built-in world streaming).
-In general, it depends on your game development experience.
+
+(2018'in 4. çeyreği), geniş bir platform yelpazesini destekleyen iyi bir alternatif yoktu. Örneğin, `wgpu`
+ 
+[henüz mevcut bile değildi](https://crates.io/crates/wgpu/0.1.0), çünkü ilk sürümü Ocak 2019'da yayınlandı. Diğer kütüphaneler ise ilk adımlarını atıyor 
+
+ve üretime hazır değildi.
+
+### Neden şimdi alternatifleri kullanmıyorsunuz?
+
+Buna gerek yoktur. Mevcut uygulama çalışıyor ve fazlasıyla yeterlidir. Bu nedenle, çok az fayda sağlayan bir şeyi değiştirmek yerine, mevcut odak noktası eksik özelliklerin eklenmesi ve gerektiğinde mevcut özelliklerin iyileştirilmesidir.
+
+## Motor ECS tabanlı mı?
+
+
+
+Hayır, motor, belirli bir göreve en uygun olan mesaj aktarımı ve diğer farklı yaklaşımları içeren karışık bileşim tabanlı, nesne yönelimli bir tasarım kullanır.
+
+ Peki neden her şey için ECS kullanmıyorsunuz? Pragmatizm. İş için doğru aracı kullanın.
+
+Çivi çakmak için mikroskop kullanmayın.
+
+## Fyrox ile ne tür oyunlar yapabilirim?
+
+
+
+Geniş açık dünyalı oyunlar hariç (çünkü yerleşik dünya akışı yoktur), hemen hemen her tür oyun yapabilirsiniz.
+
+Genel olarak, oyun geliştirme deneyiminize bağlıdır.

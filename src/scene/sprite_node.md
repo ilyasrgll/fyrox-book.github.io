@@ -1,36 +1,49 @@
 # Sprite
 
-Sprite is just a quad mesh that is always facing camera. It has size, color, rotation around "look" axis and a texture.
-Sprites are useful mostly for projectiles, like glowing plasma, and for things that should always face a camera.
 
-> ⚠️ It should be noted that **sprites are not meant to be used for 2D games**, they're only for 3D. 
-> Use [Rectangle node](./rectangle.md) if you need 2D sprites.
 
-## How to create
+Sprite, her zaman kameraya bakan bir dörtgen ağdır. Boyutu, rengi, “bakış” ekseni etrafındaki dönüşü ve bir dokusu vardır.
 
-A sprite instance could be created using `SpriteBuilder`:
+Sprite'lar çoğunlukla parlayan plazma gibi mermiler ve her zaman kameraya bakması gereken nesneler için kullanışlıdır.
+
+> ⚠️ Sprite'ların 2D oyunlarda kullanılmak üzere tasarlanmadığını, yalnızca 3D oyunlarda kullanılabileceğini unutmayın.
+> 2D sprite'lara ihtiyacınız varsa [Rectangle node](./rectangle.md) kullanın.
+
+## Nasıl oluşturulur
+
+Bir sprite örneği `SpriteBuilder` kullanılarak oluşturulabilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/sprite.rs:create_sprite}}
 ```
 
-A sprite with a texture could be created by using `.with_material` method of the builder:
+Yapıcıda `.with_material` yöntemi kullanılarak dokulu bir sprite oluşturulabilir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/sprite.rs:create_sprite_with_texture}}
 ```
 
-Please note, that this code create a material per each sprite. This could be very unoptimal if you're using tons of 
-sprites at once, share the same material resource across multiple sprites if you can. Otherwise, each sprite will be
-rendered in a separate draw call and the overall performance will be very low.
+Bu kodun her sprite için bir malzeme oluşturduğunu lütfen unutmayın. Aynı anda çok sayıda sprite kullanıyorsanız, bu çok verimsiz olabilir.
 
-## Animation
+ Mümkünse, aynı malzeme kaynağını birden fazla sprite arasında paylaşın. Aksi takdirde, her sprite
 
-See [Sprite Animation](../animation/spritesheet/spritesheet.md) chapter for more info.
+ayrı bir çizim çağrısında işlenecek ve genel performans çok düşük olacaktır.
 
-## General rules
+## Animasyon
 
-Sprites **must not** be used to create any visual effects that involve many particles. You should use 
-[particle systems](particle_system_node.md) for that. Why so? Particles systems are very well optimized for managing
-huge amounts of particles at the same time, but sprites are not. Each sprite is quite heavy to be used as a particle in 
-particle systems, it has a lot of "useless" info that will eat a lot of memory.
+
+
+Daha fazla bilgi için [Sprite Animasyonu](../animation/spritesheet/spritesheet.md) bölümüne bakın.
+
+## Genel kurallar
+
+
+
+Sprite'lar **çok sayıda parçacık içeren** görsel efektler oluşturmak için **kullanılmamalıdır**. Bunun için 
+
+
+[parçacık sistemleri](particle_system_node.md) kullanmalısınız. Neden? Parçacık sistemleri,
+
+aynı anda çok büyük miktarda parçacığı yönetmek için çok iyi optimize edilmiştir, ancak spriteler değildir. Her sprite, 
+
+parçacık sistemlerinde parçacık olarak kullanılmak için oldukça ağırdır ve çok fazla bellek tüketen birçok “yararsız” bilgi içerir.

@@ -1,9 +1,13 @@
-# Getting Started
+# Başlangıç
 
-This section of the book will guide you through the basics of the engine. You will learn how to create a project, use
-plugins, scripts, assets, and the editor. Fyrox is a modern game engine with its own scene editor, that helps you to edit 
-game worlds, manage assets, and much more. By the end this section, you will have learned how to manage game and 
-engine entities, understand how they are structured and have basic knowledge of data management in the engine. 
 
-The next chapter will guide you through the major setup of the engine - creating a game project using the special project generator
-tool.
+
+Bu bölümde, motorun temel özellikleri hakkında bilgi edineceksiniz. Proje oluşturma,
+eklenti, komut dosyası, varlık ve düzenleyiciyi kullanma gibi konuları öğreneceksiniz. Fyrox, kendi sahne düzenleyicisine sahip modern bir oyun motorudur. 
+oyun dünyalarını düzenlemenize, varlıkları yönetmenize ve çok daha fazlasını yapmanıza yardımcı olur. Bu bölümün sonunda, oyun ve 
+motor varlıklarını yönetmeyi öğrenecek, bunların nasıl yapılandırıldığını anlayacak ve motorun veri yönetimi hakkında temel bilgilere sahip olacaksınız.
+ 
+
+
+Bir sonraki bölümde, motorun temel kurulumunu - özel proje oluşturucu
+aracını kullanarak bir oyun projesi oluşturmayı

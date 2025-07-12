@@ -1,227 +1,289 @@
 # Terrain
 
-Terrain is a scene node that represents uniform grid of cells where each cell can have different height. Other, commonly
-known name for terrain is heightmap. Terrains used to create maps for open-world games, it is used to create hills,
-mountains, plateau, roads, etc.
+Terrain, her bir hücrenin farklı yüksekliğe sahip olabileceği tek tip bir hücre ızgarasını temsil eden bir sahne düğümüdür. Terrain için yaygın olarak kullanılan diğer
+
+adlar arasında heightmap bulunmaktadır. Terrain, açık dünya oyunları için haritalar oluşturmak amacıyla kullanılır; tepeler,
+dağlar, platolar, yollar vb. oluşturmak için kullanılır.
 
 ![terrain](./terrain.png)
 
-## Basic concepts
+## Temel kavramlar
 
-There are few basic concepts that you should understand before trying to use terrains. This will help you to understand
-design decisions and potential use cases.
 
-### Heightmap
 
-As it was already mentioned, terrain is a uniform grid where X and Z coordinates of cells have fixed values, while Y
-can change. In this case we can store only width, height and resolution numerical parameters to calculate X and Z coordinates,
-while Y is stored in a separate array which is then used to modify heights of cells. Such array is called _heightmap_.
+Terrain'leri kullanmaya başlamadan önce anlamanız gereken birkaç temel kavram vardır. Bu kavramlar,
+
+tasarım kararlarını ve olası kullanım durumlarını anlamanıza yardımcı olacaktır.
+
+### Yükseklik Haritası
+
+
+
+Daha önce de belirtildiği gibi, arazi, hücrelerin X ve Z koordinatlarının sabit değerlere sahip olduğu, Y
+
+ise değişebilen tek tip bir ızgaradır. Bu durumda, X ve Z koordinatlarını hesaplamak için yalnızca genişlik, yükseklik ve çözünürlük sayısal parametrelerini saklayabiliriz,
+
+ Y ise hücrelerin yüksekliklerini değiştirmek için kullanılan ayrı bir dizide saklanır. Bu diziye _yükseklik haritası_ denir.
 
 ![terrain mesh](./terrain_mesh.png)
 
-### Layers
+### Katmanlar
 
-Layer is a material + mask applied to terrain's mesh. Mask is a separate, greyscale texture that defines in which parts
-of the terrain the material should be visible or not. White pixels in the mask makes the material to be visible, black -
-completely transparent, everything between helps you to create smooth transitions between layers. Here's a simple
-example of multiple layers:
+
+
+Katman, arazi ağlarına uygulanan malzeme + maskedir. Maske, malzemenin arazinin hangi kısımlarında görünür olacağını veya olmayacağını tanımlayan ayrı bir gri tonlamalı dokudur.
+
+ Maskedeki beyaz pikseller malzemenin görünür olmasını sağlarken, siyah pikseller malzemenin
+
+tamamen şeffaf olmasını sağlar. İkisi arasındaki her şey, katmanlar arasında yumuşak geçişler oluşturmanıza yardımcı olur. İşte çoklu katmanlara ilişkin basit bir
+
+örnek:
 
 ![terrain layers layout](./terrain_layers_layout.png)
 
-There are 3 layers: 1 - dirt, 2 - grass, 3 - rocks and grass. As you can see, there are smooth transitions between each
-layer, it is achieved by layer's mask.
+3 katman vardır: 1 - kir, 2 - çim, 3 - kayalar ve çim. Gördüğünüz gibi, her katman arasında yumuşak geçişler vardır,
 
-Each layer uses separate material, which can be edited from respective property editor in the Inspector:
+ bu katman maskesiyle elde edilir.
+
+
+
+Her katman ayrı bir malzeme kullanır ve bu malzeme, Denetçi'deki ilgili özellik düzenleyicisinden düzenlenebilir:
 
 ![terrain layer material](./terrain_layer_material.png)
 
-## Creating terrain in the editor
+## Editörde arazi oluşturma
 
-You can create a terrain node by clicking `Create -> Terrain`. It will create a terrain with fixed width, height,
-and resolution (see [limitations](./terrain_node.md#limitations-and-known-issues)). Once the terrain is created, select
-it in the World Viewer and click on Hill icon on the toolbar. This will enable terrain editing, brush options panel
-should also appear. See the picture below with all the steps:
+
+
+`create -> terrain` seçeneğine tıklayarak bir arazi düğümü oluşturabilirsiniz. Bu, sabit genişlik, yükseklik ve
+
+
+çözünürlüğe sahip bir arazi oluşturacaktır (bkz. [sınırlamalar](./terrain_node.md#limitations-and-known-issues)). Arazi oluşturulduktan sonra, Dünya Görüntüleyicisi'nde
+
+onu seçin ve araç çubuğundaki Tepe simgesine tıklayın. Bu, arazi düzenlemeyi etkinleştirir ve fırça seçenekleri paneli
+
+de görünmelidir. Tüm adımları gösteren aşağıdaki resme bakın:
 
 ![terrain editing](./terrain_editing.png)
 
-The green rectangle on the terrain under the cursor represents current brush. You can edit brush options in the
-`Brush Options` window:
+İmlecin altındaki arazideki yeşil rectangle, mevcut fırçayı temsil eder. Fırça seçeneklerini
+
+`Brush Options` penceresinde düzenleyebilirsiniz:
 
 ![brush options](./brush_options.png)
 
-- *Shape:* Select a circular brush or a rectangular brush. When a circular brush is selected, a control to adjust its
-radius appears. When a rectangular brush is select, controls for its width and length appear. The size of the green
-rectangle changes to reflect the size of the brush based on these controls.
-- *Mode:* Select the terrain editing operation that the brush should perform.
-    - *Raise or Lower:* Modifies the existing value by a fixed amount. When the number is positive, the value is
-    increased. When the number is negative, the value is decreased. When the brush target is "Height Map", this can be
-    to raise or lower the terrain. When the `Shift` key is held at the start of a brush stroke, the number of raising or lowering
-    is negated, so a raise operation becomes a lowering operation.
-    - *Assign Value:* Replaces the existing value with a given value. For example, if you want to create a plateau
-    with land of a specific height, you can select this mode and type in the height you want as the brush value.
-    - *Flatten:* Levels terrain by spreading the value of the terrain from point where you click across wherever
-    you drag the brush. It works just like *Assign Value* except you do not need to specify the desired value because it
-    is taken automatically from the value of the terrain where the brush stroke starts.
-    - *Smooth:* For each point of the terrain touched by the brush, replace that value with an average of the nearby values.
-    This tends to diminish sharp transitions in terrain value.
-- *Target:* There are multiple aspects of terrain that can be edited by a brush, and this control allows you to select which
-one you will be editing. Setting it to "Height Map" causes the brush to change the terrain elevation.
-Setting it to "Layer Mask" causes it to change the transparency of the layer with a chosen index.
-Masks are always clamped to be between 0 and 1, regardless of what brush mode is selected, since 0 represents fully transparent
-and 1 represents the layer being fully opaque.
-- *Transform:* This is a 2x2 matrix that is applied to the brush's shape, allowing linear transformations such as rotating
-a rectangular brush, or skewing, or stretching.
-For most purposes the identity matrix of \\(\begin{bmatrix}1&0\\\\0&1\end{bmatrix}\\) works well, since that is the default that applies no modification to the brush's shape.
-If the matrix is not invertable, then it will be ignored.
-- *Hardness:* The effect of a brush does not need to be applied equally across its entire area. The *hardness*
-of a brush controls how much of a brush gets its full effect.
-When hardness is 0, only the exact center of the brush receives the full effect, while the rest of the brush fades from
-full effect to no effect at the edges.
-When hardness is 1 or greater, the entire brush gets the full effect.
-If the value is less than 0, then even the center of the brush does not receive the full effect.
-- *Alpha:* The \\(\alpha\\) value linearlly interpolates between the current value of the terrain and the value that would be
-produced by the full effect of the brush.
-If \\(v_0\\) is the current value of a point on the terrain and and \\(v_1\\) is the full effect of the brush, then the actual
-effect that the brush will apply will be \\((1 - \alpha) * v_0 + \alpha * v_1\\).
-There is no requirement that \\(\alpha\\) must be between 0 and 1. Values less than 0 will invert the effect of the brush,
-while values greater than 1 will exaggerate the effect of the brush.
-Values close to 0 can be used to make fine adjustments by applying an effect incrementally across multiple brush strokes.
+- *Shape:* Dairesel veya dikdörtgen bir fırça seçin. Dairesel bir fırça seçildiğinde, çapını ayarlamak için bir kontrol görünür. Dikdörtgen bir fırça seçildiğinde, genişlik ve uzunluk için kontroller görünür. Yeşil dikdörtgenin boyutu, bu kontrollere göre fırçanın boyutunu yansıtacak şekilde değişir.
 
-Each brush stroke is treated as an independent operation starting from when the mouse button is pressed and ending when
-the mouse button is released. Repeatedly dragging the mouse across the same area of terrain will not increase the effect
-of the brush as it is all part of the same brush stroke, but repeatedly pressing and releasing the mouse button will
-cause the brush's effect to be applied repeatedly since that is counted as multiple brush strokes.
+- *Mode:* Fırçanın gerçekleştireceği arazi düzenleme işlemini seçin.
+    
+- *Yükselt veya Alçalt:* Mevcut değeri sabit bir miktar değiştirir. Sayı pozitif olduğunda, değer artar. Sayı negatif olduğunda, değer azalır. Fırça hedefi “Yükseklik Haritası” olduğunda, bu arazi yükseltmek veya alçaltmak için kullanılabilir. Fırça darbesinin başlangıcında `Shift` tuşu basılı tutulduğunda, yükseltme veya alçaltma sayısı negatif hale gelir, böylece yükseltme işlemi alçaltma işlemine dönüşür.
 
-## Creating terrain from code
+    - *Değer Atama:* Mevcut değeri verilen bir değerle değiştirir. Örneğin, belirli bir yükseklikte bir plato oluşturmak istiyorsanız, bu modu seçip fırça değeri olarak istediğiniz yüksekliği girebilirsiniz.
 
-Terrain brushes can also be used to edit terrain from code by using `fyrox::scene:terrain::Brush` and `fyrox::scene::terrain::BrushContext`.
+    - *Düzleştir:* Tabanı, tıkladığınız noktadan  fırçayı sürüklediğiniz yere kadar yayarak düzleştirir. *Değer Atama* ile aynı şekilde çalışır, ancak fırça darbesinin başladığı yerdeki arazi değerinden otomatik olarak alındığı için istediğiniz değeri belirtmeniz gerekmez.
 
-The `Brush` structure has fields for each of the brush options, and the `BrushContext` structure has methods for accepting a `Brush` and
-applying it to a terrain. BrushContext allows you to start a new stroke, perform stamps and smears during the stroke, then end the stroke
-to write the constructed brush stroke to the terrain. It is also possible to `flush` a partially finished stroke to the terrain, so that
-a brush stroke may be animated across multiple frames instead of appearing on the terrain all at once.
+- *Düzleştir:* Fırçanın dokunduğu arazinin her noktası için, o değeri yakındaki değerlerin ortalamasıyla değiştirir. Bu, arazi değerlerindeki keskin geçişleri azaltma eğilimindedir.
 
-Here is a list of methods provided by `BrushContext`:
+- *Hedef:* Fırça ile düzenlenebilecek arazinin birçok yönü vardır ve bu kontrol, düzenleyeceğiniz yönü seçmenizi sağlar. “Yükseklik Haritası” olarak ayarlandığında fırça, arazinin yüksekliğini değiştirir. “Katman Maskesi” olarak ayarlandığında, seçilen indeksle katmanın şeffaflığını değiştirir. Maskeler, seçilen fırça modundan bağımsız olarak her zaman 0 ile 1 arasında kalır, çünkü 0 tamamen şeffaf ve 1 katmanın tamamen opak olduğunu temsil eder.
+
+- *Dönüştür:* Bu, fırçanın şekline uygulanan 2x2 matrisidir ve dikdörtgen bir fırçayı döndürme, eğirme veya uzatma gibi doğrusal dönüşümler yapmanızı sağlar. Çoğu amaç için, \\(\begin{bmatrix}1&0\\\\0&1\end{bmatrix}\\) kimlik matrisi iyi sonuç verir, çünkü bu, fırçanın şekline herhangi bir değişiklik uygulamayan varsayılan değerdir. Matris tersine çevrilemezse, yok sayılır.
+
+- *Sertlik:* Bir fırçanın etkisi, tüm alanına eşit olarak uygulanması gerekmez. Bir fırçanın *sertliği*, fırçanın ne kadarının tam etkiyi alacağını kontrol eder. Sertlik 0 olduğunda, sadece fırçanın tam merkezi tam etkiyi alırken, fırçanın geri kalanı tam etkiden kenarlarda etkisiz hale gelir. Sertlik 1 veya daha büyük olduğunda, fırçanın tamamı tam etkiyi alır. Değer 0'dan küçükse, fırçanın merkezi bile tam etkiyi almaz.
+
+- *Alfa:* \\(\alpha\\) değeri, arazinin mevcut değeri ile fırçanın tam etkisinin üreteceği değer arasında doğrusal olarak enterpolasyon yapar. \\(v_0\\) arazideki bir noktanın mevcut değeri ve \\(v_1\\) fırçanın tam etkisidir. \\(v_0\\) arazi üzerindeki bir noktanın geçerli değeri ve \\(v_1\\) fırçanın tam etkisi ise, fırçanın uygulayacağı gerçek etki \\((1 - \alpha) * v_0 + \alpha * v_1\\) olacaktır. \\(\alpha\\) değerinin 0 ile 1 arasında olması gerekmez. 0'dan küçük değerler fırçanın etkisini tersine çevirirken, 1'den büyük değerler fırçanın etkisini abartır. 0'a yakın değerler, birden fazla fırça darbesi ile kademeli olarak efekt uygulayarak ince ayar yapmak için kullanılabilir.
+
+
+
+Her fırça darbesi, fare düğmesi basıldığında başlayan ve fare düğmesi bırakıldığında biten bağımsız bir işlem olarak ele alınır. Aynı arazi alanında fareyi tekrar tekrar sürüklemek, fırçanın etkisini artırmaz çünkü bunların tümü aynı fırça darbesinin parçasıdır, ancak fare düğmesini tekrar tekrar basıp bırakmak, birden fazla fırça darbesi olarak sayıldığından fırçanın etkisinin tekrar tekrar uygulanmasına neden olur.
+
+## Koddan arazi oluşturma
+
+Arazi fırçaları, `fyrox::scene:terrain::Brush` ve `fyrox::scene::terrain::BrushContext` kullanılarak koddan araziyi düzenlemek için de kullanılabilir.
+
+
+
+`Brush` yapısı, her bir fırça seçeneği için alanlara sahiptir ve `BrushContext` yapısı, bir `Brush` kabul etmek ve
+
+
+onu araziye uygulamak için yöntemlere sahiptir. BrushContext, yeni bir vuruş başlatmanıza, vuruş sırasında damgalama ve bulaştırma işlemleri gerçekleştirmenize ve ardından vuruşu sonlandırmanıza
+
+olarak yapılandırılmış fırça vuruşunu araziye yazmak için kullanabilirsiniz. Ayrıca, kısmen tamamlanmış bir vuruşu araziye `flush` ile aktararak,
+
+fırça vuruşunun araziye tek seferde görünmek yerine birden fazla karede animasyonlu olarak gösterilmesini sağlayabilirsiniz.
+
+
+
+BrushContext tarafından sağlanan yöntemlerin listesi aşağıda verilmiştir:
 
 ```rust,no_run
 fn start_stroke(&mut self, terrain: &Terrain, brush: Brush)
 ```
 
-Call this to choose the brush that will be used for the rest of the stroke. At this point the `BrushContext` records which textures the
-terrain is using to represent the data for the given brush's target. and those textures are the ones that will finally be modified
-when `end_stroke` is eventually called.
+Çizimin geri kalanında kullanılacak fırçayı seçmek için bunu çağırın. Bu noktada `BrushContext`, verilen fırçanın hedefindeki verileri temsil etmek için
+
+arazinin hangi dokuları kullandığını kaydeder. ve bu dokular, `end_stroke` sonunda çağrıldığında nihai olarak değiştirilecek olan dokulardır
+.
 
 ```rust,no_run
 fn stamp(&mut self, terrain: &Terrain, position: Vector3<f32>)
 ```
 
-Call this to stamp the brush at a single point on the terrain. A stroke should already have been started, as this is potentially just
-one operation out of many that could make up a stroke.
+Bunu, fırçayı arazi üzerinde tek bir noktaya damgalamak için çağırın. Bir vuruş zaten başlatılmış olmalıdır, çünkü bu, bir vuruşu oluşturabilecek birçok işlemden sadece
+biri olabilir.
 
-The terrain is not modified; it is only being used to translate the the given position from world space to terrain texture space.
-In order to actually see the results of this stamp in the terrain, `flush` or `end_stroke` must be called.
 
-The y-coordinate of the position is ignored as the position is projected onto the terrain.
+Arazi değiştirilmez; sadece verilen konumu dünya uzayından arazi doku uzayına çevirmek için kullanılır.
+Bu damganın arazi üzerindeki sonuçlarını gerçekten görmek için, `flush` veya `end_stroke` çağrılmalıdır.
+
+Konum araziye yansıtıldığından, konumun y koordinatı yok sayılır.
 
 ```rust,no_run
 fn smear(&mut self, terrain: &Terrain, start: Vector3<f32>, end: Vector3<f32>)
 ```
 
-A smear is just like a stamp, except it continuously paints with the brush along a line from `start` to `end`.
-Again, a stroke should already have been started in order to select the brush to paint with, and the results will not
-appear immediately on the terrain.
+Bir leke, damga gibidir, ancak `başlangıç` ile `son` arasındaki çizgi boyunca fırça ile sürekli boyama yapar.
+
+Yine, boyama yapılacak fırçayı seçmek için bir vuruşun önceden başlatılmış olması gerekir ve sonuçlar
+arazi üzerinde hemen görünmez.
 
 ```rust,no_run
 fn flush(&mut self)
 ```
 
-Call this to force the terrain to update to include the modifications due to a partially completed brush stroke.
-If a stroke is being drawn across multiple frames, it would make sense to call `flush` at the end of each frame.
-The `flush` method does not require the terrain to be passed in because `BrushContext` already knows which textures
-need to be modified in order to update the terrain.
+Bunu çağırarak, kısmen tamamlanmış bir fırça darbesinden kaynaklanan değişikliklerin dahil edilmesi için araziyi güncellemeye zorlayabilirsiniz.
+
+Bir fırça darbesi birden fazla kareye çiziliyorsa, her karenin sonunda `flush` çağrısı yapmak mantıklı olacaktır.
+
+`flush` yöntemi, araziyi geçirmeyi gerektirmez çünkü `BrushContext`, araziyi güncellemek için hangi dokuların
+
+değiştirilmesi gerektiğini zaten bilir.
 
 ```rust,no_run
 fn end_stroke(&mut self)
 ```
 
-Call this to update the terrain to include the modifications due to the stroke, and clear all data for that stroke
-so that the context is ready to begin a new stroke.
+Bunu çağırarak, vuruştan kaynaklanan değişiklikleri dahil etmek için araziyi güncelleyin ve o vuruşa ait tüm verileri silin,
+
+ böylece bağlam yeni bir vuruşa başlamaya hazır hale gelir.
 
 ```rust,no_run
 fn shape(&mut self) -> &mut BrushShape
 ```
 
-This provides mutable access to the brush's shape, making it possible to change the shape without starting a new stroke.
+Bu, fırçanın şekline değiştirilebilir erişim sağlar ve yeni bir vuruş başlatmadan şekli değiştirilebilir.
 
 ```rust,no_run
 fn hardness(&mut self) -> &mut f32
 ```
 
-This provides mutable access to the brush's hardness, making it possible to change the hardness without starting a new stroke.
+Bu, fırçanın sertliğine değiştirilebilir erişim sağlar ve yeni bir vuruş başlatmadan sertliği değiştirmeyi mümkün kılar.
 
-There are also similiar methods for changing the brush's alpha and mode in the middle of a stroke, but these are unlikely to serve
-any practical use as brush strokes do not tend to react well to such changes. It is best to start a new stroke if a new brush mode
-is needed. It is particularly not possible to change the brush's target in the middle of a stroke, because that would require
-updating other details of the internal state of the `BrushContext`.
 
-Here is an example of `BrushContext` in use:
+
+Vuruşun ortasında fırçanın alfa ve modunu değiştirmek için de benzer yöntemler vardır, ancak bunlar pratik kullanım için uygun değildir
+
+çizim fırçaları bu tür değişikliklere iyi tepki vermez. Yeni bir fırça modu gerekiyorsa, yeni bir çizim başlatmak en iyisidir.
+
+ Çizimin ortasında fırçanın hedefini değiştirmek özellikle mümkün değildir, çünkü bu, `BrushContext` iç durumunun diğer ayrıntılarının güncellenmesini gerektirir
+.
+
+
+
+İşte `BrushContext` kullanımına bir örnek:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/terrain.rs:create_random_two_layer_terrain}}
 ```
 
-As you can see there is quite a lot of code, ideally you should use editor all the times, because handling everything
-from code could be very tedious. The result of its execution (if all textures are set correctly) could be something
-like this (keep in mind that terrain will be random everytime you run the code):
+Gördüğünüz gibi oldukça fazla kod var, ideal olarak her zaman editör kullanmalısınız, çünkü her şeyi koddan halletmek
+
+çok sıkıcı olabilir. Yürütmenin sonucu (tüm dokular doğru ayarlanmışsa) şunun gibi olabilir
+
+(kodu her çalıştırdığınızda arazinin rastgele olacağını unutmayın):
 
 ![terrain from code](./terrain_random.png)
 
-## Physics
+## Fizik
 
-By default, terrains does not have respective physical body and shape, it should be added manually. Create a static
-rigid body node with a collider with Heightmap shape ([learn more about colliders](../physics/collider.md)). Then attach
-the terrain to the rigid body. Keep in mind that terrain's origin differs from Heightmap rigid body, so you need to offset
-the terrain to match its physical representation. Enable physics visualization in editor settings to see physical shapes
-and move terrain. Now to move the terrain you should move the body, instead of the terrain (because of parent-child
-[relations](../beginning/scene_and_scene_graph.md#local-and-global-coordinates)).
 
-## Performance
 
-Terrain rendering complexity have linear dependency with the number of layers terrain have. Each layer forces the engine
-to re-render terrain's geometry with different textures and mask. Typical number of layers is from 4 to 8. For example,
-a terrain could have the following layers: dirt, grass, rock, snow. This is a relatively lightweight scheme. In any case,
-you should measure frame time to understand how each new layer affects performance in your case.
+Varsayılan olarak, araziler ilgili fiziksel gövdeye ve şekle sahip değildir, bunlar manuel olarak eklenmelidir.
 
-## Chunking
+Heightmap şekline sahip bir çarpıştırıcı ile statik bir rigid body düğümü oluşturun ([çarpıştırıcılar hakkında daha fazla bilgi için](../physics/collider.md)). Ardından
 
-Terrain itself does not define any geometry or rendering data, instead it uses one or more chunks for that purpose. Each
-chunk could be considered as a "sub-terrain". You can "stack" any number of chunks from any side of the terrain. To do
-that, you define a range of chunks along each axis. This is very useful if you need to extend your terrain in a particular
-direction. Imagine that you've created a terrain with just one chunk (`0..1` range on both axes), but suddenly you found
-that you need to extend the terrain to add some new game locations. In this case you can change the range of chunks at
-the desired axis. For instance, if you want to add a new location to the right from your single chunk, then you should
-change `width_chunks` range to `0..2` and leave `length_chunks` as is (`0..1`). This way terrain will be extended, and
-you can start shaping the new location.
 
-## Level-of-detail
+arazi parçasını rigid body'ye ekleyin. Arazinin orijini Heightmap rigid body'den farklıdır, bu nedenle fiziksel temsiline uyması için araziyi
 
-Terrain has automatic LOD system, which means that the closest portions of it will be rendered with the highest
-possible quality (defined by the resolution of height map and masks), while the furthest portions will be
-rendered with the lowest quality. This effectively balances GPU load and allows you to render huge terrains with
-low overhead.
+ofsetlemeniz gerekir. Fiziksel şekilleri görmek ve araziyi hareket ettirmek için editör ayarlarında fizik görselleştirmeyi etkinleştirin.
 
-The main parameter that affects LOD system is `block_size` (`Terrain::set_block_size`), which defines size of the patch
-that will be used for rendering. It is used to divide the size of the height map into a fixed set of blocks using
-quad-tree algorithm.
+ Şimdi araziyi hareket ettirmek için arazi yerine gövdeyi hareket ettirmelisiniz (parent-child
 
-Current implementation uses modified version of CDLOD algorithm without patch morphing. Apparently it is not needed,
-since bilinear filtration in vertex shader prevents seams to occur.
+[ilişkiler](../beginning/scene_and_scene_graph.md#local-and-global-coordinates)).
 
-Current implementation makes it possible to render huge terrains (64x64 km) with 4096x4096 heightmap resolution in about a
-millisecond on average low-to-middle-end GPU.
+## Performans
+
+
+
+Arazi renderleme karmaşıklığı, arazinin katman sayısı ile doğrusal bir bağımlılığa sahiptir. Her katman, motorun
+
+farklı dokular ve maskelerle arazinin geometrisini yeniden renderlemesini gerektirir. Tipik katman sayısı 4 ila 8 arasındadır. Örneğin,
+
+bir arazi şu katmanlara sahip olabilir: toprak, çim, kaya, kar. Bu nispeten hafif bir şemadır. Her durumda,
+
+her yeni katmanın performansınızı nasıl etkilediğini anlamak için kare süresini ölçmelisiniz.
+
+
+
+## Parçalama
+
+
+
+Arazi kendisi herhangi bir geometri veya renderleme verisi tanımlamaz, bunun yerine bu amaçla bir veya daha fazla parça kullanır. Her
+
+
+parça bir “alt arazi” olarak düşünülebilir. Arazinin herhangi bir tarafından istediğiniz sayıda parçayı “istifleyebilirsiniz”. Bunu yapmak için
+
+, her eksen boyunca bir parça aralığı tanımlarsınız. Bu, arazinizi belirli bir
+
+yönünde genişletmeniz gerektiğinde çok kullanışlıdır. Tek bir parça ile (her iki eksende `0..1` aralığı) bir arazi oluşturduğunuzu, ancak aniden
+
+
+yeni oyun konumları eklemek için araziyi genişletmeniz gerektiğini fark ettiğinizi düşünün. Bu durumda,
+
+istenen eksende parça aralığını değiştirebilirsiniz. Örneğin, tek parçanızın sağına yeni bir konum eklemek istiyorsanız,
+
+`width_chunks` aralığını `0..2` olarak değiştirin ve `length_chunks` değerini olduğu gibi bırakın (`0..1`). Bu şekilde arazi genişletilecek ve
+
+yeni konumu şekillendirmeye başlayabilirsiniz.
+
+## Ayrıntı düzeyi
+
+
+
+Arazi, otomatik LOD sistemine sahiptir, bu da en yakın kısımlarının en yüksek
+kalitede (yükseklik haritasının ve maskelerin çözünürlüğü ile tanımlanır) render edileceği, en uzak kısımlarının ise
+en düşük kalitede render edileceği anlamına gelir. Bu, GPU yükünü etkili bir şekilde dengeler ve düşük ek yük ile büyük arazileri render etmenizi sağlar
+.
+
+
+
+LOD sistemini etkileyen ana parametre, render için kullanılacak yamanın boyutunu tanımlayan `block_size` (`Terrain::set_block_size`) parametresidir.
+ Bu parametre, yükseklik haritasının boyutunu dörtlü ağaç algoritması kullanılarak sabit bir blok kümesine bölmek için kullanılır
+.
+
+
+
+Mevcut uygulama, yama morflaması olmadan CDLOD algoritmasının değiştirilmiş bir sürümünü kullanır. Görünüşe göre buna gerek yoktur,
+çünkü köşe gölgelendiricideki bilineer filtreleme, dikişlerin oluşmasını engeller.
+
+
+
+Mevcut uygulama, ortalama düşük-orta seviye GPU'larda yaklaşık bir milisaniye içinde 4096x4096 yükseklik haritası çözünürlüğünde devasa arazileri (64x64 km) render etmeyi mümkün kılar.
 
 ## Limitations and known issues
 
-There is no way to cut holes in the terrain yet, it makes impossible to create caves. There is also no way to create
-ledges, use separate meshes to imitate this. See [tracking issue](https://github.com/FyroxEngine/Fyrox/issues/351) for
-more info.
+Henüz araziye delik açmanın bir yolu yoktur, bu da mağara oluşturmayı imkansız hale getirir. Ayrıca çıkıntı oluşturmanın da bir yolu yoktur,
+
+ bunu taklit etmek için ayrı ağlar kullanın. Daha fazla bilgi için [izleme sorunu](https://github.com/FyroxEngine/Fyrox/issues/351) bölümüne bakın
+
+.

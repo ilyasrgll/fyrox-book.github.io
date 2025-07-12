@@ -1,13 +1,22 @@
-# System Requirements
+# Sistem Gereksinimleri
 
-As any other software, Fyrox has its own system requirements that will provide the best user experience. 
 
-- **CPU** - at least 2 core CPU with 1.5 GHz per each core. The more is better.
-- **GPU** - any relatively modern GPU with OpenGL 3.3+ support. If the editor fails to start, then it is most likely your
-video card does not support OpenGL 3.3+. Do **not** try to run the editor on virtual machines, pretty much all of them
-have rudimentary support for graphics APIs which won't let you run the editor.
-- **RAM** - at least 1 Gb of RAM. The more is better.
-- **VRAM** - at least 256 Mb of video memory. It highly depends on your game. 
+
+Diğer tüm yazılımlar gibi, Fyrox da en iyi kullanıcı deneyimini sağlamak için kendi sistem gereksinimlerine sahiptir.
+
+
+
+- **CPU** - her bir çekirdek için en az 1,5 GHz hızında 2 çekirdekli CPU. Daha fazla çekirdek daha iyidir.
+
+- **GPU** - OpenGL 3.3+ desteğine sahip nispeten modern herhangi bir GPU. Editör başlatılamazsa, büyük olasılıkla
+
+video kartınız OpenGL 3.3+'yı desteklemiyor demektir. Editörü sanal makinelerde çalıştırmaya **çalışmayın**, çünkü bunların hemen hemen hepsi
+
+editörü çalıştırmanıza izin vermeyecek temel grafik API desteğine sahiptir.
+
+- **RAM** - en az 1 Gb RAM. Ne kadar fazla olursa o kadar iyi.
+
+- **VRAM** - en az 256 Mb video belleği. Bu, oyununuzun özelliklerine bağlı olarak büyük ölçüde değişir.
 
 ## Supported Platforms
 
@@ -20,7 +29,10 @@ have rudimentary support for graphics APIs which won't let you run the editor.
 | Android     | ✅      | ❌²     |
 | iOS         | ✅      | ❌²     |
 
-- ✅ - first-class support
-- ❌ - not supported
-- ¹ - macOS suffers from bad GPU performance on Intel chipsets, M1+ works well.
-- ² - the editor works only on PC, it requires rich filesystem functionality as well as decent threading support.
+- ✅ - birinci sınıf destek
+
+- ❌ - desteklenmiyor
+
+- ¹ - macOS, Intel yonga setlerinde kötü GPU performansından muzdariptir, M1+ iyi çalışır.
+
+- ² - düzenleyici yalnızca PC'de çalışır, zengin dosya sistemi işlevselliğinin yanı sıra iyi iş parçacığı desteği gerektirir.

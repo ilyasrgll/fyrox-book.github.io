@@ -1,126 +1,117 @@
-# Camera node
+# Kamera düğümü
 
-Camera is a special scene node that allows you to "look" at your scene from any point and with any orientation.
-Currently, the engine supports only _perspective_ cameras, which could be represented as a frustum volume. Everything
-that "intersects" with the frustum will be rendered. 
+Kamera, sahnenizi herhangi bir noktadan ve herhangi bir yönde “gözlemlemenizi” sağlayan özel bir sahne düğümüdür.
+Şu anda motor, frustum hacmi olarak temsil edilebilen yalnızca perspektif kameraları desteklemektedir. Frustum ile “kesişen” her şey
 
 ![Frustum](./frustum.svg)
 
-## How to create
+## Nasıl oluşturulur?
 
-An instance of camera node could be created using `CameraBuilder`: 
-
+Kamera düğümünün bir örneği `CameraBuilder` kullanılarak oluşturulabilir: 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:create_camera}}
 ```
 
-Orientation and position should be set in `BaseBuilder` as usual.
+Oryantasyon ve konum her zamanki gibi `BaseBuilder` içinde ayarlanmalıdır.
 
-## Projection modes
+## Projeksiyon modları
 
-Projection mode defines how your scene will look like after rendering, there are two projection modes available.
+Projeksiyon modu, sahnenizin render edildikten sonra nasıl görüneceğini belirler. İki projeksiyon modu mevcuttur.
 
-### Perspective
+### Perspektif
 
-Perspective projection makes distant objects smaller and parallel lines converging when using it, it is the most 
-common projection type for 3D games. By default, each camera uses perspective projection. It's defined by three 
-parameters that describes frustum volume:
+Perspektif projeksiyon, uzak nesneleri küçültür ve paralel çizgileri birleştirir. 3D oyunlar için en yaygın projeksiyon türüdür. Varsayılan olarak, her kamera perspektif projeksiyon kullanır.
 
-- Field of view angle
-- Near clipping plane location
-- Far clipping plane location
+Bu, frustum hacmini tanımlayan üç parametre ile tanımlanır: Bu, frustum hacmini tanımlayan üç 
+parametre ile tanımlanır:
 
-Here is a simple example of how to create a camera with perspective projection:
+- Görüş açısı
+- Yakın kırpma düzlemi konumu
+- Uzak kırpma düzlemi konumu
+
+İşte perspektif projeksiyonlu bir kamera oluşturmanın basit bir örneği:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:create_perspective_camera}}
 ```
 
-### Orthographic
+### Ortografik
 
-Orthographic projection prevents parallel lines from converging, it does not affect object size with distance.
-If you're making 2D games or isometric 3D games, this is the projection mode you're looking for. Orthographic
-projection defined by three parameters:
+- Dikey Boyut
+- Yakın Kesme Düzlemi
+- Uzak Kesme Düzlemi
 
-- Vertical Size
-- Near Clipping Plane
-- Far Clipping Plane
+Dikey boyut, “kutunun” dikey eksende ne kadar büyük olacağını tanımlar, yatay boyut ise dikey boyuttan, dikey boyutu en boy oranıyla çarparak elde edilir.
 
-Vertical size defines how large the "box" will be in vertical axis, horizontal size is derived from vertical
-size by multiplying vertical size with aspect ratio.
 
-Here is a simple example of how to create a camera with orthographic projection:
+Ortografik projeksiyonlu bir kamera oluşturmanın basit bir örneği aşağıda verilmiştir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:create_orthographic_camera}}
 ```
 
-## Performance
+## Performans
 
-Each camera forces engine to re-render scene one more time, which can be very resource-intensive (both CPU and GPU)
-operation. 
+Her kamera, motorun sahneyi bir kez daha yeniden oluşturmasını gerektirir ve bu, çok fazla kaynak gerektiren (hem CPU hem de GPU) bir işlem olabilir.
 
-To reduce GPU load, try to keep the Far Clipping Plane at lowest possible values. For example, if you're making a game
-with closed environment (lots of corridors, small rooms, etc.) set the Far clipping Plane to max possible distance that 
-can be "seen" in your game - if the largest thing is a corridor, then set the Far clipping Plane to slightly exceed the 
-length. This will force the engine to clip everything that is out of bounds and do not draw such objects.
+
+GPU yükünü azaltmak için, Uzak Kırpma Düzlemini mümkün olan en düşük değerlerde tutmaya çalışın. Örneğin, kapalı bir ortamda (çok sayıda koridor, küçük odalar vb.) bir oyun yapıyorsanız, Uzak Kırpma Düzlemini oyununuzda “görünebilecek” maksimum mesafeye ayarlayın. 
+En büyük nesne bir koridor ise, Uzak Kırpma Düzlemini bu uzunluğu biraz aşacak şekilde ayarlayın. 
+Bu, motoru sınırların dışındaki her şeyi kırpmaya ve bu tür nesneleri çizmemeye zorlayacaktır.
 
 ## Skybox
 
-Outdoor scenes usually have distant objects that can't be reached, these can be mountains, sky, distant forest, etc.
-such objects can be pre-rendered and then applied to a huge cube around camera, it will always be rendered first and will
-be the background of your scene. To create a Skybox and set it to a camera, you can use the following code:
+Dış mekan sahnelerinde genellikle ulaşılamayan uzak nesneler bulunur; bunlar dağlar, gökyüzü, uzak ormanlar vb. olabilir.
+Bu tür nesneler önceden render edilip kameranın etrafındaki büyük bir küpün üzerine uygulanabilir; bu küp her zaman ilk olarak render edilir ve sahnenizin arka planını oluşturur.
+Bir Skybox oluşturmak ve bunu bir kameraya ayarlamak için aşağıdaki kodu kullanabilirsiniz:
 
 ```rust,no_run,edition2018
 {{#include ../code/snippets/src/scene/camera.rs:create_camera_with_skybox}}
 ```
 
-## Color grading look-up tables
+## Renk derecelendirme arama tabloları
 
-Color grading Look-Up Tables (LUT) allows you to transform color space of your frame. Probably everyone saw the
-famous "mexican" movie effect when everything becomes yellow-ish when action takes place in Mexico, this is done
-via color grading LUT effect. When used wisely, it can significantly improve perception of your scene.
+Renk derecelendirme Arama Tabloları (LUT), karenizin renk alanını dönüştürmenizi sağlar. Muhtemelen herkes, aksiyon Meksika'da gerçekleştiğinde her şeyin sarımsı bir renk aldığı ünlü “Meksika” film efektini görmüştür. Bu, renk derecelendirme LUT efektiyle yapılır. Akıllıca kullanıldığında, sahnenizin algısını önemli ölçüde iyileştirebilir.
 
-Here is the same scene having no color correction along with another case that has "mexico" color correction:
+İşte renk düzeltmesi yapılmamış aynı sahne ve “mexico” renk düzeltmesi yapılmış başka bir örnek:
+
+Aynı sahnenin renk düzeltmesi yapılmamış hali ile “Meksika” renk düzeltmesi yapılmış hali aşağıda gösterilmiştir:
 
 | Scene                                                 | Look-up-table                     |
 |-------------------------------------------------------|-----------------------------------|
 | ![No Color Correction](./no_color_correction.PNG)     | ![Neutral LUT](./lut_neutral.jpg) |
 | ![With Color Correction](./with_color_correction.PNG) | ![Neutral LUT](./lut_mexico.jpg)  |
 
-To use color grading LUT you could do something like this:
-
+Renk derecelendirme LUT'unu kullanmak için şunu yapabilirsiniz:
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:create_camera_with_lut}}
 ```
 
-## Picking 
+## Seçim 
 
-In some games you may need to do mouse picking of objects in your scene. To do that, at first you need to somehow convert
-a point on the screen to ray in the world. `Camera` has `make_ray` method exactly for that purpose:
+Bazı oyunlarda sahnedeki nesneleri fare ile seçmeniz gerekebilir. Bunu yapmak için, önce ekran üzerindeki bir noktayı dünyadaki bir ışına dönüştürmeniz gerekir. `Camera`, tam da bu amaçla `make_ray` yöntemine sahiptir:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:make_picking_ray}}
 ```
 
-The ray then can be used to [perform a ray cast over physics entities](../physics/ray.md). This is the simplest way
-of camera picking, and you should prefer it most of the time.
+Işın daha sonra [fizik varlıkları üzerinde ışın atışı yapmak için kullanılabilir](../physics/ray.md). Bu, kamera seçiminin en basit yoludur ve çoğu zaman bunu tercih etmelisiniz.
 
-### Advanced picking
+### Gelişmiş seçme
 
-**Important**: The following picking method is for advanced engine users only, if you don't know the math you should not
-use it.
+**Önemli**: Aşağıdaki seçme yöntemi yalnızca ileri düzey motor kullanıcıları içindir, matematiği bilmiyorsanız bunu kullanmamalısınız.
 
-If you know the math and don't want to create physical entities, you can use this ray to perform manual 
-ray intersection check:
+
+Matematiği biliyorsanız ve fiziksel varlıklar oluşturmak istemiyorsanız, bu ışını kullanarak manuel 
+ışın kesişim kontrolü gerçekleştirebilirsiniz:
 
 ```rust,no_run
 {{#include ../code/snippets/src/scene/camera.rs:precise_ray_test}}
 ```
 
-`precise_ray_test` is what you need, it performs precise intersection check with geometry of a mesh node. It returns a
-tuple of the closest distance and the closest intersection point. 
+`precise_ray_test` ihtiyacınız olan şeydir, bir mesh düğümünün geometrisiyle hassas kesişim kontrolü gerçekleştirir. En yakın mesafe ve en yakın kesişim noktasının bir tuple'ını döndürür. 
 
-## Exposure and HDR
+
+## Pozlama ve HDR
 
 (WIP)
